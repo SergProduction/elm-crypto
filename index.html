@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Crypto</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" media="screen" href="styled/main.css" />
+  <script src="elm.js"></script>
+</head>
+<body>
+  <div id="elm"></div>
+  <script>
+
+  var app = Elm.Main.init({
+    node: document.getElementById('elm'),
+  });
+
+  var socket;
+  
+  if (window.WebSocket) {
+    socket = new WebSocket("ws://142.93.47.26:1023");
+    socket.onmessage = function (event) {
+      app.ports.ws.send(event.data)
+      console.log(event.data)
+    }
+    socket.onopen = function (event) {
+      console.log("Web Socket opened!");
+    };
+    socket.onclose = function (event) {
+      console.log("Web Socket closed.");
+    };
+  } else {
+    console.log("Your browser does not support Websockets. (Use Chrome)");
+  }
+  
+
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+@font-face {
+  font-family: 'monacoregular';
+  src: url('/src/fonts/monaco_regular-webfont.woff2') format('woff2'),
+       url('/src/fonts/monaco_regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: monacoregular;
+}
