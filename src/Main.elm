@@ -9,10 +9,6 @@ import Json.Decode as D
 import Json.Encode as E
 
 
-
--- MAIN
-
-
 main =
     Browser.element
         { init = init
@@ -55,21 +51,62 @@ subscriptions model =
     ws (\s -> Echo (D.decodeString decode s))
 
 
-
--- VIEW
-
-
 view : Model -> Html Msg
 view model =
     div []
         [ h2 [] [ text "Begin ws" ]
-        , table [] (List.map viewCeil model)
+        , table []
+            [ tbody [] (List.map viewCeil model)
+            ]
         ]
 
 
 viewCeil : Data -> Html Msg
 viewCeil d =
     tr []
-        [ td [] [ text d.symbol ]
-        , td [] [ text d.exchange ]
+        [ td []
+            [ div []
+                [ div [ class "name" ] [ text d.symbol ]
+                ]
+            ]
+        , td []
+            [ div [ class "name" ] [ text "BID" ]
+            , div [ class "value" ] [ text d.bid.current ]
+            , div [ class "name" ] [ text "ASK" ]
+            , div [ class "value" ] [ text d.ask.current ]
+            ]
+        , td []
+            [ div [ class "name" ] [ text "24h High" ]
+            , div [ class "value" ] [ text d.high.current ]
+            , div [ class "name" ] [ text "24h Low" ]
+            , div [ class "value" ] [ text d.low.current ]
+            ]
+        , td []
+            [ div [ class "name" ] [ text "CV 24h" ]
+            , div [ class "value" ] [ text "-" ]
+            , div [ class "name" ] [ text "CV 24h High" ]
+            , div [ class "value" ] [ text "-" ]
+            ]
+        , td []
+            [ div [ class "name" ] [ text "MH 24h Buy" ]
+            , div [ class "value" ] [ text d.marketHistory.buy ]
+            , div [ class "name" ] [ text "MH 24h Sell" ]
+            , div [ class "value" ] [ text d.marketHistory.sell ]
+            ]
+        , td []
+            [ div [ class "name" ] [ text "Interest Ratio Now" ]
+            , div [ class "value" ] [ text "-" ]
+            ]
+        , td []
+            [ div [ class "name" ] [ text "24h Vol" ]
+            , div [ class "value" ] [ text "-" ]
+            , div [ class "name" ] [ text "Pre Vol" ]
+            , div [ class "value" ] [ text "-" ]
+            ]
+        , td []
+            [ div [ class "name" ] [ text "Market Cup" ]
+            , div [ class "value" ] [ text d.marketCup.current ]
+            , div [ class "name" ] [ text "24 Market Vol" ]
+            , div [ class "value" ] [ text d.marketVol24.current ]
+            ]
         ]

@@ -1,11 +1,38 @@
 @font-face {
   font-family: 'monacoregular';
-  src: url('/src/fonts/monaco_regular-webfont.woff2') format('woff2'),
-       url('/src/fonts/monaco_regular-webfont.woff') format('woff');
+  src: url('../fonts/monaco_regular-webfont.woff2') format('woff2'),
+       url('../fonts/monaco_regular-webfont.woff') format('woff');
   font-weight: normal;
   font-style: normal;
 }
 
 body {
   font-family: monacoregular;
+  background-color: #000;
+  color: #b3b3b3;
+}
+
+.name {
+  color: #ffa028;
+}
+
+td {
+  padding: 19px;
+}
+
+
+tr:nth-child(odd) {
+  background-color: #040404;
+}
+
+tr:nth-child(even) {
+  background-color: #080808;
+}
+
+tr + tr {
+  margin-top: 3px;
+}
+
+td > div + div {
+  margin-top: 5px
 }
