@@ -11,12 +11,25 @@ body {
   background-color: #000;
   color: #b3b3b3;
   font-size: 14px;
+  margin: 0px;
 }
+
+
+
+.logo-name {
+  color: #fff;
+}
+
 
 
 .name {
   color: #ffa028;
 }
+
+.name-value-group > div + div {
+  margin-top: 5px
+}
+
 
 
 .gt {
@@ -28,6 +41,7 @@ body {
 }
 
 
+
 .interest-ratio div + div {
   margin-left: 25px
 }
@@ -35,6 +49,19 @@ body {
 .interest-ratio-value {
   font-size: 36px;
 }
+
+
+.options-view {
+  border: 1px solid #1c1c1c;
+  border-top: 0px solid transparent;
+  border-bottom: 0px solid transparent;
+}
+
+.options-view span {
+  margin-left: 5px;
+}
+
+/* ----- flex helpers ----- */
 
 
 .flex-row {
@@ -51,9 +78,17 @@ body {
   justify-content: center;
 }
 
+.flex-between {
+  justify-content: space-between;
+}
+
 .flex-vertical-center {
   align-items: center;
 }
+
+
+
+/* ----- inputs ----- */
 
 
 input {
@@ -77,9 +112,45 @@ input :focus {
   margin-top: 1rem;
 }
 
+/* ----- buttons ----- */
+
 
 button {
   cursor: pointer;
+}
+
+button:focus {
+  border: 2px solid #464c52;
+}
+
+.red-button {
+  width: 97px;
+  height: 40px;
+  background-color: #a00000;
+  border: 0px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.pair-button {
+  width: 153px;
+  height: 40px;
+  background-color: #ffa028;
+  border: 0px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+
+.sign-in-button {
+  width: 97px;
+  height: 40px;
+  background-color: #b3b3b3;;
+  border: 0px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
 }
 
 .button-form {
@@ -106,6 +177,9 @@ button {
   border-color: rgba(0,0,0,0.6);
 }
 
+/* ----- Modal ----- */
+
+
 .modal {
   position: absolute;
   top: 0;
@@ -126,6 +200,38 @@ button {
   align-items: flex-end;
 }
 
+/* ----- Tile ----- */
+
+.tile-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px,1fr));
+}
+
+.tile-list > div:nth-child(odd) {
+  background-color: #040404;
+}
+
+.tile-list > div:nth-child(even) {
+  background-color: #080808;
+}
+
+.tile {
+  padding: 17px;
+  margin: 3px;
+  background-color: #080808;
+}
+
+.tile > div + div {
+  margin-top: 24px;
+  border-top: 1px solid #1c1c1c;
+}
+
+.tile + .tile {
+  border-top: 1px solid #1c1c1c;
+}
+
+/* ----- Table ----- */
+
 td {
   padding: 19px;
 }
@@ -141,10 +247,6 @@ tr:nth-child(even) {
 
 tr + tr {
   padding-top: 3px;
-}
-
-td > div + div {
-  margin-top: 5px
 }
 
 td + td {

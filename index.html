@@ -21,8 +21,10 @@
   if (window.WebSocket) {
     socket = new WebSocket("ws://142.93.47.26:1023");
     socket.onmessage = function (event) {
+      
       app.ports.ws.send(event.data)
-      console.log(event.data)
+      
+      // console.log(event.data)
     }
     socket.onopen = function (event) {
       console.log("Web Socket opened!");
@@ -30,10 +32,15 @@
     socket.onclose = function (event) {
       console.log("Web Socket closed.");
     };
+
+    // app.ports.getPair.subscribe((data) => {
+    // console.log('save', data)
+      // socket.send(data)
+    //})
+
   } else {
     console.log("Your browser does not support Websockets. (Use Chrome)");
   }
-  
 
 </script>
 </body>

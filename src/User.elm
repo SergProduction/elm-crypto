@@ -8,9 +8,14 @@ import Json.Decode as D
 import Json.Encode as E
 
 
-decode : D.Decoder String
-decode =
+decodeSucces : D.Decoder String
+decodeSucces =
     D.field "userkey" D.string
+
+
+decodeError : D.Decoder String
+decodeError =
+    D.field "error" D.string
 
 
 encode : Model -> E.Value
@@ -24,7 +29,8 @@ encode model =
 type alias Model =
     { email : String
     , password : String
-    , userkey : String
+    , userkey : Maybe String
+    , responseError : Maybe String
     }
 
 
@@ -32,14 +38,17 @@ type Msg
     = Email String
     | Password String
     | Submit
-    | Response (Result Http.Error String)
+    | ResponseSuccess String
+    | ResponseError String
+    | ResponseFail
 
 
 init : Model
 init =
     { email = ""
     , password = ""
-    , userkey = ""
+    , userkey = Nothing
+    , responseError = Nothing
     }
 
 
@@ -55,17 +64,34 @@ update msg model =
         Submit ->
             ( model, singUp model )
 
-        Response result ->
-            case result of
-                Ok ukey ->
-                    ( { model | userkey = ukey }, Cmd.none )
+        ResponseSuccess ukey ->
+            ( { model | userkey = Just ukey }, Cmd.none )
 
-                Err e ->
-                    let
-                        f =
-                            Debug.log "Response" e
-                    in
-                    ( model, Cmd.none )
+        ResponseError message ->
+            ( { model | responseError = Just message }, Cmd.none )
+
+        ResponseFail ->
+            ( model, Cmd.none )
+
+
+ff : Result.Result Http.Error String -> Msg
+ff r =
+    case r of
+        Ok response ->
+            case D.decodeString decodeSucces response of
+                Ok success ->
+                    ResponseSuccess success
+
+                Err _ ->
+                    case D.decodeString decodeError response of
+                        Ok errorMessage ->
+                            ResponseError errorMessage
+
+                        Err e ->
+                            ResponseFail
+
+        Err e ->
+            ResponseFail
 
 
 singUp : Model -> Cmd Msg
@@ -73,7 +99,7 @@ singUp model =
     Http.post
         { url = "https://cp.coindaq.net/api/getuserkey"
         , body = Http.jsonBody (encode model)
-        , expect = Http.expectJson Response decode
+        , expect = Http.expectString ff
         }
 
 
