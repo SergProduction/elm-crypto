@@ -6276,7 +6276,7 @@ var author$project$Main$viewHead = function (model) {
 				_List_fromArray(
 					[
 						A2(
-						elm$html$Html$span,
+						elm$html$Html$button,
 						_List_fromArray(
 							[
 								elm$html$Html$Events$onClick(
@@ -6287,7 +6287,7 @@ var author$project$Main$viewHead = function (model) {
 								elm$html$Html$text('table')
 							])),
 						A2(
-						elm$html$Html$span,
+						elm$html$Html$button,
 						_List_fromArray(
 							[
 								elm$html$Html$Events$onClick(

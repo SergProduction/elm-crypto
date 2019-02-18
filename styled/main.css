@@ -57,9 +57,6 @@ body {
   border-bottom: 0px solid transparent;
 }
 
-.options-view span {
-  margin-left: 5px;
-}
 
 /* ----- flex helpers ----- */
 
@@ -142,6 +139,11 @@ button:focus {
   font-weight: 600;
 }
 
+.options-view button {
+  background: transparent;
+  color: #fff;
+  border: 0;
+}
 
 .sign-in-button {
   width: 97px;

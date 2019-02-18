@@ -133,10 +133,8 @@ viewHead model =
             ]
         , div [] [ text "Market Cap: $120 558 456 737 • 24h Vol: $20 850 816 957 • BTC Dominance: 52.7%" ]
         , div [ class "options-view" ]
-            [ span [ onClick (View Table) ]
-                [ text "table" ]
-            , span [ onClick (View Squart) ]
-                [ text "tile" ]
+            [ button [ onClick (View Table) ] [ text "table" ]
+            , button [ onClick (View Squart) ] [ text "tile" ]
             ]
         , case model.user.userkey of
             Nothing ->
