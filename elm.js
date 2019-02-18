@@ -6475,7 +6475,7 @@ var author$project$Main$viewModal = function (model) {
 	}
 };
 var elm$core$String$toFloat = _String_toFloat;
-var author$project$Main$getRedOrGreenClass = F2(
+var author$project$View$Table$getRedOrGreenClass = F2(
 	function (prev, next) {
 		var _n0 = elm$core$String$toFloat(prev);
 		if (_n0.$ === 'Just') {
@@ -6491,6 +6491,8 @@ var author$project$Main$getRedOrGreenClass = F2(
 			return _Utils_Tuple2('', false);
 		}
 	});
+var elm$html$Html$td = _VirtualDom_node('td');
+var elm$html$Html$tr = _VirtualDom_node('tr');
 var elm$core$List$filter = F2(
 	function (isGood, list) {
 		return A3(
@@ -6530,573 +6532,6 @@ var elm$html$Html$Attributes$classList = function (classes) {
 				elm$core$Tuple$first,
 				A2(elm$core$List$filter, elm$core$Tuple$second, classes))));
 };
-var author$project$Main$viewSquart = function (d) {
-	return A2(
-		elm$html$Html$div,
-		_List_fromArray(
-			[
-				elm$html$Html$Attributes$class('tile')
-			]),
-		_List_fromArray(
-			[
-				A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('flex-row flex-between')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$span,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text(d.exchange)
-							])),
-						A2(
-						elm$html$Html$span,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text(d.symbol)
-							])),
-						A2(
-						elm$html$Html$span,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('$2222.00002')
-							])),
-						A2(
-						elm$html$Html$span,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('ET TIME')
-							]))
-					])),
-				A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('flex-row flex-between')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name-value-group')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('BID')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$classList(
-										_List_fromArray(
-											[
-												_Utils_Tuple2('value', true),
-												A2(author$project$Main$getRedOrGreenClass, d.bid.prev, d.bid.current)
-											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.bid.current)
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('ASK')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$classList(
-										_List_fromArray(
-											[
-												_Utils_Tuple2('value', true),
-												A2(author$project$Main$getRedOrGreenClass, d.ask.prev, d.ask.current)
-											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.ask.current)
-									]))
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name-value-group')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('24h High')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$classList(
-										_List_fromArray(
-											[
-												_Utils_Tuple2('value', true),
-												A2(author$project$Main$getRedOrGreenClass, d.high.prev, d.high.current)
-											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.high.current)
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('24h Low')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$classList(
-										_List_fromArray(
-											[
-												_Utils_Tuple2('value', true),
-												A2(author$project$Main$getRedOrGreenClass, d.low.prev, d.low.current)
-											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.low.current)
-									]))
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name-value-group')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('24h Vol')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$classList(
-										_List_fromArray(
-											[
-												_Utils_Tuple2('value', true),
-												A2(author$project$Main$getRedOrGreenClass, d.baseVolume.prevDay, d.baseVolume.currentDay)
-											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.baseVolume.currentDay)
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('Pre Vol')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$classList(
-										_List_fromArray(
-											[
-												_Utils_Tuple2('value', true),
-												A2(author$project$Main$getRedOrGreenClass, d.baseVolume.twoPrevDay, d.baseVolume.prevDay)
-											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.baseVolume.prevDay)
-									]))
-							]))
-					])),
-				A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('flex-row flex-between')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name-value-group')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('Coin Volume 24h')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$classList(
-										_List_fromArray(
-											[
-												_Utils_Tuple2('value', true),
-												A2(author$project$Main$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
-											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.volume24.current)
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('Coin Volume 24h High')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$classList(
-										_List_fromArray(
-											[
-												_Utils_Tuple2('value', true),
-												_Utils_Tuple2('gt', true)
-											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.highVolume24)
-									]))
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name-value-group')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('MH 24h Buy')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('value')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.marketHistory.buy)
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('MH 24h Sell')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('value')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.marketHistory.sell)
-									]))
-							]))
-					])),
-				A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('flex-row flex-between')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$div,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('Interest Ratio Now')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('flex-row interest-ratio')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										elm$html$Html$div,
-										_List_fromArray(
-											[
-												elm$html$Html$Attributes$class('flex-column')
-											]),
-										_List_fromArray(
-											[
-												A2(
-												elm$html$Html$span,
-												_List_fromArray(
-													[
-														elm$html$Html$Attributes$class('interest-ratio-value lt')
-													]),
-												_List_fromArray(
-													[
-														elm$html$Html$text(d.interestRatioNow.buy + '%')
-													])),
-												A2(
-												elm$html$Html$span,
-												_List_Nil,
-												_List_fromArray(
-													[
-														elm$html$Html$text('IRN Buy')
-													]))
-											])),
-										A2(
-										elm$html$Html$div,
-										_List_fromArray(
-											[
-												elm$html$Html$Attributes$class('flex-column')
-											]),
-										_List_fromArray(
-											[
-												A2(
-												elm$html$Html$span,
-												_List_fromArray(
-													[
-														elm$html$Html$Attributes$class('interest-ratio-value gt')
-													]),
-												_List_fromArray(
-													[
-														elm$html$Html$text(d.interestRatioNow.sell + '%')
-													])),
-												A2(
-												elm$html$Html$span,
-												_List_Nil,
-												_List_fromArray(
-													[
-														elm$html$Html$text('IRN Sell')
-													]))
-											]))
-									]))
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('GRAPH')
-							]))
-					])),
-				A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('flex-row flex-between')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name-value-group')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('Market Cap')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$classList(
-										_List_fromArray(
-											[
-												_Utils_Tuple2('value', true),
-												A2(author$project$Main$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
-											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.marketCup.current)
-									]))
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name-value-group')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('24 Market Vol')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$classList(
-										_List_fromArray(
-											[
-												_Utils_Tuple2('value', true),
-												A2(author$project$Main$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
-											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.marketVol24.current)
-									]))
-							]))
-					]))
-			]));
-};
-var elm$core$Dict$values = function (dict) {
-	return A3(
-		elm$core$Dict$foldr,
-		F3(
-			function (key, value, valueList) {
-				return A2(elm$core$List$cons, value, valueList);
-			}),
-		_List_Nil,
-		dict);
-};
-var author$project$Main$viewSquartList = function (model) {
-	return A2(
-		elm$html$Html$div,
-		_List_fromArray(
-			[
-				elm$html$Html$Attributes$class('tile-list')
-			]),
-		A2(
-			elm$core$List$map,
-			author$project$Main$viewSquart,
-			elm$core$Dict$values(model)));
-};
-var author$project$View$Table$getRedOrGreenClass = F2(
-	function (prev, next) {
-		var _n0 = elm$core$String$toFloat(prev);
-		if (_n0.$ === 'Just') {
-			var p = _n0.a;
-			var _n1 = elm$core$String$toFloat(next);
-			if (_n1.$ === 'Just') {
-				var n = _n1.a;
-				return (_Utils_cmp(p, n) > 0) ? _Utils_Tuple2('lt', true) : ((_Utils_cmp(p, n) < 0) ? _Utils_Tuple2('gt', true) : _Utils_Tuple2('', false));
-			} else {
-				return _Utils_Tuple2('', false);
-			}
-		} else {
-			return _Utils_Tuple2('', false);
-		}
-	});
-var elm$html$Html$td = _VirtualDom_node('td');
-var elm$html$Html$tr = _VirtualDom_node('tr');
 var author$project$View$Table$viewCeil = function (d) {
 	return A2(
 		elm$html$Html$tr,
@@ -7565,6 +7000,16 @@ var author$project$View$Table$viewCeil = function (d) {
 					]))
 			]));
 };
+var elm$core$Dict$values = function (dict) {
+	return A3(
+		elm$core$Dict$foldr,
+		F3(
+			function (key, value, valueList) {
+				return A2(elm$core$List$cons, value, valueList);
+			}),
+		_List_Nil,
+		dict);
+};
 var elm$html$Html$table = _VirtualDom_node('table');
 var elm$html$Html$tbody = _VirtualDom_node('tbody');
 var author$project$View$Table$viewTable = function (model) {
@@ -7591,6 +7036,561 @@ var author$project$View$Table$viewTable = function (model) {
 					]))
 			]));
 };
+var author$project$View$Tile$getRedOrGreenClass = F2(
+	function (prev, next) {
+		var _n0 = elm$core$String$toFloat(prev);
+		if (_n0.$ === 'Just') {
+			var p = _n0.a;
+			var _n1 = elm$core$String$toFloat(next);
+			if (_n1.$ === 'Just') {
+				var n = _n1.a;
+				return (_Utils_cmp(p, n) > 0) ? _Utils_Tuple2('lt', true) : ((_Utils_cmp(p, n) < 0) ? _Utils_Tuple2('gt', true) : _Utils_Tuple2('', false));
+			} else {
+				return _Utils_Tuple2('', false);
+			}
+		} else {
+			return _Utils_Tuple2('', false);
+		}
+	});
+var author$project$View$Tile$viewTile = function (d) {
+	return A2(
+		elm$html$Html$div,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$class('tile')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('flex-row flex-between')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$span,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('name')
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text(d.exchange)
+							])),
+						A2(
+						elm$html$Html$span,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('name')
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text(d.symbol)
+							])),
+						A2(
+						elm$html$Html$span,
+						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$text('$2222.00002')
+							])),
+						A2(
+						elm$html$Html$span,
+						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$text('ET TIME')
+							]))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('flex-row flex-between')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('name-value-group')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('name')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('BID')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$classList(
+										_List_fromArray(
+											[
+												_Utils_Tuple2('value', true),
+												A2(author$project$View$Tile$getRedOrGreenClass, d.bid.prev, d.bid.current)
+											]))
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text(d.bid.current)
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('name')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('ASK')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$classList(
+										_List_fromArray(
+											[
+												_Utils_Tuple2('value', true),
+												A2(author$project$View$Tile$getRedOrGreenClass, d.ask.prev, d.ask.current)
+											]))
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text(d.ask.current)
+									]))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('name-value-group')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('name')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('24h High')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$classList(
+										_List_fromArray(
+											[
+												_Utils_Tuple2('value', true),
+												A2(author$project$View$Tile$getRedOrGreenClass, d.high.prev, d.high.current)
+											]))
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text(d.high.current)
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('name')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('24h Low')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$classList(
+										_List_fromArray(
+											[
+												_Utils_Tuple2('value', true),
+												A2(author$project$View$Tile$getRedOrGreenClass, d.low.prev, d.low.current)
+											]))
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text(d.low.current)
+									]))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('name-value-group')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('name')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('24h Vol')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$classList(
+										_List_fromArray(
+											[
+												_Utils_Tuple2('value', true),
+												A2(author$project$View$Tile$getRedOrGreenClass, d.baseVolume.prevDay, d.baseVolume.currentDay)
+											]))
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text(d.baseVolume.currentDay)
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('name')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Pre Vol')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$classList(
+										_List_fromArray(
+											[
+												_Utils_Tuple2('value', true),
+												A2(author$project$View$Tile$getRedOrGreenClass, d.baseVolume.twoPrevDay, d.baseVolume.prevDay)
+											]))
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text(d.baseVolume.prevDay)
+									]))
+							]))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('flex-row flex-between')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('name-value-group')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('name')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Coin Volume 24h')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$classList(
+										_List_fromArray(
+											[
+												_Utils_Tuple2('value', true),
+												A2(author$project$View$Tile$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
+											]))
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text(d.volume24.current)
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('name')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Coin Volume 24h High')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$classList(
+										_List_fromArray(
+											[
+												_Utils_Tuple2('value', true),
+												_Utils_Tuple2('gt', true)
+											]))
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text(d.highVolume24)
+									]))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('name-value-group')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('name')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('MH 24h Buy')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('value')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text(d.marketHistory.buy)
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('name')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('MH 24h Sell')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('value')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text(d.marketHistory.sell)
+									]))
+							]))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('flex-row flex-between')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('name')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Interest Ratio Now')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('flex-row interest-ratio')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$div,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('flex-column')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$span,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('interest-ratio-value lt')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text(d.interestRatioNow.buy + '%')
+													])),
+												A2(
+												elm$html$Html$span,
+												_List_Nil,
+												_List_fromArray(
+													[
+														elm$html$Html$text('IRN Buy')
+													]))
+											])),
+										A2(
+										elm$html$Html$div,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('flex-column')
+											]),
+										_List_fromArray(
+											[
+												A2(
+												elm$html$Html$span,
+												_List_fromArray(
+													[
+														elm$html$Html$Attributes$class('interest-ratio-value gt')
+													]),
+												_List_fromArray(
+													[
+														elm$html$Html$text(d.interestRatioNow.sell + '%')
+													])),
+												A2(
+												elm$html$Html$span,
+												_List_Nil,
+												_List_fromArray(
+													[
+														elm$html$Html$text('IRN Sell')
+													]))
+											]))
+									]))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$text('GRAPH')
+							]))
+					])),
+				A2(
+				elm$html$Html$div,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('flex-row flex-between')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('name-value-group')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('name')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('Market Cap')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$classList(
+										_List_fromArray(
+											[
+												_Utils_Tuple2('value', true),
+												A2(author$project$View$Tile$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
+											]))
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text(d.marketCup.current)
+									]))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('name-value-group')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('name')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('24 Market Vol')
+									])),
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$classList(
+										_List_fromArray(
+											[
+												_Utils_Tuple2('value', true),
+												A2(author$project$View$Tile$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
+											]))
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text(d.marketVol24.current)
+									]))
+							]))
+					]))
+			]));
+};
+var author$project$View$Tile$viewTileList = function (model) {
+	return A2(
+		elm$html$Html$div,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$class('tile-list')
+			]),
+		A2(
+			elm$core$List$map,
+			author$project$View$Tile$viewTile,
+			elm$core$Dict$values(model)));
+};
 var author$project$Main$view = function (model) {
 	return A2(
 		elm$html$Html$div,
@@ -7604,7 +7604,7 @@ var author$project$Main$view = function (model) {
 				if (_n0.$ === 'Table') {
 					return author$project$View$Table$viewTable(model.data);
 				} else {
-					return author$project$Main$viewSquartList(model.data);
+					return author$project$View$Tile$viewTileList(model.data);
 				}
 			}()
 			]));
