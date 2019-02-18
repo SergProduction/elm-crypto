@@ -1,0 +1,256 @@
+@font-face {
+  font-family: 'monacoregular';
+  src: url('../fonts/monaco_regular-webfont.woff2') format('woff2'),
+       url('../fonts/monaco_regular-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: monacoregular;
+  background-color: #000;
+  color: #b3b3b3;
+  font-size: 14px;
+  margin: 0px;
+}
+
+
+
+.logo-name {
+  color: #fff;
+}
+
+
+
+.name {
+  color: #ffa028;
+}
+
+.name-value-group > div + div {
+  margin-top: 5px
+}
+
+
+
+.gt {
+  color: #c70021;
+}
+
+.lt {
+  color: #008951;
+}
+
+
+
+.interest-ratio div + div {
+  margin-left: 25px
+}
+
+.interest-ratio-value {
+  font-size: 36px;
+}
+
+
+.options-view {
+  border: 1px solid #1c1c1c;
+  border-top: 0px solid transparent;
+  border-bottom: 0px solid transparent;
+}
+
+
+/* ----- flex helpers ----- */
+
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-center {
+  justify-content: center;
+}
+
+.flex-between {
+  justify-content: space-between;
+}
+
+.flex-vertical-center {
+  align-items: center;
+}
+
+
+
+/* ----- inputs ----- */
+
+
+input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  background-color: #000;
+  color: #b3b3b3;
+  background-clip: padding-box;
+  border: 1px solid #000;;
+  border-radius: 0.25rem;
+  box-sizing: border-box;
+}
+
+input :focus {
+  border-color: #757f89
+}
+
+.input-group + .input-group {
+  margin-top: 1rem;
+}
+
+/* ----- buttons ----- */
+
+
+button {
+  cursor: pointer;
+}
+
+button:focus {
+  border: 2px solid #464c52;
+}
+
+.red-button {
+  width: 97px;
+  height: 40px;
+  background-color: #a00000;
+  border: 0px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.pair-button {
+  width: 153px;
+  height: 40px;
+  background-color: #ffa028;
+  border: 0px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.options-view button {
+  background: transparent;
+  color: #fff;
+  border: 0;
+}
+
+.sign-in-button {
+  width: 97px;
+  height: 40px;
+  background-color: #b3b3b3;;
+  border: 0px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+}
+
+.button-form {
+  display: inline-block;
+  width: 100%;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 0.75rem 1rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  background: linear-gradient(1deg, #464c52, #313539);
+  color: #b3b3b3;
+}
+
+.button-form :hover {
+  border-color: rgba(0,0,0,0.6);
+}
+
+/* ----- Modal ----- */
+
+
+.modal {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(20,20,20,0.75);
+  padding-top: 100px;
+}
+
+.close-modal {
+  width: 45px;
+  text-align: center;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.modal-form {
+  align-items: flex-end;
+}
+
+/* ----- Tile ----- */
+
+.tile-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px,1fr));
+}
+
+.tile-list > div:nth-child(odd) {
+  background-color: #040404;
+}
+
+.tile-list > div:nth-child(even) {
+  background-color: #080808;
+}
+
+.tile {
+  padding: 17px;
+  margin: 3px;
+  background-color: #080808;
+}
+
+.tile > div + div {
+  margin-top: 24px;
+  border-top: 1px solid #1c1c1c;
+}
+
+.tile + .tile {
+  border-top: 1px solid #1c1c1c;
+}
+
+/* ----- Table ----- */
+
+td {
+  padding: 19px;
+}
+
+
+tr:nth-child(odd) {
+  background-color: #040404;
+}
+
+tr:nth-child(even) {
+  background-color: #080808;
+}
+
+tr + tr {
+  padding-top: 3px;
+}
+
+td + td {
+  border-left: 1px solid #1c1c1c;
+}

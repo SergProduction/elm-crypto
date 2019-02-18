@@ -36,6 +36,15 @@ type alias Model =
     }
 
 
+type Msg
+    = Echo (Result D.Error Data)
+    | ToggleModal
+    | View ViewType
+    | AddPair
+    | User User.Msg
+    | Test (Result Http.Error String)
+
+
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( { data = Dict.empty
@@ -48,15 +57,6 @@ init _ =
         , expect = Http.expectString Test
         }
     )
-
-
-type Msg
-    = Echo (Result D.Error Data)
-    | ToggleModal
-    | View ViewType
-    | AddPair
-    | User User.Msg
-    | Test (Result Http.Error String)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
