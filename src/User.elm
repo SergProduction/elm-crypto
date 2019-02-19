@@ -41,6 +41,7 @@ type Msg
     | ResponseSuccess String
     | ResponseError String
     | ResponseFail
+    | ResponseIsNotValide
 
 
 init : Model
@@ -70,12 +71,15 @@ update msg model =
         ResponseError message ->
             ( { model | responseError = Just message }, Cmd.none )
 
+        ResponseIsNotValide ->
+            ( model, Cmd.none )
+
         ResponseFail ->
             ( model, Cmd.none )
 
 
-ff : Result.Result Http.Error String -> Msg
-ff r =
+decodeSuccessOrError : Result.Result Http.Error String -> Msg
+decodeSuccessOrError r =
     case r of
         Ok response ->
             case D.decodeString decodeSucces response of
@@ -88,7 +92,7 @@ ff r =
                             ResponseError errorMessage
 
                         Err e ->
-                            ResponseFail
+                            ResponseIsNotValide
 
         Err e ->
             ResponseFail
@@ -99,7 +103,7 @@ singUp model =
     Http.post
         { url = "https://cp.coindaq.net/api/getuserkey"
         , body = Http.jsonBody (encode model)
-        , expect = Http.expectString ff
+        , expect = Http.expectString decodeSuccessOrError
         }
 
 

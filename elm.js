@@ -4485,10 +4485,10 @@ function _Browser_load(url)
 		}
 	}));
 }
-var author$project$Main$Squart = {$: 'Squart'};
-var author$project$Main$Test = function (a) {
-	return {$: 'Test', a: a};
+var author$project$Main$RespondePairs = function (a) {
+	return {$: 'RespondePairs', a: a};
 };
+var author$project$Main$Table = {$: 'Table'};
 var elm$core$Maybe$Nothing = {$: 'Nothing'};
 var author$project$User$init = {email: '', password: '', responseError: elm$core$Maybe$Nothing, userkey: elm$core$Maybe$Nothing};
 var elm$core$Basics$False = {$: 'False'};
@@ -5840,10 +5840,10 @@ var elm$http$Http$get = function (r) {
 };
 var author$project$Main$init = function (_n0) {
 	return _Utils_Tuple2(
-		{data: elm$core$Dict$empty, modal: false, user: author$project$User$init, viewType: author$project$Main$Squart},
+		{data: elm$core$Dict$empty, modal: false, user: author$project$User$init, viewType: author$project$Main$Table},
 		elm$http$Http$get(
 			{
-				expect: elm$http$Http$expectString(author$project$Main$Test),
+				expect: elm$http$Http$expectString(author$project$Main$RespondePairs),
 				url: 'http://142.93.47.26:1023/pairs'
 			}));
 };
@@ -5857,7 +5857,7 @@ var NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required = F3(
 			A2(elm$json$Json$Decode$field, key, valDecoder),
 			decoder);
 	});
-var author$project$Data$Data = function (symbol) {
+var author$project$Data$Pair$Pair = function (symbol) {
 	return function (exchange) {
 		return function (highVolume24) {
 			return function (bid) {
@@ -5884,77 +5884,77 @@ var author$project$Data$Data = function (symbol) {
 		};
 	};
 };
-var author$project$Data$A = F2(
+var author$project$Data$Pair$A = F2(
 	function (current, prev) {
 		return {current: current, prev: prev};
 	});
 var elm$json$Json$Decode$string = _Json_decodeString;
-var author$project$Data$decodeA = A3(
+var author$project$Data$Pair$decodeA = A3(
 	elm$json$Json$Decode$map2,
-	author$project$Data$A,
+	author$project$Data$Pair$A,
 	A2(elm$json$Json$Decode$field, 'current', elm$json$Json$Decode$string),
 	A2(elm$json$Json$Decode$field, 'prev', elm$json$Json$Decode$string));
-var author$project$Data$B = F2(
+var author$project$Data$Pair$B = F2(
 	function (sell, buy) {
 		return {buy: buy, sell: sell};
 	});
-var author$project$Data$decodeB = A3(
+var author$project$Data$Pair$decodeB = A3(
 	elm$json$Json$Decode$map2,
-	author$project$Data$B,
+	author$project$Data$Pair$B,
 	A2(elm$json$Json$Decode$field, 'sell', elm$json$Json$Decode$string),
 	A2(elm$json$Json$Decode$field, 'buy', elm$json$Json$Decode$string));
-var author$project$Data$C = F3(
+var author$project$Data$Pair$C = F3(
 	function (currentDay, prevDay, twoPrevDay) {
 		return {currentDay: currentDay, prevDay: prevDay, twoPrevDay: twoPrevDay};
 	});
 var elm$json$Json$Decode$map3 = _Json_map3;
-var author$project$Data$decodeC = A4(
+var author$project$Data$Pair$decodeC = A4(
 	elm$json$Json$Decode$map3,
-	author$project$Data$C,
+	author$project$Data$Pair$C,
 	A2(elm$json$Json$Decode$field, 'currentDay', elm$json$Json$Decode$string),
 	A2(elm$json$Json$Decode$field, 'prevDay', elm$json$Json$Decode$string),
 	A2(elm$json$Json$Decode$field, 'twoPrevDay', elm$json$Json$Decode$string));
 var elm$json$Json$Decode$succeed = _Json_succeed;
-var author$project$Data$decode = A3(
+var author$project$Data$Pair$decodePair = A3(
 	NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 	'BaseVolume',
-	author$project$Data$decodeC,
+	author$project$Data$Pair$decodeC,
 	A3(
 		NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 		'InterestRatioNow',
-		author$project$Data$decodeB,
+		author$project$Data$Pair$decodeB,
 		A3(
 			NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 			'MarketHistory',
-			author$project$Data$decodeB,
+			author$project$Data$Pair$decodeB,
 			A3(
 				NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 				'MarketVol24',
-				author$project$Data$decodeA,
+				author$project$Data$Pair$decodeA,
 				A3(
 					NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 					'MarketCup',
-					author$project$Data$decodeA,
+					author$project$Data$Pair$decodeA,
 					A3(
 						NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 						'Volume24',
-						author$project$Data$decodeA,
+						author$project$Data$Pair$decodeA,
 						A3(
 							NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 							'High',
-							author$project$Data$decodeA,
+							author$project$Data$Pair$decodeA,
 							A3(
 								NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 								'Low',
-								author$project$Data$decodeA,
+								author$project$Data$Pair$decodeA,
 								A3(
 									NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 									'Ask',
-									author$project$Data$decodeA,
+									author$project$Data$Pair$decodeA,
 									A3(
 										NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 										'Bid',
-										author$project$Data$decodeA,
+										author$project$Data$Pair$decodeA,
 										A3(
 											NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 											'HighVolume24',
@@ -5967,25 +5967,19 @@ var author$project$Data$decode = A3(
 													NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$required,
 													'Symbol',
 													elm$json$Json$Decode$string,
-													elm$json$Json$Decode$succeed(author$project$Data$Data))))))))))))));
-var author$project$Main$Echo = function (a) {
-	return {$: 'Echo', a: a};
+													elm$json$Json$Decode$succeed(author$project$Data$Pair$Pair))))))))))))));
+var author$project$Main$EchoWs = function (a) {
+	return {$: 'EchoWs', a: a};
 };
-var author$project$Main$ws = _Platform_incomingPort('ws', elm$json$Json$Decode$string);
+var author$project$Main$wsListenPairs = _Platform_incomingPort('wsListenPairs', elm$json$Json$Decode$string);
 var elm$json$Json$Decode$decodeString = _Json_runOnString;
 var author$project$Main$subscriptions = function (model) {
-	return author$project$Main$ws(
+	return author$project$Main$wsListenPairs(
 		function (s) {
-			return author$project$Main$Echo(
-				A2(elm$json$Json$Decode$decodeString, author$project$Data$decode, s));
+			return author$project$Main$EchoWs(
+				A2(elm$json$Json$Decode$decodeString, author$project$Data$Pair$decodePair, s));
 		});
 };
-var author$project$Main$Table = {$: 'Table'};
-var author$project$Main$User = function (a) {
-	return {$: 'User', a: a};
-};
-var elm$json$Json$Encode$string = _Json_wrap;
-var author$project$Main$getPair = _Platform_outgoingPort('getPair', elm$json$Json$Encode$string);
 var elm$json$Json$Encode$object = function (pairs) {
 	return _Json_wrap(
 		A3(
@@ -5999,28 +5993,45 @@ var elm$json$Json$Encode$object = function (pairs) {
 			_Json_emptyObject(_Utils_Tuple0),
 			pairs));
 };
-var author$project$User$encode = function (model) {
+var elm$json$Json$Encode$string = _Json_wrap;
+var author$project$Data$Pair$encodeSubcribePair = function (d) {
 	return elm$json$Json$Encode$object(
 		_List_fromArray(
 			[
 				_Utils_Tuple2(
-				'e',
-				elm$json$Json$Encode$string(model.email)),
+				'exchange',
+				elm$json$Json$Encode$string(d.exchange)),
 				_Utils_Tuple2(
-				'p',
-				elm$json$Json$Encode$string(model.password))
+				'pair',
+				elm$json$Json$Encode$string(d.pair)),
+				_Utils_Tuple2(
+				'line',
+				elm$json$Json$Encode$string(d.line)),
+				_Utils_Tuple2(
+				'userId',
+				elm$json$Json$Encode$string(d.userId))
 			]));
 };
+var author$project$Data$Pair$defaultSubcribe = function (ukey) {
+	return author$project$Data$Pair$encodeSubcribePair(
+		{exchange: 'BITTREX', line: '0', pair: 'BTCNEM', userId: ukey});
+};
+var author$project$Main$Squart = {$: 'Squart'};
+var author$project$Main$User = function (a) {
+	return {$: 'User', a: a};
+};
+var author$project$Main$getPair = _Platform_outgoingPort('getPair', elm$core$Basics$identity);
 var author$project$User$ResponseError = function (a) {
 	return {$: 'ResponseError', a: a};
 };
 var author$project$User$ResponseFail = {$: 'ResponseFail'};
+var author$project$User$ResponseIsNotValide = {$: 'ResponseIsNotValide'};
 var author$project$User$ResponseSuccess = function (a) {
 	return {$: 'ResponseSuccess', a: a};
 };
 var author$project$User$decodeError = A2(elm$json$Json$Decode$field, 'error', elm$json$Json$Decode$string);
 var author$project$User$decodeSucces = A2(elm$json$Json$Decode$field, 'userkey', elm$json$Json$Decode$string);
-var author$project$User$ff = function (r) {
+var author$project$User$decodeSuccessOrError = function (r) {
 	if (r.$ === 'Ok') {
 		var response = r.a;
 		var _n1 = A2(elm$json$Json$Decode$decodeString, author$project$User$decodeSucces, response);
@@ -6034,13 +6045,25 @@ var author$project$User$ff = function (r) {
 				return author$project$User$ResponseError(errorMessage);
 			} else {
 				var e = _n2.a;
-				return author$project$User$ResponseFail;
+				return author$project$User$ResponseIsNotValide;
 			}
 		}
 	} else {
 		var e = r.a;
 		return author$project$User$ResponseFail;
 	}
+};
+var author$project$User$encode = function (model) {
+	return elm$json$Json$Encode$object(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				'e',
+				elm$json$Json$Encode$string(model.email)),
+				_Utils_Tuple2(
+				'p',
+				elm$json$Json$Encode$string(model.password))
+			]));
 };
 var elm$http$Http$jsonBody = function (value) {
 	return A2(
@@ -6057,7 +6080,7 @@ var author$project$User$singUp = function (model) {
 		{
 			body: elm$http$Http$jsonBody(
 				author$project$User$encode(model)),
-			expect: elm$http$Http$expectString(author$project$User$ff),
+			expect: elm$http$Http$expectString(author$project$User$decodeSuccessOrError),
 			url: 'https://cp.coindaq.net/api/getuserkey'
 		});
 };
@@ -6102,6 +6125,8 @@ var author$project$User$update = F2(
 							responseError: elm$core$Maybe$Just(message)
 						}),
 					elm$core$Platform$Cmd$none);
+			case 'ResponseIsNotValide':
+				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 			default:
 				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 		}
@@ -6111,6 +6136,16 @@ var elm$core$Platform$Cmd$map = _Platform_map;
 var author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
+			case 'User':
+				var userMsg = msg.a;
+				var _n1 = A2(author$project$User$update, userMsg, model.user);
+				var user = _n1.a;
+				var command = _n1.b;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{user: user}),
+					A2(elm$core$Platform$Cmd$map, author$project$Main$User, command));
 			case 'View':
 				var t = msg.a;
 				if (t.$ === 'Table') {
@@ -6127,10 +6162,19 @@ var author$project$Main$update = F2(
 						elm$core$Platform$Cmd$none);
 				}
 			case 'AddPair':
-				return _Utils_Tuple2(
-					model,
-					author$project$Main$getPair('{ userId = "12345",exchange = " binance",pair = " BTCETH", Line =" 10" }'));
-			case 'Test':
+				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+			case 'DefaultSubcribe':
+				var _n3 = model.user.userkey;
+				if (_n3.$ === 'Nothing') {
+					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+				} else {
+					var ukey = _n3.a;
+					return _Utils_Tuple2(
+						model,
+						author$project$Main$getPair(
+							author$project$Data$Pair$defaultSubcribe(ukey)));
+				}
+			case 'RespondePairs':
 				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
 			case 'ToggleModal':
 				return _Utils_Tuple2(
@@ -6138,16 +6182,6 @@ var author$project$Main$update = F2(
 						model,
 						{modal: !model.modal}),
 					elm$core$Platform$Cmd$none);
-			case 'User':
-				var userMsg = msg.a;
-				var _n2 = A2(author$project$User$update, userMsg, model.user);
-				var user = _n2.a;
-				var command = _n2.b;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{user: user}),
-					A2(elm$core$Platform$Cmd$map, author$project$Main$User, command));
 			default:
 				var result = msg.a;
 				if (result.$ === 'Ok') {
@@ -6164,6 +6198,7 @@ var author$project$Main$update = F2(
 		}
 	});
 var author$project$Main$AddPair = {$: 'AddPair'};
+var author$project$Main$DefaultSubcribe = {$: 'DefaultSubcribe'};
 var author$project$Main$ToggleModal = {$: 'ToggleModal'};
 var author$project$Main$View = function (a) {
 	return {$: 'View', a: a};
@@ -6183,6 +6218,7 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 };
 var elm$html$Html$button = _VirtualDom_node('button');
 var elm$html$Html$div = _VirtualDom_node('div');
+var elm$html$Html$i = _VirtualDom_node('i');
 var elm$html$Html$span = _VirtualDom_node('span');
 var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
@@ -6216,7 +6252,7 @@ var author$project$Main$viewHead = function (model) {
 		elm$html$Html$div,
 		_List_fromArray(
 			[
-				elm$html$Html$Attributes$class('flex-row flex-between flex-vertical-center')
+				elm$html$Html$Attributes$class('header flex-row flex-between flex-vertical-center roboto')
 			]),
 		_List_fromArray(
 			[
@@ -6242,7 +6278,8 @@ var author$project$Main$viewHead = function (model) {
 						elm$html$Html$button,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$class('red-button')
+								elm$html$Html$Attributes$class('red-button'),
+								elm$html$Html$Events$onClick(author$project$Main$DefaultSubcribe)
 							]),
 						_List_fromArray(
 							[
@@ -6284,7 +6321,13 @@ var author$project$Main$viewHead = function (model) {
 							]),
 						_List_fromArray(
 							[
-								elm$html$Html$text('table')
+								A2(
+								elm$html$Html$i,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('disactive fas fa-th-list')
+									]),
+								_List_Nil)
 							])),
 						A2(
 						elm$html$Html$button,
@@ -6295,7 +6338,13 @@ var author$project$Main$viewHead = function (model) {
 							]),
 						_List_fromArray(
 							[
-								elm$html$Html$text('tile')
+								A2(
+								elm$html$Html$i,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('active fas fa-th-large')
+									]),
+								_List_Nil)
 							]))
 					])),
 				function () {
@@ -6456,16 +6505,13 @@ var author$project$Main$viewModal = function (model) {
 					_List_fromArray(
 						[
 							A2(
-							elm$html$Html$div,
+							elm$html$Html$i,
 							_List_fromArray(
 								[
-									elm$html$Html$Attributes$class('close-modal'),
+									elm$html$Html$Attributes$class('fas fa-times'),
 									elm$html$Html$Events$onClick(author$project$Main$ToggleModal)
 								]),
-							_List_fromArray(
-								[
-									elm$html$Html$text('close')
-								])),
+							_List_Nil),
 							A2(
 							elm$html$Html$map,
 							author$project$Main$User,
@@ -6474,21 +6520,37 @@ var author$project$Main$viewModal = function (model) {
 				]));
 	}
 };
-var elm$core$String$toFloat = _String_toFloat;
-var author$project$View$Table$getRedOrGreenClass = F2(
-	function (prev, next) {
-		var _n0 = elm$core$String$toFloat(prev);
-		if (_n0.$ === 'Just') {
-			var p = _n0.a;
-			var _n1 = elm$core$String$toFloat(next);
-			if (_n1.$ === 'Just') {
-				var n = _n1.a;
-				return (_Utils_cmp(p, n) > 0) ? _Utils_Tuple2('lt', true) : ((_Utils_cmp(p, n) < 0) ? _Utils_Tuple2('gt', true) : _Utils_Tuple2('', false));
-			} else {
-				return _Utils_Tuple2('', false);
-			}
+var elm$core$Maybe$map2 = F3(
+	function (func, ma, mb) {
+		if (ma.$ === 'Nothing') {
+			return elm$core$Maybe$Nothing;
 		} else {
+			var a = ma.a;
+			if (mb.$ === 'Nothing') {
+				return elm$core$Maybe$Nothing;
+			} else {
+				var b = mb.a;
+				return elm$core$Maybe$Just(
+					A2(func, a, b));
+			}
+		}
+	});
+var elm$core$String$toFloat = _String_toFloat;
+var author$project$View$Helpers$getRedOrGreenClass = F2(
+	function (prev, next) {
+		var res = A3(
+			elm$core$Maybe$map2,
+			F2(
+				function (p, n) {
+					return (_Utils_cmp(p, n) > 0) ? 'green' : ((_Utils_cmp(p, n) < 0) ? 'red' : '');
+				}),
+			elm$core$String$toFloat(prev),
+			elm$core$String$toFloat(next));
+		if (res.$ === 'Nothing') {
 			return _Utils_Tuple2('', false);
+		} else {
+			var x = res.a;
+			return _Utils_Tuple2(x, true);
 		}
 	});
 var elm$html$Html$td = _VirtualDom_node('td');
@@ -6603,7 +6665,7 @@ var author$project$View$Table$viewCeil = function (d) {
 								_List_fromArray(
 									[
 										_Utils_Tuple2('value', true),
-										A2(author$project$View$Table$getRedOrGreenClass, d.bid.prev, d.bid.current)
+										A2(author$project$View$Helpers$getRedOrGreenClass, d.bid.prev, d.bid.current)
 									]))
 							]),
 						_List_fromArray(
@@ -6628,7 +6690,7 @@ var author$project$View$Table$viewCeil = function (d) {
 								_List_fromArray(
 									[
 										_Utils_Tuple2('value', true),
-										A2(author$project$View$Table$getRedOrGreenClass, d.ask.prev, d.ask.current)
+										A2(author$project$View$Helpers$getRedOrGreenClass, d.ask.prev, d.ask.current)
 									]))
 							]),
 						_List_fromArray(
@@ -6662,7 +6724,7 @@ var author$project$View$Table$viewCeil = function (d) {
 								_List_fromArray(
 									[
 										_Utils_Tuple2('value', true),
-										A2(author$project$View$Table$getRedOrGreenClass, d.high.prev, d.high.current)
+										A2(author$project$View$Helpers$getRedOrGreenClass, d.high.prev, d.high.current)
 									]))
 							]),
 						_List_fromArray(
@@ -6687,7 +6749,7 @@ var author$project$View$Table$viewCeil = function (d) {
 								_List_fromArray(
 									[
 										_Utils_Tuple2('value', true),
-										A2(author$project$View$Table$getRedOrGreenClass, d.low.prev, d.low.current)
+										A2(author$project$View$Helpers$getRedOrGreenClass, d.low.prev, d.low.current)
 									]))
 							]),
 						_List_fromArray(
@@ -6721,7 +6783,7 @@ var author$project$View$Table$viewCeil = function (d) {
 								_List_fromArray(
 									[
 										_Utils_Tuple2('value', true),
-										A2(author$project$View$Table$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
+										A2(author$project$View$Helpers$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
 									]))
 							]),
 						_List_fromArray(
@@ -6822,7 +6884,7 @@ var author$project$View$Table$viewCeil = function (d) {
 						elm$html$Html$div,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$class('flex-row interest-ratio')
+								elm$html$Html$Attributes$class('flex-row interest-ratio roboto')
 							]),
 						_List_fromArray(
 							[
@@ -6838,7 +6900,7 @@ var author$project$View$Table$viewCeil = function (d) {
 										elm$html$Html$span,
 										_List_fromArray(
 											[
-												elm$html$Html$Attributes$class('interest-ratio-value lt')
+												elm$html$Html$Attributes$class('interest-ratio-value green')
 											]),
 										_List_fromArray(
 											[
@@ -6864,7 +6926,7 @@ var author$project$View$Table$viewCeil = function (d) {
 										elm$html$Html$span,
 										_List_fromArray(
 											[
-												elm$html$Html$Attributes$class('interest-ratio-value gt')
+												elm$html$Html$Attributes$class('interest-ratio-value red')
 											]),
 										_List_fromArray(
 											[
@@ -6906,7 +6968,7 @@ var author$project$View$Table$viewCeil = function (d) {
 								_List_fromArray(
 									[
 										_Utils_Tuple2('value', true),
-										A2(author$project$View$Table$getRedOrGreenClass, d.baseVolume.prevDay, d.baseVolume.currentDay)
+										A2(author$project$View$Helpers$getRedOrGreenClass, d.baseVolume.prevDay, d.baseVolume.currentDay)
 									]))
 							]),
 						_List_fromArray(
@@ -6931,7 +6993,7 @@ var author$project$View$Table$viewCeil = function (d) {
 								_List_fromArray(
 									[
 										_Utils_Tuple2('value', true),
-										A2(author$project$View$Table$getRedOrGreenClass, d.baseVolume.twoPrevDay, d.baseVolume.prevDay)
+										A2(author$project$View$Helpers$getRedOrGreenClass, d.baseVolume.twoPrevDay, d.baseVolume.prevDay)
 									]))
 							]),
 						_List_fromArray(
@@ -6965,7 +7027,7 @@ var author$project$View$Table$viewCeil = function (d) {
 								_List_fromArray(
 									[
 										_Utils_Tuple2('value', true),
-										A2(author$project$View$Table$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
+										A2(author$project$View$Helpers$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
 									]))
 							]),
 						_List_fromArray(
@@ -6990,12 +7052,53 @@ var author$project$View$Table$viewCeil = function (d) {
 								_List_fromArray(
 									[
 										_Utils_Tuple2('value', true),
-										A2(author$project$View$Table$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
+										A2(author$project$View$Helpers$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
 									]))
 							]),
 						_List_fromArray(
 							[
 								elm$html$Html$text(d.marketVol24.current)
+							]))
+					])),
+				A2(
+				elm$html$Html$td,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('name-value-group')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('table-row-menu')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$button,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('btn transparent')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$i,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('menu fas fa-ellipsis-h')
+											]),
+										_List_Nil)
+									]))
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$text('GRAPH')
 							]))
 					]))
 			]));
@@ -7036,22 +7139,6 @@ var author$project$View$Table$viewTable = function (model) {
 					]))
 			]));
 };
-var author$project$View$Tile$getRedOrGreenClass = F2(
-	function (prev, next) {
-		var _n0 = elm$core$String$toFloat(prev);
-		if (_n0.$ === 'Just') {
-			var p = _n0.a;
-			var _n1 = elm$core$String$toFloat(next);
-			if (_n1.$ === 'Just') {
-				var n = _n1.a;
-				return (_Utils_cmp(p, n) > 0) ? _Utils_Tuple2('lt', true) : ((_Utils_cmp(p, n) < 0) ? _Utils_Tuple2('gt', true) : _Utils_Tuple2('', false));
-			} else {
-				return _Utils_Tuple2('', false);
-			}
-		} else {
-			return _Utils_Tuple2('', false);
-		}
-	});
 var author$project$View$Tile$viewTile = function (d) {
 	return A2(
 		elm$html$Html$div,
@@ -7071,10 +7158,7 @@ var author$project$View$Tile$viewTile = function (d) {
 					[
 						A2(
 						elm$html$Html$span,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name')
-							]),
+						_List_Nil,
 						_List_fromArray(
 							[
 								elm$html$Html$text(d.exchange)
@@ -7091,17 +7175,48 @@ var author$project$View$Tile$viewTile = function (d) {
 							])),
 						A2(
 						elm$html$Html$span,
-						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('red')
+							]),
 						_List_fromArray(
 							[
 								elm$html$Html$text('$2222.00002')
 							])),
 						A2(
 						elm$html$Html$span,
-						_List_Nil,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('blue')
+							]),
 						_List_fromArray(
 							[
 								elm$html$Html$text('ET TIME')
+							])),
+						A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('table-row-menu')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$button,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('btn transparent')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										elm$html$Html$i,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('menu fas fa-ellipsis-h')
+											]),
+										_List_Nil)
+									]))
 							]))
 					])),
 				A2(
@@ -7138,7 +7253,7 @@ var author$project$View$Tile$viewTile = function (d) {
 										_List_fromArray(
 											[
 												_Utils_Tuple2('value', true),
-												A2(author$project$View$Tile$getRedOrGreenClass, d.bid.prev, d.bid.current)
+												A2(author$project$View$Helpers$getRedOrGreenClass, d.bid.prev, d.bid.current)
 											]))
 									]),
 								_List_fromArray(
@@ -7163,7 +7278,7 @@ var author$project$View$Tile$viewTile = function (d) {
 										_List_fromArray(
 											[
 												_Utils_Tuple2('value', true),
-												A2(author$project$View$Tile$getRedOrGreenClass, d.ask.prev, d.ask.current)
+												A2(author$project$View$Helpers$getRedOrGreenClass, d.ask.prev, d.ask.current)
 											]))
 									]),
 								_List_fromArray(
@@ -7197,7 +7312,7 @@ var author$project$View$Tile$viewTile = function (d) {
 										_List_fromArray(
 											[
 												_Utils_Tuple2('value', true),
-												A2(author$project$View$Tile$getRedOrGreenClass, d.high.prev, d.high.current)
+												A2(author$project$View$Helpers$getRedOrGreenClass, d.high.prev, d.high.current)
 											]))
 									]),
 								_List_fromArray(
@@ -7222,7 +7337,7 @@ var author$project$View$Tile$viewTile = function (d) {
 										_List_fromArray(
 											[
 												_Utils_Tuple2('value', true),
-												A2(author$project$View$Tile$getRedOrGreenClass, d.low.prev, d.low.current)
+												A2(author$project$View$Helpers$getRedOrGreenClass, d.low.prev, d.low.current)
 											]))
 									]),
 								_List_fromArray(
@@ -7256,7 +7371,7 @@ var author$project$View$Tile$viewTile = function (d) {
 										_List_fromArray(
 											[
 												_Utils_Tuple2('value', true),
-												A2(author$project$View$Tile$getRedOrGreenClass, d.baseVolume.prevDay, d.baseVolume.currentDay)
+												A2(author$project$View$Helpers$getRedOrGreenClass, d.baseVolume.prevDay, d.baseVolume.currentDay)
 											]))
 									]),
 								_List_fromArray(
@@ -7281,7 +7396,7 @@ var author$project$View$Tile$viewTile = function (d) {
 										_List_fromArray(
 											[
 												_Utils_Tuple2('value', true),
-												A2(author$project$View$Tile$getRedOrGreenClass, d.baseVolume.twoPrevDay, d.baseVolume.prevDay)
+												A2(author$project$View$Helpers$getRedOrGreenClass, d.baseVolume.twoPrevDay, d.baseVolume.prevDay)
 											]))
 									]),
 								_List_fromArray(
@@ -7324,7 +7439,7 @@ var author$project$View$Tile$viewTile = function (d) {
 										_List_fromArray(
 											[
 												_Utils_Tuple2('value', true),
-												A2(author$project$View$Tile$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
+												A2(author$project$View$Helpers$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
 											]))
 									]),
 								_List_fromArray(
@@ -7534,7 +7649,7 @@ var author$project$View$Tile$viewTile = function (d) {
 										_List_fromArray(
 											[
 												_Utils_Tuple2('value', true),
-												A2(author$project$View$Tile$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
+												A2(author$project$View$Helpers$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
 											]))
 									]),
 								_List_fromArray(
@@ -7568,7 +7683,7 @@ var author$project$View$Tile$viewTile = function (d) {
 										_List_fromArray(
 											[
 												_Utils_Tuple2('value', true),
-												A2(author$project$View$Tile$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
+												A2(author$project$View$Helpers$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
 											]))
 									]),
 								_List_fromArray(

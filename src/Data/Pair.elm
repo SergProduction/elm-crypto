@@ -1,7 +1,12 @@
-module Data exposing (A, B, C, Data, decode)
+module Data.Pair exposing
+    ( Pair
+    , decodePair
+    , defaultSubcribe
+    )
 
 import Json.Decode as D
 import Json.Decode.Pipeline exposing (required)
+import Json.Encode as E
 
 
 
@@ -21,6 +26,19 @@ import Json.Decode.Pipeline exposing (required)
      "InterestRatioNow":{"sell":"96","buy":"4"},
      "BaseVolume":{"currentDay":"5397.80119079","prevDay":"5489.05795146","twoPrevDay":"0.0"},
    }
+-}
+{-
+   defaultpair
+
+   BTCNEM
+   BTCXVG
+   BTCDGB
+   BTCKMD
+   BTCDASH
+   BTCNAV
+
+   default berge
+   BITTREX
 -}
 
 
@@ -43,7 +61,7 @@ type alias C =
     }
 
 
-type alias Data =
+type alias Pair =
     { symbol : String
     , exchange : String
     , highVolume24 : String
@@ -60,9 +78,9 @@ type alias Data =
     }
 
 
-decode : D.Decoder Data
-decode =
-    D.succeed Data
+decodePair : D.Decoder Pair
+decodePair =
+    D.succeed Pair
         |> required "Symbol" D.string
         |> required "Exchange" D.string
         |> required "HighVolume24" D.string
@@ -98,3 +116,30 @@ decodeC =
         (D.field "currentDay" D.string)
         (D.field "prevDay" D.string)
         (D.field "twoPrevDay" D.string)
+
+
+type alias SubcribePair =
+    { exchange : String
+    , pair : String
+    , line : String
+    , userId : String
+    }
+
+
+encodeSubcribePair : SubcribePair -> E.Value
+encodeSubcribePair d =
+    E.object
+        [ ( "exchange", E.string d.exchange )
+        , ( "pair", E.string d.pair )
+        , ( "line", E.string d.line )
+        , ( "userId", E.string d.userId )
+        ]
+
+
+defaultSubcribe ukey =
+    encodeSubcribePair
+        { exchange = "BITTREX"
+        , pair = "BTCNEM"
+        , line = "0"
+        , userId = ukey
+        }

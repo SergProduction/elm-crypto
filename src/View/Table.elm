@@ -1,13 +1,14 @@
 module View.Table exposing (viewTable)
 
-import Data as DataModule exposing (Data)
+import Data.Pair as DataModule exposing (Pair)
 import Dict
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import View.Helpers exposing (getRedOrGreenClass)
 
 
-viewTable : Dict.Dict String Data -> Html msg
+viewTable : Dict.Dict String Pair -> Html msg
 viewTable model =
     div [ class "flex-row flex-center" ]
         [ table []
@@ -16,7 +17,7 @@ viewTable model =
         ]
 
 
-viewCeil : Data -> Html msg
+viewCeil : Pair -> Html msg
 viewCeil d =
     tr []
         [ td [ class "name-value-group" ]
@@ -56,13 +57,13 @@ viewCeil d =
             ]
         , td []
             [ div [ class "name" ] [ text "Interest Ratio Now" ]
-            , div [ class "flex-row interest-ratio" ]
+            , div [ class "flex-row interest-ratio roboto" ]
                 [ div [ class "flex-column" ]
-                    [ span [ class "interest-ratio-value lt" ] [ text (d.interestRatioNow.buy ++ "%") ]
+                    [ span [ class "interest-ratio-value green" ] [ text (d.interestRatioNow.buy ++ "%") ]
                     , span [] [ text "IRN Buy" ]
                     ]
                 , div [ class "flex-column" ]
-                    [ span [ class "interest-ratio-value gt" ] [ text (d.interestRatioNow.sell ++ "%") ]
+                    [ span [ class "interest-ratio-value red" ] [ text (d.interestRatioNow.sell ++ "%") ]
                     , span [] [ text "IRN Sell" ]
                     ]
                 ]
@@ -83,26 +84,11 @@ viewCeil d =
             , div [ classList [ ( "value", True ), getRedOrGreenClass d.volume24.prev d.volume24.current ] ]
                 [ text d.marketVol24.current ]
             ]
+        , td [ class "name-value-group" ]
+            [ div [ class "table-row-menu" ]
+                [ button [ class "btn transparent" ]
+                    [ i [ class "menu fas fa-ellipsis-h" ] [] ]
+                ]
+            , div [] [ text "GRAPH" ]
+            ]
         ]
-
-
-getRedOrGreenClass : String -> String -> ( String, Bool )
-getRedOrGreenClass prev next =
-    case String.toFloat prev of
-        Just p ->
-            case String.toFloat next of
-                Just n ->
-                    if p > n then
-                        ( "lt", True )
-
-                    else if p < n then
-                        ( "gt", True )
-
-                    else
-                        ( "", False )
-
-                Nothing ->
-                    ( "", False )
-
-        Nothing ->
-            ( "", False )

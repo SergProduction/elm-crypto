@@ -1,7 +1,7 @@
 port module Main exposing (Model, Msg(..), init, main, subscriptions, update, view)
 
 import Browser
-import Data as DataModule exposing (Data, decode)
+import Data.Pair exposing (Pair, decodePair, defaultSubcribe)
 import Dict
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -29,7 +29,7 @@ type ViewType
 
 
 type alias Model =
-    { data : Dict.Dict String Data
+    { data : Dict.Dict String Pair
     , modal : Bool
     , viewType : ViewType
     , user : User.Model
@@ -37,24 +37,25 @@ type alias Model =
 
 
 type Msg
-    = Echo (Result D.Error Data)
+    = EchoWs (Result D.Error Pair)
+    | User User.Msg
     | ToggleModal
     | View ViewType
     | AddPair
-    | User User.Msg
-    | Test (Result Http.Error String)
+    | RespondePairs (Result Http.Error String)
+    | DefaultSubcribe
 
 
 init : () -> ( Model, Cmd Msg )
 init _ =
     ( { data = Dict.empty
-      , viewType = Squart
+      , viewType = Table
       , modal = False
       , user = User.init
       }
     , Http.get
         { url = "http://142.93.47.26:1023/pairs"
-        , expect = Http.expectString Test
+        , expect = Http.expectString RespondePairs
         }
     )
 
@@ -62,6 +63,13 @@ init _ =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        User userMsg ->
+            let
+                ( user, command ) =
+                    User.update userMsg model.user
+            in
+            ( { model | user = user }, Cmd.map User command )
+
         View t ->
             case t of
                 Table ->
@@ -71,22 +79,23 @@ update msg model =
                     ( { model | viewType = Squart }, Cmd.none )
 
         AddPair ->
-            ( model, getPair """{ userId = "12345",exchange = " binance",pair = " BTCETH", Line =" 10" }""" )
+            ( model, Cmd.none )
 
-        Test _ ->
+        DefaultSubcribe ->
+            case model.user.userkey of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just ukey ->
+                    ( model, getPair (defaultSubcribe ukey) )
+
+        RespondePairs _ ->
             ( model, Cmd.none )
 
         ToggleModal ->
             ( { model | modal = not model.modal }, Cmd.none )
 
-        User userMsg ->
-            let
-                ( user, command ) =
-                    User.update userMsg model.user
-            in
-            ( { model | user = user }, Cmd.map User command )
-
-        Echo result ->
+        EchoWs result ->
             case result of
                 Ok d ->
                     let
@@ -99,15 +108,15 @@ update msg model =
                     ( model, Cmd.none )
 
 
-port ws : (String -> msg) -> Sub msg
+port wsListenPairs : (String -> msg) -> Sub msg
 
 
-port getPair : String -> Cmd msg
+port getPair : E.Value -> Cmd msg
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    ws (\s -> Echo (D.decodeString decode s))
+    wsListenPairs (\s -> EchoWs (D.decodeString decodePair s))
 
 
 view : Model -> Html Msg
@@ -126,16 +135,18 @@ view model =
 
 viewHead : Model -> Html Msg
 viewHead model =
-    div [ class "flex-row flex-between flex-vertical-center" ]
+    div [ class "header flex-row flex-between flex-vertical-center roboto" ]
         [ div [ class "logo-name" ] [ text "CDQ Screener" ]
         , div [ class "flex-row" ]
-            [ button [ class "red-button" ] [ text "SRH |>" ]
+            [ button [ class "red-button", onClick DefaultSubcribe ] [ text "SRH |>" ]
             , button [ class "pair-button", onClick AddPair ] [ text "< ADD PAIR >" ]
             ]
         , div [] [ text "Market Cap: $120 558 456 737 • 24h Vol: $20 850 816 957 • BTC Dominance: 52.7%" ]
         , div [ class "options-view" ]
-            [ button [ onClick (View Table) ] [ text "table" ]
-            , button [ onClick (View Squart) ] [ text "tile" ]
+            [ button [ onClick (View Table) ]
+                [ i [ class "disactive fas fa-th-list" ] [] ]
+            , button [ onClick (View Squart) ]
+                [ i [ class "active fas fa-th-large" ] [] ]
             ]
         , case model.user.userkey of
             Nothing ->
@@ -155,7 +166,7 @@ viewModal model =
         True ->
             div [ class "modal flex-row flex-center" ]
                 [ div [ class "flex-column modal-form" ]
-                    [ div [ class "close-modal", onClick ToggleModal ] [ text "close" ]
+                    [ i [ class "fas fa-times", onClick ToggleModal ] []
                     , User.view model.user |> Html.map User
                     ]
                 ]

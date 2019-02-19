@@ -1,25 +1,30 @@
 module View.Tile exposing (viewTileList)
 
-import Data as DataModule exposing (Data)
+import Data.Pair as DataModule exposing (Pair)
 import Dict
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import View.Helpers exposing (getRedOrGreenClass)
 
 
-viewTileList : Dict.Dict String Data -> Html msg
+viewTileList : Dict.Dict String Pair -> Html msg
 viewTileList model =
     div [ class "tile-list" ] (List.map viewTile (Dict.values model))
 
 
-viewTile : Data -> Html msg
+viewTile : Pair -> Html msg
 viewTile d =
     div [ class "tile" ]
         [ div [ class "flex-row flex-between" ]
-            [ span [ class "name" ] [ text d.exchange ]
+            [ span [] [ text d.exchange ]
             , span [ class "name" ] [ text d.symbol ]
-            , span [] [ text "$2222.00002" ]
-            , span [] [ text "ET TIME" ]
+            , span [ class "red" ] [ text "$2222.00002" ]
+            , span [ class "blue" ] [ text "ET TIME" ]
+            , div [ class "table-row-menu" ]
+                [ button [ class "btn transparent" ]
+                    [ i [ class "menu fas fa-ellipsis-h" ] [] ]
+                ]
             ]
         , div [ class "flex-row flex-between" ]
             [ div [ class "name-value-group" ]
@@ -94,25 +99,3 @@ viewTile d =
                 ]
             ]
         ]
-
-
-getRedOrGreenClass : String -> String -> ( String, Bool )
-getRedOrGreenClass prev next =
-    case String.toFloat prev of
-        Just p ->
-            case String.toFloat next of
-                Just n ->
-                    if p > n then
-                        ( "lt", True )
-
-                    else if p < n then
-                        ( "gt", True )
-
-                    else
-                        ( "", False )
-
-                Nothing ->
-                    ( "", False )
-
-        Nothing ->
-            ( "", False )
