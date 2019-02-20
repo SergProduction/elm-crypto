@@ -57,7 +57,6 @@ type alias Model =
     { find : String
     , data : PairSymbolsList
     , resultFind : PairSymbolsList
-    , tableHeadRow : List String
     }
 
 
@@ -66,7 +65,6 @@ init =
     { find = ""
     , data = []
     , resultFind = []
-    , tableHeadRow = [ "exchange", "pair" ]
     }
 
 
@@ -113,28 +111,25 @@ viewSearchInput model =
 
 view : Model -> Html Msg
 view model =
-    div [ class "flex-row flex-between" ]
+    div [ class "search flex-row flex-between" ]
         [ table [ class "full-width" ]
-            [ thead []
-                [ tr []
-                    (List.map
-                        viewHeadRow
-                        model.tableHeadRow
-                    )
-                ]
+            [ thead [] [ viewHeadRow ]
             , tbody [] (List.map viewBodyRow model.resultFind)
             ]
         ]
 
 
-viewHeadRow : String -> Html Msg
-viewHeadRow colName =
-    td [ class "name-value-group" ] [ text colName ]
+viewHeadRow : Html Msg
+viewHeadRow =
+    tr []
+        [ td [ class "name-value-group" ] [ text "Exchange" ]
+        , td [ class "name-value-group name" ] [ text "Pair" ]
+        ]
 
 
 viewBodyRow : PairSymbols -> Html Msg
 viewBodyRow row =
     tr [ onClick (SubscribePair row) ]
         [ td [ class "name-value-group" ] [ text row.exchange ]
-        , td [ class "name-value-group" ] [ text row.pair ]
+        , td [ class "name-value-group name" ] [ text row.pair ]
         ]
