@@ -99,7 +99,7 @@ update msg model =
 getPairSymbols : Cmd Msg
 getPairSymbols =
     Http.get
-        { url = "http://142.93.47.26:1023/pairs" -- https://coindaq.net:8080
+        { url = "https://coindaq.net:8080/pairs" -- https://coindaq.net:8080 http://142.93.47.26:1023/pairs
         , expect = Http.expectJson ResponsePairSymbols decodeJSONPairSymbols
         }
 
