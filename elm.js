@@ -4485,26 +4485,20 @@ function _Browser_load(url)
 		}
 	}));
 }
-var author$project$Main$RespondePairs = function (a) {
-	return {$: 'RespondePairs', a: a};
+var author$project$Main$Search = function (a) {
+	return {$: 'Search', a: a};
 };
 var author$project$Main$Table = {$: 'Table'};
-var elm$core$Maybe$Nothing = {$: 'Nothing'};
-var author$project$User$init = {email: '', password: '', responseError: elm$core$Maybe$Nothing, userkey: elm$core$Maybe$Nothing};
-var elm$core$Basics$False = {$: 'False'};
+var author$project$Search$ResponsePairSymbols = function (a) {
+	return {$: 'ResponsePairSymbols', a: a};
+};
 var elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
 var elm$core$Dict$empty = elm$core$Dict$RBEmpty_elm_builtin;
-var elm$core$Result$Ok = function (a) {
-	return {$: 'Ok', a: a};
-};
-var elm$core$Basics$composeR = F3(
-	function (f, g, x) {
-		return g(
-			f(x));
+var elm$core$Dict$Black = {$: 'Black'};
+var elm$core$Dict$RBNode_elm_builtin = F5(
+	function (a, b, c, d, e) {
+		return {$: 'RBNode_elm_builtin', a: a, b: b, c: c, d: d, e: e};
 	});
-var elm$core$Basics$identity = function (x) {
-	return x;
-};
 var elm$core$Elm$JsArray$foldr = _JsArray_foldr;
 var elm$core$Array$foldr = F3(
 	function (func, baseCase, _n0) {
@@ -4586,45 +4580,6 @@ var elm$core$Set$toList = function (_n0) {
 	return elm$core$Dict$keys(dict);
 };
 var elm$core$Basics$compare = _Utils_compare;
-var elm$core$Maybe$Just = function (a) {
-	return {$: 'Just', a: a};
-};
-var elm$core$Dict$get = F2(
-	function (targetKey, dict) {
-		get:
-		while (true) {
-			if (dict.$ === 'RBEmpty_elm_builtin') {
-				return elm$core$Maybe$Nothing;
-			} else {
-				var key = dict.b;
-				var value = dict.c;
-				var left = dict.d;
-				var right = dict.e;
-				var _n1 = A2(elm$core$Basics$compare, targetKey, key);
-				switch (_n1.$) {
-					case 'LT':
-						var $temp$targetKey = targetKey,
-							$temp$dict = left;
-						targetKey = $temp$targetKey;
-						dict = $temp$dict;
-						continue get;
-					case 'EQ':
-						return elm$core$Maybe$Just(value);
-					default:
-						var $temp$targetKey = targetKey,
-							$temp$dict = right;
-						targetKey = $temp$targetKey;
-						dict = $temp$dict;
-						continue get;
-				}
-			}
-		}
-	});
-var elm$core$Dict$Black = {$: 'Black'};
-var elm$core$Dict$RBNode_elm_builtin = F5(
-	function (a, b, c, d, e) {
-		return {$: 'RBNode_elm_builtin', a: a, b: b, c: c, d: d, e: e};
-	});
 var elm$core$Dict$Red = {$: 'Red'};
 var elm$core$Dict$balance = F5(
 	function (color, key, value, left, right) {
@@ -4728,8 +4683,475 @@ var elm$core$Dict$insert = F3(
 			return x;
 		}
 	});
+var elm$core$List$foldl = F3(
+	function (func, acc, list) {
+		foldl:
+		while (true) {
+			if (!list.b) {
+				return acc;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				var $temp$func = func,
+					$temp$acc = A2(func, x, acc),
+					$temp$list = xs;
+				func = $temp$func;
+				acc = $temp$acc;
+				list = $temp$list;
+				continue foldl;
+			}
+		}
+	});
+var elm$core$Dict$fromList = function (assocs) {
+	return A3(
+		elm$core$List$foldl,
+		F2(
+			function (_n0, dict) {
+				var key = _n0.a;
+				var value = _n0.b;
+				return A3(elm$core$Dict$insert, key, value, dict);
+			}),
+		elm$core$Dict$empty,
+		assocs);
+};
+var elm$core$Array$branchFactor = 32;
+var elm$core$Array$Array_elm_builtin = F4(
+	function (a, b, c, d) {
+		return {$: 'Array_elm_builtin', a: a, b: b, c: c, d: d};
+	});
+var elm$core$Basics$ceiling = _Basics_ceiling;
+var elm$core$Basics$fdiv = _Basics_fdiv;
+var elm$core$Basics$logBase = F2(
+	function (base, number) {
+		return _Basics_log(number) / _Basics_log(base);
+	});
+var elm$core$Basics$toFloat = _Basics_toFloat;
+var elm$core$Array$shiftStep = elm$core$Basics$ceiling(
+	A2(elm$core$Basics$logBase, 2, elm$core$Array$branchFactor));
+var elm$core$Elm$JsArray$empty = _JsArray_empty;
+var elm$core$Array$empty = A4(elm$core$Array$Array_elm_builtin, 0, elm$core$Array$shiftStep, elm$core$Elm$JsArray$empty, elm$core$Elm$JsArray$empty);
+var elm$core$Array$Leaf = function (a) {
+	return {$: 'Leaf', a: a};
+};
+var elm$core$Array$SubTree = function (a) {
+	return {$: 'SubTree', a: a};
+};
+var elm$core$Elm$JsArray$initializeFromList = _JsArray_initializeFromList;
+var elm$core$List$reverse = function (list) {
+	return A3(elm$core$List$foldl, elm$core$List$cons, _List_Nil, list);
+};
+var elm$core$Array$compressNodes = F2(
+	function (nodes, acc) {
+		compressNodes:
+		while (true) {
+			var _n0 = A2(elm$core$Elm$JsArray$initializeFromList, elm$core$Array$branchFactor, nodes);
+			var node = _n0.a;
+			var remainingNodes = _n0.b;
+			var newAcc = A2(
+				elm$core$List$cons,
+				elm$core$Array$SubTree(node),
+				acc);
+			if (!remainingNodes.b) {
+				return elm$core$List$reverse(newAcc);
+			} else {
+				var $temp$nodes = remainingNodes,
+					$temp$acc = newAcc;
+				nodes = $temp$nodes;
+				acc = $temp$acc;
+				continue compressNodes;
+			}
+		}
+	});
+var elm$core$Basics$apR = F2(
+	function (x, f) {
+		return f(x);
+	});
 var elm$core$Basics$eq = _Utils_equal;
+var elm$core$Tuple$first = function (_n0) {
+	var x = _n0.a;
+	return x;
+};
+var elm$core$Array$treeFromBuilder = F2(
+	function (nodeList, nodeListSize) {
+		treeFromBuilder:
+		while (true) {
+			var newNodeSize = elm$core$Basics$ceiling(nodeListSize / elm$core$Array$branchFactor);
+			if (newNodeSize === 1) {
+				return A2(elm$core$Elm$JsArray$initializeFromList, elm$core$Array$branchFactor, nodeList).a;
+			} else {
+				var $temp$nodeList = A2(elm$core$Array$compressNodes, nodeList, _List_Nil),
+					$temp$nodeListSize = newNodeSize;
+				nodeList = $temp$nodeList;
+				nodeListSize = $temp$nodeListSize;
+				continue treeFromBuilder;
+			}
+		}
+	});
+var elm$core$Basics$add = _Basics_add;
+var elm$core$Basics$apL = F2(
+	function (f, x) {
+		return f(x);
+	});
+var elm$core$Basics$floor = _Basics_floor;
+var elm$core$Basics$gt = _Utils_gt;
+var elm$core$Basics$max = F2(
+	function (x, y) {
+		return (_Utils_cmp(x, y) > 0) ? x : y;
+	});
+var elm$core$Basics$mul = _Basics_mul;
+var elm$core$Basics$sub = _Basics_sub;
+var elm$core$Elm$JsArray$length = _JsArray_length;
+var elm$core$Array$builderToArray = F2(
+	function (reverseNodeList, builder) {
+		if (!builder.nodeListSize) {
+			return A4(
+				elm$core$Array$Array_elm_builtin,
+				elm$core$Elm$JsArray$length(builder.tail),
+				elm$core$Array$shiftStep,
+				elm$core$Elm$JsArray$empty,
+				builder.tail);
+		} else {
+			var treeLen = builder.nodeListSize * elm$core$Array$branchFactor;
+			var depth = elm$core$Basics$floor(
+				A2(elm$core$Basics$logBase, elm$core$Array$branchFactor, treeLen - 1));
+			var correctNodeList = reverseNodeList ? elm$core$List$reverse(builder.nodeList) : builder.nodeList;
+			var tree = A2(elm$core$Array$treeFromBuilder, correctNodeList, builder.nodeListSize);
+			return A4(
+				elm$core$Array$Array_elm_builtin,
+				elm$core$Elm$JsArray$length(builder.tail) + treeLen,
+				A2(elm$core$Basics$max, 5, depth * elm$core$Array$shiftStep),
+				tree,
+				builder.tail);
+		}
+	});
+var elm$core$Basics$False = {$: 'False'};
+var elm$core$Basics$idiv = _Basics_idiv;
 var elm$core$Basics$lt = _Utils_lt;
+var elm$core$Elm$JsArray$initialize = _JsArray_initialize;
+var elm$core$Array$initializeHelp = F5(
+	function (fn, fromIndex, len, nodeList, tail) {
+		initializeHelp:
+		while (true) {
+			if (fromIndex < 0) {
+				return A2(
+					elm$core$Array$builderToArray,
+					false,
+					{nodeList: nodeList, nodeListSize: (len / elm$core$Array$branchFactor) | 0, tail: tail});
+			} else {
+				var leaf = elm$core$Array$Leaf(
+					A3(elm$core$Elm$JsArray$initialize, elm$core$Array$branchFactor, fromIndex, fn));
+				var $temp$fn = fn,
+					$temp$fromIndex = fromIndex - elm$core$Array$branchFactor,
+					$temp$len = len,
+					$temp$nodeList = A2(elm$core$List$cons, leaf, nodeList),
+					$temp$tail = tail;
+				fn = $temp$fn;
+				fromIndex = $temp$fromIndex;
+				len = $temp$len;
+				nodeList = $temp$nodeList;
+				tail = $temp$tail;
+				continue initializeHelp;
+			}
+		}
+	});
+var elm$core$Basics$le = _Utils_le;
+var elm$core$Basics$remainderBy = _Basics_remainderBy;
+var elm$core$Array$initialize = F2(
+	function (len, fn) {
+		if (len <= 0) {
+			return elm$core$Array$empty;
+		} else {
+			var tailLen = len % elm$core$Array$branchFactor;
+			var tail = A3(elm$core$Elm$JsArray$initialize, tailLen, len - tailLen, fn);
+			var initialFromIndex = (len - tailLen) - elm$core$Array$branchFactor;
+			return A5(elm$core$Array$initializeHelp, fn, initialFromIndex, len, _List_Nil, tail);
+		}
+	});
+var elm$core$Maybe$Just = function (a) {
+	return {$: 'Just', a: a};
+};
+var elm$core$Maybe$Nothing = {$: 'Nothing'};
+var elm$core$Result$Err = function (a) {
+	return {$: 'Err', a: a};
+};
+var elm$core$Result$Ok = function (a) {
+	return {$: 'Ok', a: a};
+};
+var elm$core$Basics$True = {$: 'True'};
+var elm$core$Result$isOk = function (result) {
+	if (result.$ === 'Ok') {
+		return true;
+	} else {
+		return false;
+	}
+};
+var elm$json$Json$Decode$Failure = F2(
+	function (a, b) {
+		return {$: 'Failure', a: a, b: b};
+	});
+var elm$json$Json$Decode$Field = F2(
+	function (a, b) {
+		return {$: 'Field', a: a, b: b};
+	});
+var elm$json$Json$Decode$Index = F2(
+	function (a, b) {
+		return {$: 'Index', a: a, b: b};
+	});
+var elm$json$Json$Decode$OneOf = function (a) {
+	return {$: 'OneOf', a: a};
+};
+var elm$core$Basics$and = _Basics_and;
+var elm$core$Basics$append = _Utils_append;
+var elm$core$Basics$or = _Basics_or;
+var elm$core$Char$toCode = _Char_toCode;
+var elm$core$Char$isLower = function (_char) {
+	var code = elm$core$Char$toCode(_char);
+	return (97 <= code) && (code <= 122);
+};
+var elm$core$Char$isUpper = function (_char) {
+	var code = elm$core$Char$toCode(_char);
+	return (code <= 90) && (65 <= code);
+};
+var elm$core$Char$isAlpha = function (_char) {
+	return elm$core$Char$isLower(_char) || elm$core$Char$isUpper(_char);
+};
+var elm$core$Char$isDigit = function (_char) {
+	var code = elm$core$Char$toCode(_char);
+	return (code <= 57) && (48 <= code);
+};
+var elm$core$Char$isAlphaNum = function (_char) {
+	return elm$core$Char$isLower(_char) || (elm$core$Char$isUpper(_char) || elm$core$Char$isDigit(_char));
+};
+var elm$core$List$length = function (xs) {
+	return A3(
+		elm$core$List$foldl,
+		F2(
+			function (_n0, i) {
+				return i + 1;
+			}),
+		0,
+		xs);
+};
+var elm$core$List$map2 = _List_map2;
+var elm$core$List$rangeHelp = F3(
+	function (lo, hi, list) {
+		rangeHelp:
+		while (true) {
+			if (_Utils_cmp(lo, hi) < 1) {
+				var $temp$lo = lo,
+					$temp$hi = hi - 1,
+					$temp$list = A2(elm$core$List$cons, hi, list);
+				lo = $temp$lo;
+				hi = $temp$hi;
+				list = $temp$list;
+				continue rangeHelp;
+			} else {
+				return list;
+			}
+		}
+	});
+var elm$core$List$range = F2(
+	function (lo, hi) {
+		return A3(elm$core$List$rangeHelp, lo, hi, _List_Nil);
+	});
+var elm$core$List$indexedMap = F2(
+	function (f, xs) {
+		return A3(
+			elm$core$List$map2,
+			f,
+			A2(
+				elm$core$List$range,
+				0,
+				elm$core$List$length(xs) - 1),
+			xs);
+	});
+var elm$core$String$all = _String_all;
+var elm$core$String$fromInt = _String_fromNumber;
+var elm$core$String$join = F2(
+	function (sep, chunks) {
+		return A2(
+			_String_join,
+			sep,
+			_List_toArray(chunks));
+	});
+var elm$core$String$uncons = _String_uncons;
+var elm$core$String$split = F2(
+	function (sep, string) {
+		return _List_fromArray(
+			A2(_String_split, sep, string));
+	});
+var elm$json$Json$Decode$indent = function (str) {
+	return A2(
+		elm$core$String$join,
+		'\n    ',
+		A2(elm$core$String$split, '\n', str));
+};
+var elm$json$Json$Encode$encode = _Json_encode;
+var elm$json$Json$Decode$errorOneOf = F2(
+	function (i, error) {
+		return '\n\n(' + (elm$core$String$fromInt(i + 1) + (') ' + elm$json$Json$Decode$indent(
+			elm$json$Json$Decode$errorToString(error))));
+	});
+var elm$json$Json$Decode$errorToString = function (error) {
+	return A2(elm$json$Json$Decode$errorToStringHelp, error, _List_Nil);
+};
+var elm$json$Json$Decode$errorToStringHelp = F2(
+	function (error, context) {
+		errorToStringHelp:
+		while (true) {
+			switch (error.$) {
+				case 'Field':
+					var f = error.a;
+					var err = error.b;
+					var isSimple = function () {
+						var _n1 = elm$core$String$uncons(f);
+						if (_n1.$ === 'Nothing') {
+							return false;
+						} else {
+							var _n2 = _n1.a;
+							var _char = _n2.a;
+							var rest = _n2.b;
+							return elm$core$Char$isAlpha(_char) && A2(elm$core$String$all, elm$core$Char$isAlphaNum, rest);
+						}
+					}();
+					var fieldName = isSimple ? ('.' + f) : ('[\'' + (f + '\']'));
+					var $temp$error = err,
+						$temp$context = A2(elm$core$List$cons, fieldName, context);
+					error = $temp$error;
+					context = $temp$context;
+					continue errorToStringHelp;
+				case 'Index':
+					var i = error.a;
+					var err = error.b;
+					var indexName = '[' + (elm$core$String$fromInt(i) + ']');
+					var $temp$error = err,
+						$temp$context = A2(elm$core$List$cons, indexName, context);
+					error = $temp$error;
+					context = $temp$context;
+					continue errorToStringHelp;
+				case 'OneOf':
+					var errors = error.a;
+					if (!errors.b) {
+						return 'Ran into a Json.Decode.oneOf with no possibilities' + function () {
+							if (!context.b) {
+								return '!';
+							} else {
+								return ' at json' + A2(
+									elm$core$String$join,
+									'',
+									elm$core$List$reverse(context));
+							}
+						}();
+					} else {
+						if (!errors.b.b) {
+							var err = errors.a;
+							var $temp$error = err,
+								$temp$context = context;
+							error = $temp$error;
+							context = $temp$context;
+							continue errorToStringHelp;
+						} else {
+							var starter = function () {
+								if (!context.b) {
+									return 'Json.Decode.oneOf';
+								} else {
+									return 'The Json.Decode.oneOf at json' + A2(
+										elm$core$String$join,
+										'',
+										elm$core$List$reverse(context));
+								}
+							}();
+							var introduction = starter + (' failed in the following ' + (elm$core$String$fromInt(
+								elm$core$List$length(errors)) + ' ways:'));
+							return A2(
+								elm$core$String$join,
+								'\n\n',
+								A2(
+									elm$core$List$cons,
+									introduction,
+									A2(elm$core$List$indexedMap, elm$json$Json$Decode$errorOneOf, errors)));
+						}
+					}
+				default:
+					var msg = error.a;
+					var json = error.b;
+					var introduction = function () {
+						if (!context.b) {
+							return 'Problem with the given value:\n\n';
+						} else {
+							return 'Problem with the value at json' + (A2(
+								elm$core$String$join,
+								'',
+								elm$core$List$reverse(context)) + ':\n\n    ');
+						}
+					}();
+					return introduction + (elm$json$Json$Decode$indent(
+						A2(elm$json$Json$Encode$encode, 4, json)) + ('\n\n' + msg));
+			}
+		}
+	});
+var elm$json$Json$Decode$keyValuePairs = _Json_decodeKeyValuePairs;
+var elm$json$Json$Decode$map = _Json_map1;
+var elm$json$Json$Decode$dict = function (decoder) {
+	return A2(
+		elm$json$Json$Decode$map,
+		elm$core$Dict$fromList,
+		elm$json$Json$Decode$keyValuePairs(decoder));
+};
+var elm$json$Json$Decode$list = _Json_decodeList;
+var elm$json$Json$Decode$string = _Json_decodeString;
+var author$project$Search$decodeJSONPairSymbols = elm$json$Json$Decode$dict(
+	elm$json$Json$Decode$list(elm$json$Json$Decode$string));
+var elm$core$Result$mapError = F2(
+	function (f, result) {
+		if (result.$ === 'Ok') {
+			var v = result.a;
+			return elm$core$Result$Ok(v);
+		} else {
+			var e = result.a;
+			return elm$core$Result$Err(
+				f(e));
+		}
+	});
+var elm$core$Basics$composeR = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
+var elm$core$Basics$identity = function (x) {
+	return x;
+};
+var elm$core$Dict$get = F2(
+	function (targetKey, dict) {
+		get:
+		while (true) {
+			if (dict.$ === 'RBEmpty_elm_builtin') {
+				return elm$core$Maybe$Nothing;
+			} else {
+				var key = dict.b;
+				var value = dict.c;
+				var left = dict.d;
+				var right = dict.e;
+				var _n1 = A2(elm$core$Basics$compare, targetKey, key);
+				switch (_n1.$) {
+					case 'LT':
+						var $temp$targetKey = targetKey,
+							$temp$dict = left;
+						targetKey = $temp$targetKey;
+						dict = $temp$dict;
+						continue get;
+					case 'EQ':
+						return elm$core$Maybe$Just(value);
+					default:
+						var $temp$targetKey = targetKey,
+							$temp$dict = right;
+						targetKey = $temp$targetKey;
+						dict = $temp$dict;
+						continue get;
+				}
+			}
+		}
+	});
 var elm$core$Dict$getMin = function (dict) {
 	getMin:
 	while (true) {
@@ -5103,7 +5525,6 @@ var elm$core$Dict$update = F3(
 			return A2(elm$core$Dict$remove, targetKey, dictionary);
 		}
 	});
-var elm$core$Basics$True = {$: 'True'};
 var elm$core$Maybe$isJust = function (maybe) {
 	if (maybe.$ === 'Just') {
 		return true;
@@ -5111,390 +5532,6 @@ var elm$core$Maybe$isJust = function (maybe) {
 		return false;
 	}
 };
-var elm$core$Result$isOk = function (result) {
-	if (result.$ === 'Ok') {
-		return true;
-	} else {
-		return false;
-	}
-};
-var elm$core$Array$branchFactor = 32;
-var elm$core$Array$Array_elm_builtin = F4(
-	function (a, b, c, d) {
-		return {$: 'Array_elm_builtin', a: a, b: b, c: c, d: d};
-	});
-var elm$core$Basics$ceiling = _Basics_ceiling;
-var elm$core$Basics$fdiv = _Basics_fdiv;
-var elm$core$Basics$logBase = F2(
-	function (base, number) {
-		return _Basics_log(number) / _Basics_log(base);
-	});
-var elm$core$Basics$toFloat = _Basics_toFloat;
-var elm$core$Array$shiftStep = elm$core$Basics$ceiling(
-	A2(elm$core$Basics$logBase, 2, elm$core$Array$branchFactor));
-var elm$core$Elm$JsArray$empty = _JsArray_empty;
-var elm$core$Array$empty = A4(elm$core$Array$Array_elm_builtin, 0, elm$core$Array$shiftStep, elm$core$Elm$JsArray$empty, elm$core$Elm$JsArray$empty);
-var elm$core$Array$Leaf = function (a) {
-	return {$: 'Leaf', a: a};
-};
-var elm$core$Array$SubTree = function (a) {
-	return {$: 'SubTree', a: a};
-};
-var elm$core$Elm$JsArray$initializeFromList = _JsArray_initializeFromList;
-var elm$core$List$foldl = F3(
-	function (func, acc, list) {
-		foldl:
-		while (true) {
-			if (!list.b) {
-				return acc;
-			} else {
-				var x = list.a;
-				var xs = list.b;
-				var $temp$func = func,
-					$temp$acc = A2(func, x, acc),
-					$temp$list = xs;
-				func = $temp$func;
-				acc = $temp$acc;
-				list = $temp$list;
-				continue foldl;
-			}
-		}
-	});
-var elm$core$List$reverse = function (list) {
-	return A3(elm$core$List$foldl, elm$core$List$cons, _List_Nil, list);
-};
-var elm$core$Array$compressNodes = F2(
-	function (nodes, acc) {
-		compressNodes:
-		while (true) {
-			var _n0 = A2(elm$core$Elm$JsArray$initializeFromList, elm$core$Array$branchFactor, nodes);
-			var node = _n0.a;
-			var remainingNodes = _n0.b;
-			var newAcc = A2(
-				elm$core$List$cons,
-				elm$core$Array$SubTree(node),
-				acc);
-			if (!remainingNodes.b) {
-				return elm$core$List$reverse(newAcc);
-			} else {
-				var $temp$nodes = remainingNodes,
-					$temp$acc = newAcc;
-				nodes = $temp$nodes;
-				acc = $temp$acc;
-				continue compressNodes;
-			}
-		}
-	});
-var elm$core$Basics$apR = F2(
-	function (x, f) {
-		return f(x);
-	});
-var elm$core$Tuple$first = function (_n0) {
-	var x = _n0.a;
-	return x;
-};
-var elm$core$Array$treeFromBuilder = F2(
-	function (nodeList, nodeListSize) {
-		treeFromBuilder:
-		while (true) {
-			var newNodeSize = elm$core$Basics$ceiling(nodeListSize / elm$core$Array$branchFactor);
-			if (newNodeSize === 1) {
-				return A2(elm$core$Elm$JsArray$initializeFromList, elm$core$Array$branchFactor, nodeList).a;
-			} else {
-				var $temp$nodeList = A2(elm$core$Array$compressNodes, nodeList, _List_Nil),
-					$temp$nodeListSize = newNodeSize;
-				nodeList = $temp$nodeList;
-				nodeListSize = $temp$nodeListSize;
-				continue treeFromBuilder;
-			}
-		}
-	});
-var elm$core$Basics$add = _Basics_add;
-var elm$core$Basics$apL = F2(
-	function (f, x) {
-		return f(x);
-	});
-var elm$core$Basics$floor = _Basics_floor;
-var elm$core$Basics$gt = _Utils_gt;
-var elm$core$Basics$max = F2(
-	function (x, y) {
-		return (_Utils_cmp(x, y) > 0) ? x : y;
-	});
-var elm$core$Basics$mul = _Basics_mul;
-var elm$core$Basics$sub = _Basics_sub;
-var elm$core$Elm$JsArray$length = _JsArray_length;
-var elm$core$Array$builderToArray = F2(
-	function (reverseNodeList, builder) {
-		if (!builder.nodeListSize) {
-			return A4(
-				elm$core$Array$Array_elm_builtin,
-				elm$core$Elm$JsArray$length(builder.tail),
-				elm$core$Array$shiftStep,
-				elm$core$Elm$JsArray$empty,
-				builder.tail);
-		} else {
-			var treeLen = builder.nodeListSize * elm$core$Array$branchFactor;
-			var depth = elm$core$Basics$floor(
-				A2(elm$core$Basics$logBase, elm$core$Array$branchFactor, treeLen - 1));
-			var correctNodeList = reverseNodeList ? elm$core$List$reverse(builder.nodeList) : builder.nodeList;
-			var tree = A2(elm$core$Array$treeFromBuilder, correctNodeList, builder.nodeListSize);
-			return A4(
-				elm$core$Array$Array_elm_builtin,
-				elm$core$Elm$JsArray$length(builder.tail) + treeLen,
-				A2(elm$core$Basics$max, 5, depth * elm$core$Array$shiftStep),
-				tree,
-				builder.tail);
-		}
-	});
-var elm$core$Basics$idiv = _Basics_idiv;
-var elm$core$Elm$JsArray$initialize = _JsArray_initialize;
-var elm$core$Array$initializeHelp = F5(
-	function (fn, fromIndex, len, nodeList, tail) {
-		initializeHelp:
-		while (true) {
-			if (fromIndex < 0) {
-				return A2(
-					elm$core$Array$builderToArray,
-					false,
-					{nodeList: nodeList, nodeListSize: (len / elm$core$Array$branchFactor) | 0, tail: tail});
-			} else {
-				var leaf = elm$core$Array$Leaf(
-					A3(elm$core$Elm$JsArray$initialize, elm$core$Array$branchFactor, fromIndex, fn));
-				var $temp$fn = fn,
-					$temp$fromIndex = fromIndex - elm$core$Array$branchFactor,
-					$temp$len = len,
-					$temp$nodeList = A2(elm$core$List$cons, leaf, nodeList),
-					$temp$tail = tail;
-				fn = $temp$fn;
-				fromIndex = $temp$fromIndex;
-				len = $temp$len;
-				nodeList = $temp$nodeList;
-				tail = $temp$tail;
-				continue initializeHelp;
-			}
-		}
-	});
-var elm$core$Basics$le = _Utils_le;
-var elm$core$Basics$remainderBy = _Basics_remainderBy;
-var elm$core$Array$initialize = F2(
-	function (len, fn) {
-		if (len <= 0) {
-			return elm$core$Array$empty;
-		} else {
-			var tailLen = len % elm$core$Array$branchFactor;
-			var tail = A3(elm$core$Elm$JsArray$initialize, tailLen, len - tailLen, fn);
-			var initialFromIndex = (len - tailLen) - elm$core$Array$branchFactor;
-			return A5(elm$core$Array$initializeHelp, fn, initialFromIndex, len, _List_Nil, tail);
-		}
-	});
-var elm$core$Result$Err = function (a) {
-	return {$: 'Err', a: a};
-};
-var elm$json$Json$Decode$Failure = F2(
-	function (a, b) {
-		return {$: 'Failure', a: a, b: b};
-	});
-var elm$json$Json$Decode$Field = F2(
-	function (a, b) {
-		return {$: 'Field', a: a, b: b};
-	});
-var elm$json$Json$Decode$Index = F2(
-	function (a, b) {
-		return {$: 'Index', a: a, b: b};
-	});
-var elm$json$Json$Decode$OneOf = function (a) {
-	return {$: 'OneOf', a: a};
-};
-var elm$core$Basics$and = _Basics_and;
-var elm$core$Basics$append = _Utils_append;
-var elm$core$Basics$or = _Basics_or;
-var elm$core$Char$toCode = _Char_toCode;
-var elm$core$Char$isLower = function (_char) {
-	var code = elm$core$Char$toCode(_char);
-	return (97 <= code) && (code <= 122);
-};
-var elm$core$Char$isUpper = function (_char) {
-	var code = elm$core$Char$toCode(_char);
-	return (code <= 90) && (65 <= code);
-};
-var elm$core$Char$isAlpha = function (_char) {
-	return elm$core$Char$isLower(_char) || elm$core$Char$isUpper(_char);
-};
-var elm$core$Char$isDigit = function (_char) {
-	var code = elm$core$Char$toCode(_char);
-	return (code <= 57) && (48 <= code);
-};
-var elm$core$Char$isAlphaNum = function (_char) {
-	return elm$core$Char$isLower(_char) || (elm$core$Char$isUpper(_char) || elm$core$Char$isDigit(_char));
-};
-var elm$core$List$length = function (xs) {
-	return A3(
-		elm$core$List$foldl,
-		F2(
-			function (_n0, i) {
-				return i + 1;
-			}),
-		0,
-		xs);
-};
-var elm$core$List$map2 = _List_map2;
-var elm$core$List$rangeHelp = F3(
-	function (lo, hi, list) {
-		rangeHelp:
-		while (true) {
-			if (_Utils_cmp(lo, hi) < 1) {
-				var $temp$lo = lo,
-					$temp$hi = hi - 1,
-					$temp$list = A2(elm$core$List$cons, hi, list);
-				lo = $temp$lo;
-				hi = $temp$hi;
-				list = $temp$list;
-				continue rangeHelp;
-			} else {
-				return list;
-			}
-		}
-	});
-var elm$core$List$range = F2(
-	function (lo, hi) {
-		return A3(elm$core$List$rangeHelp, lo, hi, _List_Nil);
-	});
-var elm$core$List$indexedMap = F2(
-	function (f, xs) {
-		return A3(
-			elm$core$List$map2,
-			f,
-			A2(
-				elm$core$List$range,
-				0,
-				elm$core$List$length(xs) - 1),
-			xs);
-	});
-var elm$core$String$all = _String_all;
-var elm$core$String$fromInt = _String_fromNumber;
-var elm$core$String$join = F2(
-	function (sep, chunks) {
-		return A2(
-			_String_join,
-			sep,
-			_List_toArray(chunks));
-	});
-var elm$core$String$uncons = _String_uncons;
-var elm$core$String$split = F2(
-	function (sep, string) {
-		return _List_fromArray(
-			A2(_String_split, sep, string));
-	});
-var elm$json$Json$Decode$indent = function (str) {
-	return A2(
-		elm$core$String$join,
-		'\n    ',
-		A2(elm$core$String$split, '\n', str));
-};
-var elm$json$Json$Encode$encode = _Json_encode;
-var elm$json$Json$Decode$errorOneOf = F2(
-	function (i, error) {
-		return '\n\n(' + (elm$core$String$fromInt(i + 1) + (') ' + elm$json$Json$Decode$indent(
-			elm$json$Json$Decode$errorToString(error))));
-	});
-var elm$json$Json$Decode$errorToString = function (error) {
-	return A2(elm$json$Json$Decode$errorToStringHelp, error, _List_Nil);
-};
-var elm$json$Json$Decode$errorToStringHelp = F2(
-	function (error, context) {
-		errorToStringHelp:
-		while (true) {
-			switch (error.$) {
-				case 'Field':
-					var f = error.a;
-					var err = error.b;
-					var isSimple = function () {
-						var _n1 = elm$core$String$uncons(f);
-						if (_n1.$ === 'Nothing') {
-							return false;
-						} else {
-							var _n2 = _n1.a;
-							var _char = _n2.a;
-							var rest = _n2.b;
-							return elm$core$Char$isAlpha(_char) && A2(elm$core$String$all, elm$core$Char$isAlphaNum, rest);
-						}
-					}();
-					var fieldName = isSimple ? ('.' + f) : ('[\'' + (f + '\']'));
-					var $temp$error = err,
-						$temp$context = A2(elm$core$List$cons, fieldName, context);
-					error = $temp$error;
-					context = $temp$context;
-					continue errorToStringHelp;
-				case 'Index':
-					var i = error.a;
-					var err = error.b;
-					var indexName = '[' + (elm$core$String$fromInt(i) + ']');
-					var $temp$error = err,
-						$temp$context = A2(elm$core$List$cons, indexName, context);
-					error = $temp$error;
-					context = $temp$context;
-					continue errorToStringHelp;
-				case 'OneOf':
-					var errors = error.a;
-					if (!errors.b) {
-						return 'Ran into a Json.Decode.oneOf with no possibilities' + function () {
-							if (!context.b) {
-								return '!';
-							} else {
-								return ' at json' + A2(
-									elm$core$String$join,
-									'',
-									elm$core$List$reverse(context));
-							}
-						}();
-					} else {
-						if (!errors.b.b) {
-							var err = errors.a;
-							var $temp$error = err,
-								$temp$context = context;
-							error = $temp$error;
-							context = $temp$context;
-							continue errorToStringHelp;
-						} else {
-							var starter = function () {
-								if (!context.b) {
-									return 'Json.Decode.oneOf';
-								} else {
-									return 'The Json.Decode.oneOf at json' + A2(
-										elm$core$String$join,
-										'',
-										elm$core$List$reverse(context));
-								}
-							}();
-							var introduction = starter + (' failed in the following ' + (elm$core$String$fromInt(
-								elm$core$List$length(errors)) + ' ways:'));
-							return A2(
-								elm$core$String$join,
-								'\n\n',
-								A2(
-									elm$core$List$cons,
-									introduction,
-									A2(elm$core$List$indexedMap, elm$json$Json$Decode$errorOneOf, errors)));
-						}
-					}
-				default:
-					var msg = error.a;
-					var json = error.b;
-					var introduction = function () {
-						if (!context.b) {
-							return 'Problem with the given value:\n\n';
-						} else {
-							return 'Problem with the value at json' + (A2(
-								elm$core$String$join,
-								'',
-								elm$core$List$reverse(context)) + ':\n\n    ');
-						}
-					}();
-					return introduction + (elm$json$Json$Decode$indent(
-						A2(elm$json$Json$Encode$encode, 4, json)) + ('\n\n' + msg));
-			}
-		}
-	});
 var elm$core$Platform$sendToApp = _Platform_sendToApp;
 var elm$core$Platform$sendToSelf = _Platform_sendToSelf;
 var elm$core$Result$map = F2(
@@ -5535,17 +5572,6 @@ var elm$http$Http$expectStringResponse = F2(
 			elm$core$Basics$identity,
 			A2(elm$core$Basics$composeR, toResult, toMsg));
 	});
-var elm$core$Result$mapError = F2(
-	function (f, result) {
-		if (result.$ === 'Ok') {
-			var v = result.a;
-			return elm$core$Result$Ok(v);
-		} else {
-			var e = result.a;
-			return elm$core$Result$Err(
-				f(e));
-		}
-	});
 var elm$http$Http$BadBody = function (a) {
 	return {$: 'BadBody', a: a};
 };
@@ -5580,12 +5606,20 @@ var elm$http$Http$resolve = F2(
 					toResult(body));
 		}
 	});
-var elm$http$Http$expectString = function (toMsg) {
-	return A2(
-		elm$http$Http$expectStringResponse,
-		toMsg,
-		elm$http$Http$resolve(elm$core$Result$Ok));
-};
+var elm$json$Json$Decode$decodeString = _Json_runOnString;
+var elm$http$Http$expectJson = F2(
+	function (toMsg, decoder) {
+		return A2(
+			elm$http$Http$expectStringResponse,
+			toMsg,
+			elm$http$Http$resolve(
+				function (string) {
+					return A2(
+						elm$core$Result$mapError,
+						elm$json$Json$Decode$errorToString,
+						A2(elm$json$Json$Decode$decodeString, decoder, string));
+				}));
+	});
 var elm$http$Http$emptyBody = _Http_emptyBody;
 var elm$http$Http$Request = function (a) {
 	return {$: 'Request', a: a};
@@ -5838,14 +5872,24 @@ var elm$http$Http$get = function (r) {
 	return elm$http$Http$request(
 		{body: elm$http$Http$emptyBody, expect: r.expect, headers: _List_Nil, method: 'GET', timeout: elm$core$Maybe$Nothing, tracker: elm$core$Maybe$Nothing, url: r.url});
 };
+var author$project$Search$getPairSymbols = elm$http$Http$get(
+	{
+		expect: A2(elm$http$Http$expectJson, author$project$Search$ResponsePairSymbols, author$project$Search$decodeJSONPairSymbols),
+		url: 'http://142.93.47.26:1023/pairs'
+	});
+var author$project$Search$init = {
+	data: _List_Nil,
+	find: '',
+	resultFind: _List_Nil,
+	tableHeadRow: _List_fromArray(
+		['exchange', 'pair'])
+};
+var author$project$User$init = {email: '', password: '', responseError: elm$core$Maybe$Nothing, userId: elm$core$Maybe$Nothing};
+var elm$core$Platform$Cmd$map = _Platform_map;
 var author$project$Main$init = function (_n0) {
 	return _Utils_Tuple2(
-		{data: elm$core$Dict$empty, modal: false, user: author$project$User$init, viewType: author$project$Main$Table},
-		elm$http$Http$get(
-			{
-				expect: elm$http$Http$expectString(author$project$Main$RespondePairs),
-				url: 'http://142.93.47.26:1023/pairs'
-			}));
+		{data: elm$core$Dict$empty, isFind: false, modal: false, prevViewType: author$project$Main$Table, search: author$project$Search$init, user: author$project$User$init, viewType: author$project$Main$Table},
+		A2(elm$core$Platform$Cmd$map, author$project$Main$Search, author$project$Search$getPairSymbols));
 };
 var elm$json$Json$Decode$map2 = _Json_map2;
 var NoRedInk$elm_json_decode_pipeline$Json$Decode$Pipeline$custom = elm$json$Json$Decode$map2(elm$core$Basics$apR);
@@ -5888,7 +5932,6 @@ var author$project$Data$Pair$A = F2(
 	function (current, prev) {
 		return {current: current, prev: prev};
 	});
-var elm$json$Json$Decode$string = _Json_decodeString;
 var author$project$Data$Pair$decodeA = A3(
 	elm$json$Json$Decode$map2,
 	author$project$Data$Pair$A,
@@ -5972,13 +6015,25 @@ var author$project$Main$EchoWs = function (a) {
 	return {$: 'EchoWs', a: a};
 };
 var author$project$Main$wsListenPairs = _Platform_incomingPort('wsListenPairs', elm$json$Json$Decode$string);
-var elm$json$Json$Decode$decodeString = _Json_runOnString;
 var author$project$Main$subscriptions = function (model) {
 	return author$project$Main$wsListenPairs(
 		function (s) {
 			return author$project$Main$EchoWs(
 				A2(elm$json$Json$Decode$decodeString, author$project$Data$Pair$decodePair, s));
 		});
+};
+var author$project$Main$PairSub = F4(
+	function (exchange, pair, userId, pairId) {
+		return {exchange: exchange, pair: pair, pairId: pairId, userId: userId};
+	});
+var author$project$Main$PairUnSub = F3(
+	function (exchange, pair, pairId) {
+		return {exchange: exchange, pair: pair, pairId: pairId};
+	});
+var author$project$Main$SearchView = {$: 'SearchView'};
+var author$project$Main$Squart = {$: 'Squart'};
+var author$project$Main$User = function (a) {
+	return {$: 'User', a: a};
 };
 var elm$json$Json$Encode$object = function (pairs) {
 	return _Json_wrap(
@@ -5994,7 +6049,7 @@ var elm$json$Json$Encode$object = function (pairs) {
 			pairs));
 };
 var elm$json$Json$Encode$string = _Json_wrap;
-var author$project$Data$Pair$encodeSubcribePair = function (d) {
+var author$project$Main$encodeSubcribePair = function (d) {
 	return elm$json$Json$Encode$object(
 		_List_fromArray(
 			[
@@ -6005,30 +6060,141 @@ var author$project$Data$Pair$encodeSubcribePair = function (d) {
 				'pair',
 				elm$json$Json$Encode$string(d.pair)),
 				_Utils_Tuple2(
-				'line',
-				elm$json$Json$Encode$string(d.line)),
+				'pairId',
+				elm$json$Json$Encode$string(d.pairId)),
 				_Utils_Tuple2(
 				'userId',
 				elm$json$Json$Encode$string(d.userId))
 			]));
 };
-var author$project$Data$Pair$defaultSubcribe = function (ukey) {
-	return author$project$Data$Pair$encodeSubcribePair(
-		{exchange: 'BITTREX', line: '0', pair: 'BTCNEM', userId: ukey});
+var author$project$Main$encodeUnSubcribePair = function (d) {
+	return elm$json$Json$Encode$object(
+		_List_fromArray(
+			[
+				_Utils_Tuple2(
+				'exchange',
+				elm$json$Json$Encode$string(d.exchange)),
+				_Utils_Tuple2(
+				'pair',
+				elm$json$Json$Encode$string(d.pair)),
+				_Utils_Tuple2(
+				'pairId',
+				elm$json$Json$Encode$string(d.pairId))
+			]));
 };
-var author$project$Main$Squart = {$: 'Squart'};
-var author$project$Main$User = function (a) {
-	return {$: 'User', a: a};
+var author$project$Main$toJs = _Platform_outgoingPort('toJs', elm$core$Basics$identity);
+var author$project$Search$PairSymbols = F2(
+	function (exchange, pair) {
+		return {exchange: exchange, pair: pair};
+	});
+var elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3(elm$core$List$foldr, elm$core$List$cons, ys, xs);
+		}
+	});
+var elm$core$List$concat = function (lists) {
+	return A3(elm$core$List$foldr, elm$core$List$append, _List_Nil, lists);
 };
-var author$project$Main$getPair = _Platform_outgoingPort('getPair', elm$core$Basics$identity);
+var elm$core$List$map = F2(
+	function (f, xs) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, acc) {
+					return A2(
+						elm$core$List$cons,
+						f(x),
+						acc);
+				}),
+			_List_Nil,
+			xs);
+	});
+var elm$core$List$concatMap = F2(
+	function (f, list) {
+		return elm$core$List$concat(
+			A2(elm$core$List$map, f, list));
+	});
+var author$project$Search$transformJSONToPairSymbolsList = function (a) {
+	return A2(
+		elm$core$List$concatMap,
+		function (_n0) {
+			var exchange = _n0.a;
+			var pairs = _n0.b;
+			return A2(
+				elm$core$List$map,
+				function (pair) {
+					return A2(author$project$Search$PairSymbols, exchange, pair);
+				},
+				pairs);
+		},
+		elm$core$Dict$toList(a));
+};
+var elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var elm$core$Platform$Cmd$batch = _Platform_batch;
+var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
+var elm$core$String$contains = _String_contains;
+var elm$core$String$toLower = _String_toLower;
+var author$project$Search$update = F2(
+	function (msg, model) {
+		switch (msg.$) {
+			case 'FindPair':
+				var str = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							find: str,
+							resultFind: A2(
+								elm$core$List$filter,
+								function (d) {
+									return A2(
+										elm$core$String$contains,
+										elm$core$String$toLower(str),
+										elm$core$String$toLower(d.pair));
+								},
+								model.data)
+						}),
+					elm$core$Platform$Cmd$none);
+			case 'SubscribePair':
+				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+			default:
+				var r = msg.a;
+				if (r.$ === 'Ok') {
+					var d = r.a;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{
+								data: author$project$Search$transformJSONToPairSymbolsList(d),
+								resultFind: author$project$Search$transformJSONToPairSymbolsList(d)
+							}),
+						elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+				}
+		}
+	});
+var author$project$User$ResponseSuccess = function (a) {
+	return {$: 'ResponseSuccess', a: a};
+};
 var author$project$User$ResponseError = function (a) {
 	return {$: 'ResponseError', a: a};
 };
 var author$project$User$ResponseFail = {$: 'ResponseFail'};
 var author$project$User$ResponseIsNotValide = {$: 'ResponseIsNotValide'};
-var author$project$User$ResponseSuccess = function (a) {
-	return {$: 'ResponseSuccess', a: a};
-};
 var author$project$User$decodeError = A2(elm$json$Json$Decode$field, 'error', elm$json$Json$Decode$string);
 var author$project$User$decodeSucces = A2(elm$json$Json$Decode$field, 'userkey', elm$json$Json$Decode$string);
 var author$project$User$decodeSuccessOrError = function (r) {
@@ -6065,6 +6231,12 @@ var author$project$User$encode = function (model) {
 				elm$json$Json$Encode$string(model.password))
 			]));
 };
+var elm$http$Http$expectString = function (toMsg) {
+	return A2(
+		elm$http$Http$expectStringResponse,
+		toMsg,
+		elm$http$Http$resolve(elm$core$Result$Ok));
+};
 var elm$http$Http$jsonBody = function (value) {
 	return A2(
 		_Http_pair,
@@ -6084,8 +6256,6 @@ var author$project$User$singUp = function (model) {
 			url: 'https://cp.coindaq.net/api/getuserkey'
 		});
 };
-var elm$core$Platform$Cmd$batch = _Platform_batch;
-var elm$core$Platform$Cmd$none = elm$core$Platform$Cmd$batch(_List_Nil);
 var author$project$User$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -6113,7 +6283,7 @@ var author$project$User$update = F2(
 					_Utils_update(
 						model,
 						{
-							userkey: elm$core$Maybe$Just(ukey)
+							userId: elm$core$Maybe$Just(ukey)
 						}),
 					elm$core$Platform$Cmd$none);
 			case 'ResponseError':
@@ -6132,51 +6302,112 @@ var author$project$User$update = F2(
 		}
 	});
 var elm$core$Basics$not = _Basics_not;
-var elm$core$Platform$Cmd$map = _Platform_map;
+var elm$core$String$toUpper = _String_toUpper;
 var author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
 			case 'User':
-				var userMsg = msg.a;
-				var _n1 = A2(author$project$User$update, userMsg, model.user);
-				var user = _n1.a;
-				var command = _n1.b;
+				if (msg.a.$ === 'ResponseSuccess') {
+					var ukey = msg.a.a;
+					var _n1 = A2(
+						author$project$User$update,
+						author$project$User$ResponseSuccess(ukey),
+						model.user);
+					var userModel = _n1.a;
+					var command = _n1.b;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{modal: false, user: userModel}),
+						elm$core$Platform$Cmd$none);
+				} else {
+					var userMsg = msg.a;
+					var _n2 = A2(author$project$User$update, userMsg, model.user);
+					var userModel = _n2.a;
+					var command = _n2.b;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{user: userModel}),
+						A2(elm$core$Platform$Cmd$map, author$project$Main$User, command));
+				}
+			case 'Search':
+				if (msg.a.$ === 'SubscribePair') {
+					var p = msg.a.a;
+					var _n3 = model.user.userId;
+					if (_n3.$ === 'Nothing') {
+						return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+					} else {
+						var userId = _n3.a;
+						return _Utils_Tuple2(
+							model,
+							author$project$Main$toJs(
+								author$project$Main$encodeSubcribePair(
+									A4(
+										author$project$Main$PairSub,
+										elm$core$String$toUpper(p.exchange),
+										p.pair,
+										userId,
+										_Utils_ap(p.exchange, p.pair)))));
+					}
+				} else {
+					var searchMsg = msg.a;
+					var _n4 = A2(author$project$Search$update, searchMsg, model.search);
+					var search = _n4.a;
+					var command = _n4.b;
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{search: search}),
+						A2(elm$core$Platform$Cmd$map, author$project$Main$Search, command));
+				}
+			case 'UnSubPair':
+				var pair = msg.a;
+				var pairUnSub = A3(
+					author$project$Main$PairUnSub,
+					elm$core$String$toUpper(pair.exchange),
+					pair.symbol,
+					_Utils_ap(pair.exchange, pair.symbol));
 				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{user: user}),
-					A2(elm$core$Platform$Cmd$map, author$project$Main$User, command));
+					model,
+					author$project$Main$toJs(
+						author$project$Main$encodeUnSubcribePair(pairUnSub)));
 			case 'View':
 				var t = msg.a;
-				if (t.$ === 'Table') {
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{viewType: author$project$Main$Table}),
-						elm$core$Platform$Cmd$none);
-				} else {
-					return _Utils_Tuple2(
-						_Utils_update(
-							model,
-							{viewType: author$project$Main$Squart}),
-						elm$core$Platform$Cmd$none);
+				switch (t.$) {
+					case 'Table':
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{viewType: author$project$Main$Table}),
+							elm$core$Platform$Cmd$none);
+					case 'Squart':
+						return _Utils_Tuple2(
+							_Utils_update(
+								model,
+								{viewType: author$project$Main$Squart}),
+							elm$core$Platform$Cmd$none);
+					default:
+						var _n6 = model.user.userId;
+						if (_n6.$ === 'Nothing') {
+							return _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{modal: true}),
+								elm$core$Platform$Cmd$none);
+						} else {
+							return model.isFind ? _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{isFind: false, viewType: model.prevViewType}),
+								elm$core$Platform$Cmd$none) : _Utils_Tuple2(
+								_Utils_update(
+									model,
+									{isFind: true, prevViewType: model.viewType, viewType: author$project$Main$SearchView}),
+								elm$core$Platform$Cmd$none);
+						}
 				}
-			case 'AddPair':
-				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-			case 'DefaultSubcribe':
-				var _n3 = model.user.userkey;
-				if (_n3.$ === 'Nothing') {
-					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-				} else {
-					var ukey = _n3.a;
-					return _Utils_Tuple2(
-						model,
-						author$project$Main$getPair(
-							author$project$Data$Pair$defaultSubcribe(ukey)));
-				}
-			case 'RespondePairs':
-				return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
-			case 'ToggleModal':
+			case 'ToggleModalSignIn':
 				return _Utils_Tuple2(
 					_Utils_update(
 						model,
@@ -6186,7 +6417,11 @@ var author$project$Main$update = F2(
 				var result = msg.a;
 				if (result.$ === 'Ok') {
 					var d = result.a;
-					var data = A3(elm$core$Dict$insert, d.interestRatioNow.buy, d, model.data);
+					var data = A3(
+						elm$core$Dict$insert,
+						_Utils_ap(d.exchange, d.symbol),
+						d,
+						model.data);
 					return _Utils_Tuple2(
 						_Utils_update(
 							model,
@@ -6197,13 +6432,35 @@ var author$project$Main$update = F2(
 				}
 		}
 	});
-var author$project$Main$AddPair = {$: 'AddPair'};
-var author$project$Main$DefaultSubcribe = {$: 'DefaultSubcribe'};
-var author$project$Main$ToggleModal = {$: 'ToggleModal'};
+var author$project$Main$UnSubPair = function (a) {
+	return {$: 'UnSubPair', a: a};
+};
+var author$project$Main$ToggleModalSignIn = {$: 'ToggleModalSignIn'};
 var author$project$Main$View = function (a) {
 	return {$: 'View', a: a};
 };
-var elm$json$Json$Decode$map = _Json_map1;
+var author$project$Main$isActive = F2(
+	function (is, should) {
+		switch (is.$) {
+			case 'Table':
+				if (should.$ === 'Table') {
+					return _Utils_Tuple2('active', true);
+				} else {
+					return _Utils_Tuple2('disactive', true);
+				}
+			case 'Squart':
+				if (should.$ === 'Squart') {
+					return _Utils_Tuple2('active', true);
+				} else {
+					return _Utils_Tuple2('disactive', true);
+				}
+			default:
+				return _Utils_Tuple2('disactive', true);
+		}
+	});
+var author$project$Search$FindPair = function (a) {
+	return {$: 'FindPair', a: a};
+};
 var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 	switch (handler.$) {
 		case 'Normal':
@@ -6216,12 +6473,7 @@ var elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
 			return 3;
 	}
 };
-var elm$html$Html$button = _VirtualDom_node('button');
-var elm$html$Html$div = _VirtualDom_node('div');
-var elm$html$Html$i = _VirtualDom_node('i');
-var elm$html$Html$span = _VirtualDom_node('span');
-var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
+var elm$html$Html$input = _VirtualDom_node('input');
 var elm$html$Html$Attributes$stringProperty = F2(
 	function (key, string) {
 		return A2(
@@ -6230,10 +6482,79 @@ var elm$html$Html$Attributes$stringProperty = F2(
 			elm$json$Json$Encode$string(string));
 	});
 var elm$html$Html$Attributes$class = elm$html$Html$Attributes$stringProperty('className');
+var elm$html$Html$Attributes$placeholder = elm$html$Html$Attributes$stringProperty('placeholder');
+var elm$html$Html$Attributes$type_ = elm$html$Html$Attributes$stringProperty('type');
+var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
+var elm$html$Html$Events$alwaysStop = function (x) {
+	return _Utils_Tuple2(x, true);
+};
+var elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
+	return {$: 'MayStopPropagation', a: a};
+};
+var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var elm$html$Html$Events$stopPropagationOn = F2(
+	function (event, decoder) {
+		return A2(
+			elm$virtual_dom$VirtualDom$on,
+			event,
+			elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
+	});
+var elm$json$Json$Decode$at = F2(
+	function (fields, decoder) {
+		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
+	});
+var elm$html$Html$Events$targetValue = A2(
+	elm$json$Json$Decode$at,
+	_List_fromArray(
+		['target', 'value']),
+	elm$json$Json$Decode$string);
+var elm$html$Html$Events$onInput = function (tagger) {
+	return A2(
+		elm$html$Html$Events$stopPropagationOn,
+		'input',
+		A2(
+			elm$json$Json$Decode$map,
+			elm$html$Html$Events$alwaysStop,
+			A2(elm$json$Json$Decode$map, tagger, elm$html$Html$Events$targetValue)));
+};
+var author$project$Search$viewSearchInput = function (model) {
+	return A2(
+		elm$html$Html$input,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$class('input-search'),
+				elm$html$Html$Attributes$type_('text'),
+				elm$html$Html$Attributes$placeholder('find'),
+				elm$html$Html$Attributes$value(model.find),
+				elm$html$Html$Events$onInput(author$project$Search$FindPair)
+			]),
+		_List_Nil);
+};
+var elm$html$Html$button = _VirtualDom_node('button');
+var elm$html$Html$div = _VirtualDom_node('div');
+var elm$html$Html$i = _VirtualDom_node('i');
+var elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
+var elm$html$Html$map = elm$virtual_dom$VirtualDom$map;
+var elm$html$Html$span = _VirtualDom_node('span');
+var elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var elm$html$Html$text = elm$virtual_dom$VirtualDom$text;
+var elm$core$Tuple$second = function (_n0) {
+	var y = _n0.b;
+	return y;
+};
+var elm$html$Html$Attributes$classList = function (classes) {
+	return elm$html$Html$Attributes$class(
+		A2(
+			elm$core$String$join,
+			' ',
+			A2(
+				elm$core$List$map,
+				elm$core$Tuple$first,
+				A2(elm$core$List$filter, elm$core$Tuple$second, classes))));
+};
 var elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 'Normal', a: a};
 };
-var elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
 var elm$html$Html$Events$on = F2(
 	function (event, decoder) {
 		return A2(
@@ -6278,24 +6599,28 @@ var author$project$Main$viewHead = function (model) {
 						elm$html$Html$button,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$class('red-button'),
-								elm$html$Html$Events$onClick(author$project$Main$DefaultSubcribe)
+								elm$html$Html$Attributes$class('red-button')
 							]),
 						_List_fromArray(
 							[
 								elm$html$Html$text('SRH |>')
 							])),
-						A2(
+						model.isFind ? A2(
+						elm$html$Html$map,
+						author$project$Main$Search,
+						author$project$Search$viewSearchInput(model.search)) : elm$html$Html$text(''),
+						(!model.isFind) ? A2(
 						elm$html$Html$button,
 						_List_fromArray(
 							[
 								elm$html$Html$Attributes$class('pair-button'),
-								elm$html$Html$Events$onClick(author$project$Main$AddPair)
+								elm$html$Html$Events$onClick(
+								author$project$Main$View(author$project$Main$SearchView))
 							]),
 						_List_fromArray(
 							[
 								elm$html$Html$text('< ADD PAIR >')
-							]))
+							])) : elm$html$Html$text('')
 					])),
 				A2(
 				elm$html$Html$div,
@@ -6308,7 +6633,7 @@ var author$project$Main$viewHead = function (model) {
 				elm$html$Html$div,
 				_List_fromArray(
 					[
-						elm$html$Html$Attributes$class('options-view')
+						elm$html$Html$Attributes$class('options-view flex-row')
 					]),
 				_List_fromArray(
 					[
@@ -6325,7 +6650,12 @@ var author$project$Main$viewHead = function (model) {
 								elm$html$Html$i,
 								_List_fromArray(
 									[
-										elm$html$Html$Attributes$class('disactive fas fa-th-list')
+										elm$html$Html$Attributes$classList(
+										_List_fromArray(
+											[
+												_Utils_Tuple2('fas fa-th-list', true),
+												A2(author$project$Main$isActive, author$project$Main$Table, model.viewType)
+											]))
 									]),
 								_List_Nil)
 							])),
@@ -6342,33 +6672,50 @@ var author$project$Main$viewHead = function (model) {
 								elm$html$Html$i,
 								_List_fromArray(
 									[
-										elm$html$Html$Attributes$class('active fas fa-th-large')
+										elm$html$Html$Attributes$classList(
+										_List_fromArray(
+											[
+												_Utils_Tuple2('fas fa-th-large', true),
+												A2(author$project$Main$isActive, author$project$Main$Squart, model.viewType)
+											]))
 									]),
 								_List_Nil)
 							]))
 					])),
 				function () {
-				var _n0 = model.user.userkey;
-				if (_n0.$ === 'Nothing') {
+				if (model.isFind) {
 					return A2(
-						elm$html$Html$button,
+						elm$html$Html$i,
 						_List_fromArray(
 							[
-								elm$html$Html$Attributes$class('sign-in-button'),
-								elm$html$Html$Events$onClick(author$project$Main$ToggleModal)
+								elm$html$Html$Attributes$class('fas fa-times'),
+								elm$html$Html$Events$onClick(
+								author$project$Main$View(author$project$Main$SearchView))
 							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text('Sign-in')
-							]));
+						_List_Nil);
 				} else {
-					return A2(
-						elm$html$Html$span,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text(model.user.email)
-							]));
+					var _n0 = model.user.userId;
+					if (_n0.$ === 'Nothing') {
+						return A2(
+							elm$html$Html$button,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('sign-in-button'),
+									elm$html$Html$Events$onClick(author$project$Main$ToggleModalSignIn)
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text('Sign-in')
+								]));
+					} else {
+						return A2(
+							elm$html$Html$span,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text(model.user.email)
+								]));
+					}
 				}
 			}()
 			]));
@@ -6380,47 +6727,39 @@ var author$project$User$Password = function (a) {
 	return {$: 'Password', a: a};
 };
 var author$project$User$Submit = {$: 'Submit'};
-var elm$html$Html$input = _VirtualDom_node('input');
-var elm$html$Html$Attributes$placeholder = elm$html$Html$Attributes$stringProperty('placeholder');
-var elm$html$Html$Attributes$type_ = elm$html$Html$Attributes$stringProperty('type');
-var elm$html$Html$Attributes$value = elm$html$Html$Attributes$stringProperty('value');
-var elm$html$Html$Events$alwaysStop = function (x) {
-	return _Utils_Tuple2(x, true);
-};
-var elm$virtual_dom$VirtualDom$MayStopPropagation = function (a) {
-	return {$: 'MayStopPropagation', a: a};
-};
-var elm$html$Html$Events$stopPropagationOn = F2(
-	function (event, decoder) {
-		return A2(
-			elm$virtual_dom$VirtualDom$on,
-			event,
-			elm$virtual_dom$VirtualDom$MayStopPropagation(decoder));
-	});
-var elm$json$Json$Decode$at = F2(
-	function (fields, decoder) {
-		return A3(elm$core$List$foldr, elm$json$Json$Decode$field, decoder, fields);
-	});
-var elm$html$Html$Events$targetValue = A2(
-	elm$json$Json$Decode$at,
-	_List_fromArray(
-		['target', 'value']),
-	elm$json$Json$Decode$string);
-var elm$html$Html$Events$onInput = function (tagger) {
-	return A2(
-		elm$html$Html$Events$stopPropagationOn,
-		'input',
-		A2(
-			elm$json$Json$Decode$map,
-			elm$html$Html$Events$alwaysStop,
-			A2(elm$json$Json$Decode$map, tagger, elm$html$Html$Events$targetValue)));
-};
 var author$project$User$view = function (model) {
 	return A2(
 		elm$html$Html$div,
 		_List_Nil,
 		_List_fromArray(
 			[
+				function () {
+				var _n0 = model.responseError;
+				if (_n0.$ === 'Nothing') {
+					return elm$html$Html$text('');
+				} else {
+					var errorMessage = _n0.a;
+					return A2(
+						elm$html$Html$div,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('input-group')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('error')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text(errorMessage)
+									]))
+							]));
+				}
+			}(),
 				A2(
 				elm$html$Html$div,
 				_List_fromArray(
@@ -6481,8 +6820,6 @@ var author$project$User$view = function (model) {
 					]))
 			]));
 };
-var elm$virtual_dom$VirtualDom$map = _VirtualDom_map;
-var elm$html$Html$map = elm$virtual_dom$VirtualDom$map;
 var author$project$Main$viewModal = function (model) {
 	var _n0 = model.modal;
 	if (!_n0) {
@@ -6505,13 +6842,22 @@ var author$project$Main$viewModal = function (model) {
 					_List_fromArray(
 						[
 							A2(
-							elm$html$Html$i,
+							elm$html$Html$div,
 							_List_fromArray(
 								[
-									elm$html$Html$Attributes$class('fas fa-times'),
-									elm$html$Html$Events$onClick(author$project$Main$ToggleModal)
+									elm$html$Html$Attributes$class('close-modal')
 								]),
-							_List_Nil),
+							_List_fromArray(
+								[
+									A2(
+									elm$html$Html$i,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('fas fa-times'),
+											elm$html$Html$Events$onClick(author$project$Main$ToggleModalSignIn)
+										]),
+									_List_Nil)
+								])),
 							A2(
 							elm$html$Html$map,
 							author$project$Main$User,
@@ -6519,6 +6865,92 @@ var author$project$Main$viewModal = function (model) {
 						]))
 				]));
 	}
+};
+var author$project$Search$SubscribePair = function (a) {
+	return {$: 'SubscribePair', a: a};
+};
+var elm$html$Html$td = _VirtualDom_node('td');
+var elm$html$Html$tr = _VirtualDom_node('tr');
+var author$project$Search$viewBodyRow = function (row) {
+	return A2(
+		elm$html$Html$tr,
+		_List_fromArray(
+			[
+				elm$html$Html$Events$onClick(
+				author$project$Search$SubscribePair(row))
+			]),
+		_List_fromArray(
+			[
+				A2(
+				elm$html$Html$td,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('name-value-group')
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text(row.exchange)
+					])),
+				A2(
+				elm$html$Html$td,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('name-value-group')
+					]),
+				_List_fromArray(
+					[
+						elm$html$Html$text(row.pair)
+					]))
+			]));
+};
+var author$project$Search$viewHeadRow = function (colName) {
+	return A2(
+		elm$html$Html$td,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$class('name-value-group')
+			]),
+		_List_fromArray(
+			[
+				elm$html$Html$text(colName)
+			]));
+};
+var elm$html$Html$table = _VirtualDom_node('table');
+var elm$html$Html$tbody = _VirtualDom_node('tbody');
+var elm$html$Html$thead = _VirtualDom_node('thead');
+var author$project$Search$view = function (model) {
+	return A2(
+		elm$html$Html$div,
+		_List_fromArray(
+			[
+				elm$html$Html$Attributes$class('flex-row flex-between')
+			]),
+		_List_fromArray(
+			[
+				A2(
+				elm$html$Html$table,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('full-width')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$thead,
+						_List_Nil,
+						_List_fromArray(
+							[
+								A2(
+								elm$html$Html$tr,
+								_List_Nil,
+								A2(elm$core$List$map, author$project$Search$viewHeadRow, model.tableHeadRow))
+							])),
+						A2(
+						elm$html$Html$tbody,
+						_List_Nil,
+						A2(elm$core$List$map, author$project$Search$viewBodyRow, model.resultFind))
+					]))
+			]));
 };
 var elm$core$Maybe$map2 = F3(
 	function (func, ma, mb) {
@@ -6553,556 +6985,518 @@ var author$project$View$Helpers$getRedOrGreenClass = F2(
 			return _Utils_Tuple2(x, true);
 		}
 	});
-var elm$html$Html$td = _VirtualDom_node('td');
-var elm$html$Html$tr = _VirtualDom_node('tr');
-var elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2(elm$core$List$cons, x, xs) : xs;
-				}),
+var author$project$View$Table$viewRow = F2(
+	function (msg, d) {
+		return A2(
+			elm$html$Html$tr,
 			_List_Nil,
-			list);
+			_List_fromArray(
+				[
+					A2(
+					elm$html$Html$td,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('name-value-group')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(d.exchange)
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('value')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text('ET TIME')
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(d.symbol)
+								]))
+						])),
+					A2(
+					elm$html$Html$td,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('name-value-group')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text('BID')
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$classList(
+									_List_fromArray(
+										[
+											_Utils_Tuple2('value', true),
+											A2(author$project$View$Helpers$getRedOrGreenClass, d.bid.prev, d.bid.current)
+										]))
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(d.bid.current)
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text('ASK')
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$classList(
+									_List_fromArray(
+										[
+											_Utils_Tuple2('value', true),
+											A2(author$project$View$Helpers$getRedOrGreenClass, d.ask.prev, d.ask.current)
+										]))
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(d.ask.current)
+								]))
+						])),
+					A2(
+					elm$html$Html$td,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('name-value-group')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text('24h High')
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$classList(
+									_List_fromArray(
+										[
+											_Utils_Tuple2('value', true),
+											A2(author$project$View$Helpers$getRedOrGreenClass, d.high.prev, d.high.current)
+										]))
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(d.high.current)
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text('24h Low')
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$classList(
+									_List_fromArray(
+										[
+											_Utils_Tuple2('value', true),
+											A2(author$project$View$Helpers$getRedOrGreenClass, d.low.prev, d.low.current)
+										]))
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(d.low.current)
+								]))
+						])),
+					A2(
+					elm$html$Html$td,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('name-value-group')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text('Coin Volume 24h')
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$classList(
+									_List_fromArray(
+										[
+											_Utils_Tuple2('value', true),
+											A2(author$project$View$Helpers$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
+										]))
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(d.volume24.current)
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text('Coin Volume 24h High')
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$classList(
+									_List_fromArray(
+										[
+											_Utils_Tuple2('value', true),
+											_Utils_Tuple2('gt', true)
+										]))
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(d.highVolume24)
+								]))
+						])),
+					A2(
+					elm$html$Html$td,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('name-value-group')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text('MH 24h Buy')
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('value')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(d.marketHistory.buy)
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text('MH 24h Sell')
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('value')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(d.marketHistory.sell)
+								]))
+						])),
+					A2(
+					elm$html$Html$td,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text('Interest Ratio Now')
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('flex-row interest-ratio roboto')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('flex-column')
+										]),
+									_List_fromArray(
+										[
+											A2(
+											elm$html$Html$span,
+											_List_fromArray(
+												[
+													elm$html$Html$Attributes$class('interest-ratio-value green')
+												]),
+											_List_fromArray(
+												[
+													elm$html$Html$text(d.interestRatioNow.buy + '%')
+												])),
+											A2(
+											elm$html$Html$span,
+											_List_Nil,
+											_List_fromArray(
+												[
+													elm$html$Html$text('IRN Buy')
+												]))
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('flex-column')
+										]),
+									_List_fromArray(
+										[
+											A2(
+											elm$html$Html$span,
+											_List_fromArray(
+												[
+													elm$html$Html$Attributes$class('interest-ratio-value red')
+												]),
+											_List_fromArray(
+												[
+													elm$html$Html$text(d.interestRatioNow.sell + '%')
+												])),
+											A2(
+											elm$html$Html$span,
+											_List_Nil,
+											_List_fromArray(
+												[
+													elm$html$Html$text('IRN Sell')
+												]))
+										]))
+								]))
+						])),
+					A2(
+					elm$html$Html$td,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('name-value-group')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text('24h Vol')
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$classList(
+									_List_fromArray(
+										[
+											_Utils_Tuple2('value', true),
+											A2(author$project$View$Helpers$getRedOrGreenClass, d.baseVolume.prevDay, d.baseVolume.currentDay)
+										]))
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(d.baseVolume.currentDay)
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text('Pre Vol')
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$classList(
+									_List_fromArray(
+										[
+											_Utils_Tuple2('value', true),
+											A2(author$project$View$Helpers$getRedOrGreenClass, d.baseVolume.twoPrevDay, d.baseVolume.prevDay)
+										]))
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(d.baseVolume.prevDay)
+								]))
+						])),
+					A2(
+					elm$html$Html$td,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('name-value-group')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text('Market Cap')
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$classList(
+									_List_fromArray(
+										[
+											_Utils_Tuple2('value', true),
+											A2(author$project$View$Helpers$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
+										]))
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(d.marketCup.current)
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text('24 Market Vol')
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$classList(
+									_List_fromArray(
+										[
+											_Utils_Tuple2('value', true),
+											A2(author$project$View$Helpers$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
+										]))
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(d.marketVol24.current)
+								]))
+						])),
+					A2(
+					elm$html$Html$td,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('name-value-group')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('table-row-menu')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									elm$html$Html$button,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('btn transparent'),
+											elm$html$Html$Events$onClick(
+											msg(d))
+										]),
+									_List_fromArray(
+										[
+											A2(
+											elm$html$Html$i,
+											_List_fromArray(
+												[
+													elm$html$Html$Attributes$class('menu fas fa-ellipsis-h')
+												]),
+											_List_Nil)
+										]))
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('GRAPH')
+								]))
+						]))
+				]));
 	});
-var elm$core$List$map = F2(
-	function (f, xs) {
-		return A3(
-			elm$core$List$foldr,
-			F2(
-				function (x, acc) {
-					return A2(
-						elm$core$List$cons,
-						f(x),
-						acc);
-				}),
-			_List_Nil,
-			xs);
-	});
-var elm$core$Tuple$second = function (_n0) {
-	var y = _n0.b;
-	return y;
-};
-var elm$html$Html$Attributes$classList = function (classes) {
-	return elm$html$Html$Attributes$class(
-		A2(
-			elm$core$String$join,
-			' ',
-			A2(
-				elm$core$List$map,
-				elm$core$Tuple$first,
-				A2(elm$core$List$filter, elm$core$Tuple$second, classes))));
-};
-var author$project$View$Table$viewCeil = function (d) {
-	return A2(
-		elm$html$Html$tr,
-		_List_Nil,
-		_List_fromArray(
-			[
-				A2(
-				elm$html$Html$td,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('name-value-group')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text(d.exchange)
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('value')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text('ET TIME')
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text(d.symbol)
-							]))
-					])),
-				A2(
-				elm$html$Html$td,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('name-value-group')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text('BID')
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$classList(
-								_List_fromArray(
-									[
-										_Utils_Tuple2('value', true),
-										A2(author$project$View$Helpers$getRedOrGreenClass, d.bid.prev, d.bid.current)
-									]))
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text(d.bid.current)
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text('ASK')
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$classList(
-								_List_fromArray(
-									[
-										_Utils_Tuple2('value', true),
-										A2(author$project$View$Helpers$getRedOrGreenClass, d.ask.prev, d.ask.current)
-									]))
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text(d.ask.current)
-							]))
-					])),
-				A2(
-				elm$html$Html$td,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('name-value-group')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text('24h High')
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$classList(
-								_List_fromArray(
-									[
-										_Utils_Tuple2('value', true),
-										A2(author$project$View$Helpers$getRedOrGreenClass, d.high.prev, d.high.current)
-									]))
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text(d.high.current)
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text('24h Low')
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$classList(
-								_List_fromArray(
-									[
-										_Utils_Tuple2('value', true),
-										A2(author$project$View$Helpers$getRedOrGreenClass, d.low.prev, d.low.current)
-									]))
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text(d.low.current)
-							]))
-					])),
-				A2(
-				elm$html$Html$td,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('name-value-group')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text('Coin Volume 24h')
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$classList(
-								_List_fromArray(
-									[
-										_Utils_Tuple2('value', true),
-										A2(author$project$View$Helpers$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
-									]))
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text(d.volume24.current)
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text('Coin Volume 24h High')
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$classList(
-								_List_fromArray(
-									[
-										_Utils_Tuple2('value', true),
-										_Utils_Tuple2('gt', true)
-									]))
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text(d.highVolume24)
-							]))
-					])),
-				A2(
-				elm$html$Html$td,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('name-value-group')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text('MH 24h Buy')
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('value')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text(d.marketHistory.buy)
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text('MH 24h Sell')
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('value')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text(d.marketHistory.sell)
-							]))
-					])),
-				A2(
-				elm$html$Html$td,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text('Interest Ratio Now')
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('flex-row interest-ratio roboto')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('flex-column')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										elm$html$Html$span,
-										_List_fromArray(
-											[
-												elm$html$Html$Attributes$class('interest-ratio-value green')
-											]),
-										_List_fromArray(
-											[
-												elm$html$Html$text(d.interestRatioNow.buy + '%')
-											])),
-										A2(
-										elm$html$Html$span,
-										_List_Nil,
-										_List_fromArray(
-											[
-												elm$html$Html$text('IRN Buy')
-											]))
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('flex-column')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										elm$html$Html$span,
-										_List_fromArray(
-											[
-												elm$html$Html$Attributes$class('interest-ratio-value red')
-											]),
-										_List_fromArray(
-											[
-												elm$html$Html$text(d.interestRatioNow.sell + '%')
-											])),
-										A2(
-										elm$html$Html$span,
-										_List_Nil,
-										_List_fromArray(
-											[
-												elm$html$Html$text('IRN Sell')
-											]))
-									]))
-							]))
-					])),
-				A2(
-				elm$html$Html$td,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('name-value-group')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text('24h Vol')
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$classList(
-								_List_fromArray(
-									[
-										_Utils_Tuple2('value', true),
-										A2(author$project$View$Helpers$getRedOrGreenClass, d.baseVolume.prevDay, d.baseVolume.currentDay)
-									]))
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text(d.baseVolume.currentDay)
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text('Pre Vol')
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$classList(
-								_List_fromArray(
-									[
-										_Utils_Tuple2('value', true),
-										A2(author$project$View$Helpers$getRedOrGreenClass, d.baseVolume.twoPrevDay, d.baseVolume.prevDay)
-									]))
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text(d.baseVolume.prevDay)
-							]))
-					])),
-				A2(
-				elm$html$Html$td,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('name-value-group')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text('Market Cap')
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$classList(
-								_List_fromArray(
-									[
-										_Utils_Tuple2('value', true),
-										A2(author$project$View$Helpers$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
-									]))
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text(d.marketCup.current)
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text('24 Market Vol')
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$classList(
-								_List_fromArray(
-									[
-										_Utils_Tuple2('value', true),
-										A2(author$project$View$Helpers$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
-									]))
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text(d.marketVol24.current)
-							]))
-					])),
-				A2(
-				elm$html$Html$td,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('name-value-group')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('table-row-menu')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$button,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('btn transparent')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										elm$html$Html$i,
-										_List_fromArray(
-											[
-												elm$html$Html$Attributes$class('menu fas fa-ellipsis-h')
-											]),
-										_List_Nil)
-									]))
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('GRAPH')
-							]))
-					]))
-			]));
-};
 var elm$core$Dict$values = function (dict) {
 	return A3(
 		elm$core$Dict$foldr,
@@ -7113,599 +7507,602 @@ var elm$core$Dict$values = function (dict) {
 		_List_Nil,
 		dict);
 };
-var elm$html$Html$table = _VirtualDom_node('table');
-var elm$html$Html$tbody = _VirtualDom_node('tbody');
-var author$project$View$Table$viewTable = function (model) {
-	return A2(
-		elm$html$Html$div,
-		_List_fromArray(
-			[
-				elm$html$Html$Attributes$class('flex-row flex-center')
-			]),
-		_List_fromArray(
-			[
-				A2(
-				elm$html$Html$table,
-				_List_Nil,
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$tbody,
-						_List_Nil,
-						A2(
-							elm$core$List$map,
-							author$project$View$Table$viewCeil,
-							elm$core$Dict$values(model)))
-					]))
-			]));
-};
-var author$project$View$Tile$viewTile = function (d) {
-	return A2(
-		elm$html$Html$div,
-		_List_fromArray(
-			[
-				elm$html$Html$Attributes$class('tile')
-			]),
-		_List_fromArray(
-			[
-				A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('flex-row flex-between')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$span,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text(d.exchange)
-							])),
-						A2(
-						elm$html$Html$span,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text(d.symbol)
-							])),
-						A2(
-						elm$html$Html$span,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('red')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text('$2222.00002')
-							])),
-						A2(
-						elm$html$Html$span,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('blue')
-							]),
-						_List_fromArray(
-							[
-								elm$html$Html$text('ET TIME')
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('table-row-menu')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$button,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('btn transparent')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										elm$html$Html$i,
-										_List_fromArray(
-											[
-												elm$html$Html$Attributes$class('menu fas fa-ellipsis-h')
-											]),
-										_List_Nil)
-									]))
-							]))
-					])),
-				A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('flex-row flex-between')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name-value-group')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('BID')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$classList(
-										_List_fromArray(
-											[
-												_Utils_Tuple2('value', true),
-												A2(author$project$View$Helpers$getRedOrGreenClass, d.bid.prev, d.bid.current)
-											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.bid.current)
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('ASK')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$classList(
-										_List_fromArray(
-											[
-												_Utils_Tuple2('value', true),
-												A2(author$project$View$Helpers$getRedOrGreenClass, d.ask.prev, d.ask.current)
-											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.ask.current)
-									]))
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name-value-group')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('24h High')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$classList(
-										_List_fromArray(
-											[
-												_Utils_Tuple2('value', true),
-												A2(author$project$View$Helpers$getRedOrGreenClass, d.high.prev, d.high.current)
-											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.high.current)
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('24h Low')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$classList(
-										_List_fromArray(
-											[
-												_Utils_Tuple2('value', true),
-												A2(author$project$View$Helpers$getRedOrGreenClass, d.low.prev, d.low.current)
-											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.low.current)
-									]))
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name-value-group')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('24h Vol')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$classList(
-										_List_fromArray(
-											[
-												_Utils_Tuple2('value', true),
-												A2(author$project$View$Helpers$getRedOrGreenClass, d.baseVolume.prevDay, d.baseVolume.currentDay)
-											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.baseVolume.currentDay)
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('Pre Vol')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$classList(
-										_List_fromArray(
-											[
-												_Utils_Tuple2('value', true),
-												A2(author$project$View$Helpers$getRedOrGreenClass, d.baseVolume.twoPrevDay, d.baseVolume.prevDay)
-											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.baseVolume.prevDay)
-									]))
-							]))
-					])),
-				A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('flex-row flex-between')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name-value-group')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('Coin Volume 24h')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$classList(
-										_List_fromArray(
-											[
-												_Utils_Tuple2('value', true),
-												A2(author$project$View$Helpers$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
-											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.volume24.current)
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('Coin Volume 24h High')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$classList(
-										_List_fromArray(
-											[
-												_Utils_Tuple2('value', true),
-												_Utils_Tuple2('gt', true)
-											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.highVolume24)
-									]))
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name-value-group')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('MH 24h Buy')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('value')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.marketHistory.buy)
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('MH 24h Sell')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('value')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.marketHistory.sell)
-									]))
-							]))
-					])),
-				A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('flex-row flex-between')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$div,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('Interest Ratio Now')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('flex-row interest-ratio')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										elm$html$Html$div,
-										_List_fromArray(
-											[
-												elm$html$Html$Attributes$class('flex-column')
-											]),
-										_List_fromArray(
-											[
-												A2(
-												elm$html$Html$span,
-												_List_fromArray(
-													[
-														elm$html$Html$Attributes$class('interest-ratio-value lt')
-													]),
-												_List_fromArray(
-													[
-														elm$html$Html$text(d.interestRatioNow.buy + '%')
-													])),
-												A2(
-												elm$html$Html$span,
-												_List_Nil,
-												_List_fromArray(
-													[
-														elm$html$Html$text('IRN Buy')
-													]))
-											])),
-										A2(
-										elm$html$Html$div,
-										_List_fromArray(
-											[
-												elm$html$Html$Attributes$class('flex-column')
-											]),
-										_List_fromArray(
-											[
-												A2(
-												elm$html$Html$span,
-												_List_fromArray(
-													[
-														elm$html$Html$Attributes$class('interest-ratio-value gt')
-													]),
-												_List_fromArray(
-													[
-														elm$html$Html$text(d.interestRatioNow.sell + '%')
-													])),
-												A2(
-												elm$html$Html$span,
-												_List_Nil,
-												_List_fromArray(
-													[
-														elm$html$Html$text('IRN Sell')
-													]))
-											]))
-									]))
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_Nil,
-						_List_fromArray(
-							[
-								elm$html$Html$text('GRAPH')
-							]))
-					])),
-				A2(
-				elm$html$Html$div,
-				_List_fromArray(
-					[
-						elm$html$Html$Attributes$class('flex-row flex-between')
-					]),
-				_List_fromArray(
-					[
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name-value-group')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('Market Cap')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$classList(
-										_List_fromArray(
-											[
-												_Utils_Tuple2('value', true),
-												A2(author$project$View$Helpers$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
-											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.marketCup.current)
-									]))
-							])),
-						A2(
-						elm$html$Html$div,
-						_List_fromArray(
-							[
-								elm$html$Html$Attributes$class('name-value-group')
-							]),
-						_List_fromArray(
-							[
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$class('name')
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text('24 Market Vol')
-									])),
-								A2(
-								elm$html$Html$div,
-								_List_fromArray(
-									[
-										elm$html$Html$Attributes$classList(
-										_List_fromArray(
-											[
-												_Utils_Tuple2('value', true),
-												A2(author$project$View$Helpers$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
-											]))
-									]),
-								_List_fromArray(
-									[
-										elm$html$Html$text(d.marketVol24.current)
-									]))
-							]))
-					]))
-			]));
-};
-var author$project$View$Tile$viewTileList = function (model) {
-	return A2(
-		elm$html$Html$div,
-		_List_fromArray(
-			[
-				elm$html$Html$Attributes$class('tile-list')
-			]),
-		A2(
-			elm$core$List$map,
-			author$project$View$Tile$viewTile,
-			elm$core$Dict$values(model)));
-};
+var author$project$View$Table$viewTable = F2(
+	function (msg, model) {
+		return A2(
+			elm$html$Html$div,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$class('flex-row flex-center')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					elm$html$Html$table,
+					_List_Nil,
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$tbody,
+							_List_Nil,
+							A2(
+								elm$core$List$map,
+								author$project$View$Table$viewRow(msg),
+								elm$core$Dict$values(model)))
+						]))
+				]));
+	});
+var author$project$View$Tile$viewTile = F2(
+	function (msg, d) {
+		return A2(
+			elm$html$Html$div,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$class('tile')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					elm$html$Html$div,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('flex-row flex-between')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$span,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text(d.exchange)
+								])),
+							A2(
+							elm$html$Html$span,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text(d.symbol)
+								])),
+							A2(
+							elm$html$Html$span,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('red')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text('$2222.00002')
+								])),
+							A2(
+							elm$html$Html$span,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('blue')
+								]),
+							_List_fromArray(
+								[
+									elm$html$Html$text('ET TIME')
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('table-row-menu')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									elm$html$Html$button,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('btn transparent'),
+											elm$html$Html$Events$onClick(
+											msg(d))
+										]),
+									_List_fromArray(
+										[
+											A2(
+											elm$html$Html$i,
+											_List_fromArray(
+												[
+													elm$html$Html$Attributes$class('menu fas fa-ellipsis-h')
+												]),
+											_List_Nil)
+										]))
+								]))
+						])),
+					A2(
+					elm$html$Html$div,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('flex-row flex-between')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name-value-group')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('name')
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text('BID')
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$classList(
+											_List_fromArray(
+												[
+													_Utils_Tuple2('value', true),
+													A2(author$project$View$Helpers$getRedOrGreenClass, d.bid.prev, d.bid.current)
+												]))
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text(d.bid.current)
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('name')
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text('ASK')
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$classList(
+											_List_fromArray(
+												[
+													_Utils_Tuple2('value', true),
+													A2(author$project$View$Helpers$getRedOrGreenClass, d.ask.prev, d.ask.current)
+												]))
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text(d.ask.current)
+										]))
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name-value-group')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('name')
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text('24h High')
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$classList(
+											_List_fromArray(
+												[
+													_Utils_Tuple2('value', true),
+													A2(author$project$View$Helpers$getRedOrGreenClass, d.high.prev, d.high.current)
+												]))
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text(d.high.current)
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('name')
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text('24h Low')
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$classList(
+											_List_fromArray(
+												[
+													_Utils_Tuple2('value', true),
+													A2(author$project$View$Helpers$getRedOrGreenClass, d.low.prev, d.low.current)
+												]))
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text(d.low.current)
+										]))
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name-value-group')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('name')
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text('24h Vol')
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$classList(
+											_List_fromArray(
+												[
+													_Utils_Tuple2('value', true),
+													A2(author$project$View$Helpers$getRedOrGreenClass, d.baseVolume.prevDay, d.baseVolume.currentDay)
+												]))
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text(d.baseVolume.currentDay)
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('name')
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text('Pre Vol')
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$classList(
+											_List_fromArray(
+												[
+													_Utils_Tuple2('value', true),
+													A2(author$project$View$Helpers$getRedOrGreenClass, d.baseVolume.twoPrevDay, d.baseVolume.prevDay)
+												]))
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text(d.baseVolume.prevDay)
+										]))
+								]))
+						])),
+					A2(
+					elm$html$Html$div,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('flex-row flex-between')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name-value-group')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('name')
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text('Coin Volume 24h')
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$classList(
+											_List_fromArray(
+												[
+													_Utils_Tuple2('value', true),
+													A2(author$project$View$Helpers$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
+												]))
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text(d.volume24.current)
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('name')
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text('Coin Volume 24h High')
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$classList(
+											_List_fromArray(
+												[
+													_Utils_Tuple2('value', true),
+													_Utils_Tuple2('gt', true)
+												]))
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text(d.highVolume24)
+										]))
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name-value-group')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('name')
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text('MH 24h Buy')
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('value')
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text(d.marketHistory.buy)
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('name')
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text('MH 24h Sell')
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('value')
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text(d.marketHistory.sell)
+										]))
+								]))
+						])),
+					A2(
+					elm$html$Html$div,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('flex-row flex-between')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$div,
+							_List_Nil,
+							_List_fromArray(
+								[
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('name')
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text('Interest Ratio Now')
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('flex-row interest-ratio')
+										]),
+									_List_fromArray(
+										[
+											A2(
+											elm$html$Html$div,
+											_List_fromArray(
+												[
+													elm$html$Html$Attributes$class('flex-column')
+												]),
+											_List_fromArray(
+												[
+													A2(
+													elm$html$Html$span,
+													_List_fromArray(
+														[
+															elm$html$Html$Attributes$class('interest-ratio-value lt')
+														]),
+													_List_fromArray(
+														[
+															elm$html$Html$text(d.interestRatioNow.buy + '%')
+														])),
+													A2(
+													elm$html$Html$span,
+													_List_Nil,
+													_List_fromArray(
+														[
+															elm$html$Html$text('IRN Buy')
+														]))
+												])),
+											A2(
+											elm$html$Html$div,
+											_List_fromArray(
+												[
+													elm$html$Html$Attributes$class('flex-column')
+												]),
+											_List_fromArray(
+												[
+													A2(
+													elm$html$Html$span,
+													_List_fromArray(
+														[
+															elm$html$Html$Attributes$class('interest-ratio-value gt')
+														]),
+													_List_fromArray(
+														[
+															elm$html$Html$text(d.interestRatioNow.sell + '%')
+														])),
+													A2(
+													elm$html$Html$span,
+													_List_Nil,
+													_List_fromArray(
+														[
+															elm$html$Html$text('IRN Sell')
+														]))
+												]))
+										]))
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$text('GRAPH')
+								]))
+						])),
+					A2(
+					elm$html$Html$div,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('flex-row flex-between')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name-value-group')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('name')
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text('Market Cap')
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$classList(
+											_List_fromArray(
+												[
+													_Utils_Tuple2('value', true),
+													A2(author$project$View$Helpers$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
+												]))
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text(d.marketCup.current)
+										]))
+								])),
+							A2(
+							elm$html$Html$div,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('name-value-group')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$class('name')
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text('24 Market Vol')
+										])),
+									A2(
+									elm$html$Html$div,
+									_List_fromArray(
+										[
+											elm$html$Html$Attributes$classList(
+											_List_fromArray(
+												[
+													_Utils_Tuple2('value', true),
+													A2(author$project$View$Helpers$getRedOrGreenClass, d.volume24.prev, d.volume24.current)
+												]))
+										]),
+									_List_fromArray(
+										[
+											elm$html$Html$text(d.marketVol24.current)
+										]))
+								]))
+						]))
+				]));
+	});
+var author$project$View$Tile$viewTileList = F2(
+	function (msg, model) {
+		return A2(
+			elm$html$Html$div,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$class('tile-list')
+				]),
+			A2(
+				elm$core$List$map,
+				author$project$View$Tile$viewTile(msg),
+				elm$core$Dict$values(model)));
+	});
 var author$project$Main$view = function (model) {
 	return A2(
 		elm$html$Html$div,
@@ -7716,10 +8113,16 @@ var author$project$Main$view = function (model) {
 				author$project$Main$viewModal(model),
 				function () {
 				var _n0 = model.viewType;
-				if (_n0.$ === 'Table') {
-					return author$project$View$Table$viewTable(model.data);
-				} else {
-					return author$project$View$Tile$viewTileList(model.data);
+				switch (_n0.$) {
+					case 'Table':
+						return A2(author$project$View$Table$viewTable, author$project$Main$UnSubPair, model.data);
+					case 'Squart':
+						return A2(author$project$View$Tile$viewTileList, author$project$Main$UnSubPair, model.data);
+					default:
+						return A2(
+							elm$html$Html$map,
+							author$project$Main$Search,
+							author$project$Search$view(model.search));
 				}
 			}()
 			]));
@@ -7817,7 +8220,6 @@ var elm$core$String$left = F2(
 	function (n, string) {
 		return (n < 1) ? '' : A3(elm$core$String$slice, 0, n, string);
 	});
-var elm$core$String$contains = _String_contains;
 var elm$core$String$toInt = _String_toInt;
 var elm$url$Url$Url = F6(
 	function (protocol, host, port_, path, query, fragment) {

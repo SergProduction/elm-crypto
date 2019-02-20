@@ -8,17 +8,17 @@ import Html.Events exposing (..)
 import View.Helpers exposing (getRedOrGreenClass)
 
 
-viewTable : Dict.Dict String Pair -> Html msg
-viewTable model =
+viewTable : (Pair -> msg) -> Dict.Dict String Pair -> Html msg
+viewTable msg model =
     div [ class "flex-row flex-center" ]
         [ table []
-            [ tbody [] (List.map viewCeil (Dict.values model))
+            [ tbody [] (List.map (viewRow msg) (Dict.values model))
             ]
         ]
 
 
-viewCeil : Pair -> Html msg
-viewCeil d =
+viewRow : (Pair -> msg) -> Pair -> Html msg
+viewRow msg d =
     tr []
         [ td [ class "name-value-group" ]
             [ div [ class "name" ] [ text d.exchange ]
@@ -86,7 +86,7 @@ viewCeil d =
             ]
         , td [ class "name-value-group" ]
             [ div [ class "table-row-menu" ]
-                [ button [ class "btn transparent" ]
+                [ button [ class "btn transparent", onClick (msg d) ]
                     [ i [ class "menu fas fa-ellipsis-h" ] [] ]
                 ]
             , div [] [ text "GRAPH" ]

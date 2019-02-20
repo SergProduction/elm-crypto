@@ -29,6 +29,12 @@
     "BaseVolume":{"currentDay":"5397.80119079","prevDay":"5489.05795146","twoPrevDay":"0.0"}
   }`
 
+  const mockPairs = {
+    BITTREX: Array.from({length: 10}, (_, i) => "BTC-" + String.fromCharCode(65 + i, 65 + (i*2), 65 + (i*3) )),
+    NOBIT: Array.from({length: 10}, (_, i) => "ETH-" + String.fromCharCode(65 + i, 65 + (i*2), 65 + (i*3) ))
+  }
+
+
   let mockPair = JSON.parse(mockPairJSON)
   
 
@@ -37,13 +43,12 @@
   });
 
 
+  const incLastLetter = (s) => s.substr(0, s.length-1) + String.fromCharCode(s[s.length-1].charCodeAt() + 1)
+  const multLastLetter = (s, x) => s.substr(0, s.length-1) + String.fromCharCode(s[s.length-1].charCodeAt() + x)
   
-  const mockPairArray = Array.from({ length: 10 }, (_, i) => ({
+  const mockPairArray = Array.from({ length: 5 }, (_, i) => ({
     ...mockPair,
-    InterestRatioNow: {
-      ...mockPair.InterestRatioNow,
-      buy: mockPair.InterestRatioNow.buy + i
-    }
+    Symbol: multLastLetter(mockPair.Symbol, i)
   }))
   
 
@@ -71,8 +76,8 @@
       console.log("Web Socket closed.");
     };
 
-    app.ports.getPair.subscribe((data) => {
-      console.log('save', data)
+    app.ports.toJs.subscribe((data) => {
+      console.log('toJs.subscribe', data)
       socket.send(JSON.stringify(data))
     })
 

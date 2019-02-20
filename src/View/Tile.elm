@@ -8,13 +8,13 @@ import Html.Events exposing (..)
 import View.Helpers exposing (getRedOrGreenClass)
 
 
-viewTileList : Dict.Dict String Pair -> Html msg
-viewTileList model =
-    div [ class "tile-list" ] (List.map viewTile (Dict.values model))
+viewTileList : (Pair -> msg) -> Dict.Dict String Pair -> Html msg
+viewTileList msg model =
+    div [ class "tile-list" ] (List.map (viewTile msg) (Dict.values model))
 
 
-viewTile : Pair -> Html msg
-viewTile d =
+viewTile : (Pair -> msg) -> Pair -> Html msg
+viewTile msg d =
     div [ class "tile" ]
         [ div [ class "flex-row flex-between" ]
             [ span [] [ text d.exchange ]
@@ -22,7 +22,7 @@ viewTile d =
             , span [ class "red" ] [ text "$2222.00002" ]
             , span [ class "blue" ] [ text "ET TIME" ]
             , div [ class "table-row-menu" ]
-                [ button [ class "btn transparent" ]
+                [ button [ class "btn transparent", onClick (msg d) ]
                     [ i [ class "menu fas fa-ellipsis-h" ] [] ]
                 ]
             ]

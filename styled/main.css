@@ -85,6 +85,7 @@ body {
 
 .header {
   padding: 0 20px;
+  border-bottom: 1px solid #1c1c1c;
 }
 
 
@@ -142,8 +143,25 @@ input :focus {
   border-color: #757f89
 }
 
+.input-search {
+  padding: inherit;
+}
+
 .input-group + .input-group {
   margin-top: 1rem;
+}
+
+.input-group > .error {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  background-color: #c70021;
+  color: #000;
+  background-clip: padding-box;
+  border: 1px solid #000;;
+  border-radius: 0.25rem;
+  box-sizing: border-box;
 }
 
 /* ----- buttons ----- */
@@ -235,7 +253,7 @@ button:focus {
 }
 
 .close-modal {
-  width: 45px;
+  padding: 5px;
   text-align: center;
   margin-bottom: 1rem;
   cursor: pointer;
@@ -285,6 +303,9 @@ td {
   padding: 19px;
 }
 
+table.full-width {
+  width: 100%;
+}
 
 tr:nth-child(odd) {
   background-color: #040404;

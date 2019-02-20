@@ -29,7 +29,7 @@ encode model =
 type alias Model =
     { email : String
     , password : String
-    , userkey : Maybe String
+    , userId : Maybe String
     , responseError : Maybe String
     }
 
@@ -48,7 +48,7 @@ init : Model
 init =
     { email = ""
     , password = ""
-    , userkey = Nothing
+    , userId = Nothing
     , responseError = Nothing
     }
 
@@ -66,7 +66,7 @@ update msg model =
             ( model, singUp model )
 
         ResponseSuccess ukey ->
-            ( { model | userkey = Just ukey }, Cmd.none )
+            ( { model | userId = Just ukey }, Cmd.none )
 
         ResponseError message ->
             ( { model | responseError = Just message }, Cmd.none )
@@ -110,7 +110,14 @@ singUp model =
 view : Model -> Html Msg
 view model =
     div []
-        [ div [ class "input-group" ]
+        [ case model.responseError of
+            Nothing ->
+                text ""
+
+            Just errorMessage ->
+                div [ class "input-group" ]
+                    [ div [ class "error" ] [ text errorMessage ] ]
+        , div [ class "input-group" ]
             [ input [ type_ "text", placeholder "Email", onInput Email, value model.email ] []
             ]
         , div [ class "input-group" ]
