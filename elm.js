@@ -6008,21 +6008,45 @@ var author$project$Data$Pair$decodePair = A3(
 var author$project$Main$EchoWs = function (a) {
 	return {$: 'EchoWs', a: a};
 };
+var author$project$Main$EchoWsUsub = function (a) {
+	return {$: 'EchoWsUsub', a: a};
+};
+var author$project$Main$PairUnSubResponse = F2(
+	function (message, pairId) {
+		return {message: message, pairId: pairId};
+	});
+var elm$json$Json$Decode$bool = _Json_decodeBool;
+var author$project$Main$encodePairUnSubResponse = A3(
+	elm$json$Json$Decode$map2,
+	author$project$Main$PairUnSubResponse,
+	A2(elm$json$Json$Decode$field, 'message', elm$json$Json$Decode$bool),
+	A2(elm$json$Json$Decode$field, 'pairId', elm$json$Json$Decode$string));
 var author$project$Main$wsListenPairs = _Platform_incomingPort('wsListenPairs', elm$json$Json$Decode$string);
+var author$project$Main$wsListenUnsubcribePairs = _Platform_incomingPort('wsListenUnsubcribePairs', elm$json$Json$Decode$string);
+var elm$core$Platform$Sub$batch = _Platform_batch;
 var author$project$Main$subscriptions = function (model) {
-	return author$project$Main$wsListenPairs(
-		function (s) {
-			return author$project$Main$EchoWs(
-				A2(elm$json$Json$Decode$decodeString, author$project$Data$Pair$decodePair, s));
-		});
+	return elm$core$Platform$Sub$batch(
+		_List_fromArray(
+			[
+				author$project$Main$wsListenPairs(
+				function (s) {
+					return author$project$Main$EchoWs(
+						A2(elm$json$Json$Decode$decodeString, author$project$Data$Pair$decodePair, s));
+				}),
+				author$project$Main$wsListenUnsubcribePairs(
+				function (s) {
+					return author$project$Main$EchoWsUsub(
+						A2(elm$json$Json$Decode$decodeString, author$project$Main$encodePairUnSubResponse, s));
+				})
+			]));
 };
 var author$project$Main$PairSub = F4(
 	function (exchange, pair, userId, pairId) {
 		return {exchange: exchange, pair: pair, pairId: pairId, userId: userId};
 	});
 var author$project$Main$PairUnSub = F3(
-	function (exchange, pair, pairId) {
-		return {exchange: exchange, pair: pair, pairId: pairId};
+	function (exchange, pair, userId) {
+		return {exchange: exchange, pair: pair, userId: userId};
 	});
 var author$project$Main$SearchView = {$: 'SearchView'};
 var author$project$Main$Squart = {$: 'Squart'};
@@ -6072,8 +6096,8 @@ var author$project$Main$encodeUnSubcribePair = function (d) {
 				'pair',
 				elm$json$Json$Encode$string(d.pair)),
 				_Utils_Tuple2(
-				'pairId',
-				elm$json$Json$Encode$string(d.pairId))
+				'userId',
+				elm$json$Json$Encode$string(d.userId))
 			]));
 };
 var author$project$Main$toJs = _Platform_outgoingPort('toJs', elm$core$Basics$identity);
@@ -6296,6 +6320,42 @@ var author$project$User$update = F2(
 		}
 	});
 var elm$core$Basics$not = _Basics_not;
+var elm$core$Dict$foldl = F3(
+	function (func, acc, dict) {
+		foldl:
+		while (true) {
+			if (dict.$ === 'RBEmpty_elm_builtin') {
+				return acc;
+			} else {
+				var key = dict.b;
+				var value = dict.c;
+				var left = dict.d;
+				var right = dict.e;
+				var $temp$func = func,
+					$temp$acc = A3(
+					func,
+					key,
+					value,
+					A3(elm$core$Dict$foldl, func, acc, left)),
+					$temp$dict = right;
+				func = $temp$func;
+				acc = $temp$acc;
+				dict = $temp$dict;
+				continue foldl;
+			}
+		}
+	});
+var elm$core$Dict$filter = F2(
+	function (isGood, dict) {
+		return A3(
+			elm$core$Dict$foldl,
+			F3(
+				function (k, v, d) {
+					return A2(isGood, k, v) ? A3(elm$core$Dict$insert, k, v, d) : d;
+				}),
+			elm$core$Dict$empty,
+			dict);
+	});
 var elm$core$String$toUpper = _String_toUpper;
 var author$project$Main$update = F2(
 	function (msg, model) {
@@ -6357,15 +6417,21 @@ var author$project$Main$update = F2(
 				}
 			case 'UnSubPair':
 				var pair = msg.a;
-				var pairUnSub = A3(
-					author$project$Main$PairUnSub,
-					elm$core$String$toUpper(pair.exchange),
-					pair.symbol,
-					_Utils_ap(pair.exchange, pair.symbol));
-				return _Utils_Tuple2(
-					model,
-					author$project$Main$toJs(
-						author$project$Main$encodeUnSubcribePair(pairUnSub)));
+				var _n5 = model.user.userId;
+				if (_n5.$ === 'Nothing') {
+					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+				} else {
+					var userId = _n5.a;
+					var pairUnSub = A3(
+						author$project$Main$PairUnSub,
+						elm$core$String$toUpper(pair.exchange),
+						pair.symbol,
+						userId);
+					return _Utils_Tuple2(
+						model,
+						author$project$Main$toJs(
+							author$project$Main$encodeUnSubcribePair(pairUnSub)));
+				}
 			case 'View':
 				var t = msg.a;
 				switch (t.$) {
@@ -6382,8 +6448,8 @@ var author$project$Main$update = F2(
 								{viewType: author$project$Main$Squart}),
 							elm$core$Platform$Cmd$none);
 					default:
-						var _n6 = model.user.userId;
-						if (_n6.$ === 'Nothing') {
+						var _n7 = model.user.userId;
+						if (_n7.$ === 'Nothing') {
 							return _Utils_Tuple2(
 								_Utils_update(
 									model,
@@ -6407,7 +6473,7 @@ var author$project$Main$update = F2(
 						model,
 						{modal: !model.modal}),
 					elm$core$Platform$Cmd$none);
-			default:
+			case 'EchoWs':
 				var result = msg.a;
 				if (result.$ === 'Ok') {
 					var d = result.a;
@@ -6415,6 +6481,25 @@ var author$project$Main$update = F2(
 						elm$core$Dict$insert,
 						_Utils_ap(d.exchange, d.symbol),
 						d,
+						model.data);
+					return _Utils_Tuple2(
+						_Utils_update(
+							model,
+							{data: data}),
+						elm$core$Platform$Cmd$none);
+				} else {
+					return _Utils_Tuple2(model, elm$core$Platform$Cmd$none);
+				}
+			default:
+				var result = msg.a;
+				if (result.$ === 'Ok') {
+					var d = result.a;
+					var data = A2(
+						elm$core$Dict$filter,
+						F2(
+							function (k, v) {
+								return !_Utils_eq(k, d.pairId);
+							}),
 						model.data);
 					return _Utils_Tuple2(
 						_Utils_update(
@@ -6575,7 +6660,7 @@ var author$project$Main$viewHead = function (model) {
 				elm$html$Html$div,
 				_List_fromArray(
 					[
-						elm$html$Html$Attributes$class('logo-name')
+						elm$html$Html$Attributes$class('logo-name f-bold')
 					]),
 				_List_fromArray(
 					[
@@ -6597,7 +6682,23 @@ var author$project$Main$viewHead = function (model) {
 							]),
 						_List_fromArray(
 							[
-								elm$html$Html$text('SRH |>')
+								A2(
+								elm$html$Html$div,
+								_List_fromArray(
+									[
+										elm$html$Html$Attributes$class('flex-row flex-center flex-vertical-center')
+									]),
+								_List_fromArray(
+									[
+										elm$html$Html$text('SRH '),
+										A2(
+										elm$html$Html$div,
+										_List_fromArray(
+											[
+												elm$html$Html$Attributes$class('icon-arrow-rigth')
+											]),
+										_List_Nil)
+									]))
 							])),
 						model.isFind ? A2(
 						elm$html$Html$map,
@@ -6704,7 +6805,10 @@ var author$project$Main$viewHead = function (model) {
 					} else {
 						return A2(
 							elm$html$Html$span,
-							_List_Nil,
+							_List_fromArray(
+								[
+									elm$html$Html$Attributes$class('userName')
+								]),
 							_List_fromArray(
 								[
 									elm$html$Html$text(model.user.email)
@@ -6868,11 +6972,7 @@ var elm$html$Html$tr = _VirtualDom_node('tr');
 var author$project$Search$viewBodyRow = function (row) {
 	return A2(
 		elm$html$Html$tr,
-		_List_fromArray(
-			[
-				elm$html$Html$Events$onClick(
-				author$project$Search$SubscribePair(row))
-			]),
+		_List_Nil,
 		_List_fromArray(
 			[
 				A2(
@@ -6894,6 +6994,27 @@ var author$project$Search$viewBodyRow = function (row) {
 				_List_fromArray(
 					[
 						elm$html$Html$text(row.pair)
+					])),
+				A2(
+				elm$html$Html$td,
+				_List_fromArray(
+					[
+						elm$html$Html$Attributes$class('name-value-group ')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						elm$html$Html$button,
+						_List_fromArray(
+							[
+								elm$html$Html$Attributes$class('btn transparent blue'),
+								elm$html$Html$Events$onClick(
+								author$project$Search$SubscribePair(row))
+							]),
+						_List_fromArray(
+							[
+								elm$html$Html$text('ADD')
+							]))
 					]))
 			]));
 };
@@ -6921,6 +7042,22 @@ var author$project$Search$viewHeadRow = A2(
 			_List_fromArray(
 				[
 					elm$html$Html$text('Pair')
+				])),
+			A2(
+			elm$html$Html$td,
+			_List_fromArray(
+				[
+					elm$html$Html$Attributes$class('name-value-group name')
+				]),
+			_List_fromArray(
+				[
+					A2(
+					elm$html$Html$i,
+					_List_fromArray(
+						[
+							elm$html$Html$Attributes$class('fas fa-star')
+						]),
+					_List_Nil)
 				]))
 		]));
 var elm$html$Html$table = _VirtualDom_node('table');

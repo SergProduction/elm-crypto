@@ -82,9 +82,14 @@ body {
 }
 
 
+.f-bold {
+  font-weight: 600;
+}
+
+
 
 .header {
-  padding: 0 20px;
+  padding-left: 20px;
   border-bottom: 1px solid #1c1c1c;
 }
 
@@ -95,6 +100,16 @@ body {
   border-bottom: 0px solid transparent;
 }
 
+
+.icon-arrow-rigth {
+  margin-left: 17px;
+  width: 0; 
+  height: 0; 
+  border: 10px solid #fff;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-right: 7px solid transparent;
+}
 
 /* ----- flex helpers ----- */
 
@@ -143,7 +158,7 @@ input :focus {
   border-color: #757f89
 }
 
-.input-search {
+.search input {
   padding: inherit;
 }
 
@@ -323,6 +338,10 @@ td + td {
   border-left: 1px solid #1c1c1c;
 }
 
-.search tr {
-  cursor: pointer;
+.search tr :hover {
+  background-color: #141414;
+}
+
+.header .userName {
+  margin-right: 19px;
 }

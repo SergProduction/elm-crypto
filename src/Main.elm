@@ -15,6 +15,12 @@ import View.Table exposing (viewTable)
 import View.Tile exposing (viewTileList)
 
 
+type alias PairUnSubResponse =
+    { message : Bool
+    , pairId : String
+    }
+
+
 type alias PairSub =
     { exchange : String
     , pair : String
@@ -26,7 +32,7 @@ type alias PairSub =
 type alias PairUnSub =
     { exchange : String
     , pair : String
-    , pairId : String
+    , userId : String
     }
 
 
@@ -45,8 +51,15 @@ encodeUnSubcribePair d =
     E.object
         [ ( "exchange", E.string d.exchange )
         , ( "pair", E.string d.pair )
-        , ( "pairId", E.string d.pairId )
+        , ( "userId", E.string d.userId )
         ]
+
+
+encodePairUnSubResponse : D.Decoder PairUnSubResponse
+encodePairUnSubResponse =
+    D.map2 PairUnSubResponse
+        (D.field "message" D.bool)
+        (D.field "pairId" D.string)
 
 
 main =
@@ -60,6 +73,7 @@ main =
 
 type Msg
     = EchoWs (Result D.Error Pair)
+    | EchoWsUsub (Result D.Error PairUnSubResponse)
     | User User.Msg
     | Search Search.Msg
     | View ViewType
@@ -135,11 +149,16 @@ update msg model =
             ( { model | search = search }, Cmd.map Search command )
 
         UnSubPair pair ->
-            let
-                pairUnSub =
-                    PairUnSub (String.toUpper pair.exchange) pair.symbol (pair.exchange ++ pair.symbol)
-            in
-            ( model, toJs (encodeUnSubcribePair pairUnSub) )
+            case model.user.userId of
+                Nothing ->
+                    ( model, Cmd.none )
+
+                Just userId ->
+                    let
+                        pairUnSub =
+                            PairUnSub (String.toUpper pair.exchange) pair.symbol userId
+                    in
+                    ( model, toJs (encodeUnSubcribePair pairUnSub) )
 
         View t ->
             case t of
@@ -187,8 +206,23 @@ update msg model =
                 Err _ ->
                     ( model, Cmd.none )
 
+        EchoWsUsub result ->
+            case result of
+                Ok d ->
+                    let
+                        data =
+                            Dict.filter (\k v -> not (k == d.pairId)) model.data
+                    in
+                    ( { model | data = data }, Cmd.none )
+
+                Err _ ->
+                    ( model, Cmd.none )
+
 
 port wsListenPairs : (String -> msg) -> Sub msg
+
+
+port wsListenUnsubcribePairs : (String -> msg) -> Sub msg
 
 
 port toJs : E.Value -> Cmd msg
@@ -196,7 +230,10 @@ port toJs : E.Value -> Cmd msg
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    wsListenPairs (\s -> EchoWs (D.decodeString decodePair s))
+    Sub.batch
+        [ wsListenPairs (\s -> EchoWs (D.decodeString decodePair s))
+        , wsListenUnsubcribePairs (\s -> EchoWsUsub (D.decodeString encodePairUnSubResponse s))
+        ]
 
 
 view : Model -> Html Msg
@@ -219,9 +256,14 @@ view model =
 viewHead : Model -> Html Msg
 viewHead model =
     div [ class "header flex-row flex-between flex-vertical-center roboto" ]
-        [ div [ class "logo-name" ] [ text "CDQ Screener" ]
+        [ div [ class "logo-name f-bold" ] [ text "CDQ Screener" ]
         , div [ class "flex-row" ]
-            [ button [ class "red-button" ] [ text "SRH |>" ]
+            [ button [ class "red-button" ]
+                [ div [ class "flex-row flex-center flex-vertical-center" ]
+                    [ text "SRH "
+                    , div [ class "icon-arrow-rigth" ] []
+                    ]
+                ]
             , if model.isFind then
                 Search.viewSearchInput model.search |> Html.map Search
 
@@ -249,7 +291,7 @@ viewHead model =
                     button [ class "sign-in-button", onClick ToggleModalSignIn ] [ text "Sign-in" ]
 
                 Just _ ->
-                    span [] [ text model.user.email ]
+                    span [ class "userName" ] [ text model.user.email ]
         ]
 
 

@@ -99,7 +99,7 @@ update msg model =
 getPairSymbols : Cmd Msg
 getPairSymbols =
     Http.get
-        { url = "http://142.93.47.26:1023/pairs"
+        { url = "http://142.93.47.26:1023/pairs" -- https://coindaq.net:8080
         , expect = Http.expectJson ResponsePairSymbols decodeJSONPairSymbols
         }
 
@@ -124,12 +124,16 @@ viewHeadRow =
     tr []
         [ td [ class "name-value-group" ] [ text "Exchange" ]
         , td [ class "name-value-group name" ] [ text "Pair" ]
+        , td [ class "name-value-group name" ]
+            [ i [ class "fas fa-star" ] [] ]
         ]
 
 
 viewBodyRow : PairSymbols -> Html Msg
 viewBodyRow row =
-    tr [ onClick (SubscribePair row) ]
+    tr []
         [ td [ class "name-value-group" ] [ text row.exchange ]
         , td [ class "name-value-group name" ] [ text row.pair ]
+        , td [ class "name-value-group " ]
+            [ button [ class "btn transparent blue", onClick (SubscribePair row) ] [ text "ADD" ] ]
         ]

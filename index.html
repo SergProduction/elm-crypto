@@ -12,7 +12,10 @@
 <body>
   <div id="elm"></div>
   <script>
-
+  var app = Elm.Main.init({
+    node: document.getElementById('elm'),
+  });
+  /*
   const mockPairJSON = `{
     "Symbol":"ETHBTC",
     "Exchange":"BINANCE",
@@ -36,11 +39,6 @@
 
 
   let mockPair = JSON.parse(mockPairJSON)
-  
-
-  var app = Elm.Main.init({
-    node: document.getElementById('elm'),
-  });
 
 
   const incLastLetter = (s) => s.substr(0, s.length-1) + String.fromCharCode(s[s.length-1].charCodeAt() + 1)
@@ -56,29 +54,56 @@
   mockPairArray.map(p => {
     app.ports.wsListenPairs.send(JSON.stringify(p))
   });
+  */
 
 
+  const endpoint = 'wss://coindaq.net:8080' // 'ws://142.93.47.26:1023' // 'wss://coindaq.net:8080'
+  let socketAuth;
+  let socketDefault;
 
-  let socket;
   
   if (window.WebSocket) {
-    socket = new WebSocket("ws://142.93.47.26:1023");
-    socket.onmessage = function (event) {
+    socketAuth = new WebSocket(endpoint);
+    socketAuth.onmessage = function (event) {
+      
+      app.ports.wsListenPairs.send(event.data)
+
+      if (JSON.parse(event.data).Bid === undefined) {
+        app.ports.wsListenUnsubcribePairs.send(event.data)
+      }
+
+      // console.log(event.data)
+    }
+    socketAuth.onopen = function (event) {
+      console.log("Web Socket opened!");
+    };
+    socketAuth.onclose = function (event) {
+      console.log("Web Socket closed.");
+    };
+
+    app.ports.toJs.subscribe((data) => {
+      console.log('toJs.subscribe socketAuth', data)
+      socketAuth.send(JSON.stringify(data))
+      
+    })
+    
+
+
+    socketDefault = new WebSocket(`${endpoint}/defaults`);
+    socketDefault.onmessage = function (event) {
       
       app.ports.wsListenPairs.send(event.data)
 
       // console.log(event.data)
     }
-    socket.onopen = function (event) {
-      console.log("Web Socket opened!");
+    socketDefault.onopen = function (event) {
+      console.log("Web Socket default opened!");
     };
-    socket.onclose = function (event) {
-      console.log("Web Socket closed.");
+    socketDefault.onclose = function (event) {
+      console.log("Web Socket default closed.");
     };
 
     app.ports.toJs.subscribe((data) => {
-      console.log('toJs.subscribe', data)
-      socket.send(JSON.stringify(data))
     })
 
   } else {
