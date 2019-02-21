@@ -5875,7 +5875,7 @@ var elm$http$Http$get = function (r) {
 var author$project$Search$getPairSymbols = elm$http$Http$get(
 	{
 		expect: A2(elm$http$Http$expectJson, author$project$Search$ResponsePairSymbols, author$project$Search$decodeJSONPairSymbols),
-		url: 'http://142.93.47.26:1023/pairs'
+		url: 'https://app.coindaq.net/rest/pairs'
 	});
 var author$project$Search$init = {data: _List_Nil, find: '', resultFind: _List_Nil};
 var author$project$User$init = {email: '', password: '', responseError: elm$core$Maybe$Nothing, userId: elm$core$Maybe$Nothing};

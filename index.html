@@ -57,7 +57,20 @@
   */
 
 
-  const endpoint = 'wss://coindaq.net:8080' // 'ws://142.93.47.26:1023' // 'wss://coindaq.net:8080'
+  let counterMessageWs = 0
+
+  let historyCounterMessageWs = []
+
+
+  const logStatMidleWsMessage = () => setInterval(() => {
+    historyCounterMessageWs.push(counterMessageWs)
+    counterMessageWs = 0
+
+    console.log(historyCounterMessageWs.reduce((p, n) => p + n) / historyCounterMessageWs.length)
+  }, 1000)
+
+
+  const endpoint = 'wss://app.coindaq.net/ws' // 'ws://142.93.47.26:1023' // 'wss://coindaq.net:8080'
   let socketAuth;
   let socketDefault;
 
@@ -65,7 +78,7 @@
   if (window.WebSocket) {
     socketAuth = new WebSocket(endpoint);
     socketAuth.onmessage = function (event) {
-      
+
       app.ports.wsListenPairs.send(event.data)
 
       if (JSON.parse(event.data).Bid === undefined) {
@@ -92,12 +105,15 @@
     socketDefault = new WebSocket(`${endpoint}/defaults`);
     socketDefault.onmessage = function (event) {
       
+      counterMessageWs++
+
       app.ports.wsListenPairs.send(event.data)
 
       // console.log(event.data)
     }
     socketDefault.onopen = function (event) {
       console.log("Web Socket default opened!");
+      logStatMidleWsMessage()
     };
     socketDefault.onclose = function (event) {
       console.log("Web Socket default closed.");
