@@ -1,5 +1,9 @@
 ### how to start
-`npm i`
+```
+npm i
+elm make
+```
+
 
 #### development mode
 `npm run dev`
