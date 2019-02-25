@@ -1,4 +1,4 @@
-module User exposing (Model, Msg(..), init, update, view)
+port module User exposing (Model, Msg(..), init, update, view)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -6,6 +6,7 @@ import Html.Events exposing (..)
 import Http
 import Json.Decode as D
 import Json.Encode as E
+import Regex
 
 
 decodeSucces : D.Decoder String
@@ -18,12 +19,30 @@ decodeError =
     D.field "error" D.string
 
 
-encode : Model -> E.Value
-encode model =
+encodeResponse : Model -> E.Value
+encodeResponse model =
     E.object
         [ ( "e", E.string model.email )
         , ( "p", E.string model.password )
         ]
+
+type alias Session =
+  { userId : String
+  , email : String
+  }
+
+encodeSession : Session -> E.Value
+encodeSession s =
+    E.object
+        [ ( "userId", E.string s.userId )
+        , ( "email", E.string s.email )
+        ]
+
+decodeSession : D.Decoder Session
+decodeSession =
+    D.map2 Session
+        ( D.field "userId" D.string )
+        ( D.field "email" D.string )
 
 
 type alias Model =
@@ -31,6 +50,7 @@ type alias Model =
     , password : String
     , userId : Maybe String
     , responseError : Maybe String
+    , emailValid : Maybe String
     }
 
 
@@ -44,12 +64,18 @@ type Msg
     | ResponseIsNotValide
 
 
-init : Model
-init =
-    { email = ""
+init : String -> Model
+init initSession =
+  let
+    sess = case D.decodeString decodeSession initSession of
+      Ok s -> s
+      Err _ -> Session "" ""
+  in
+    { email = sess.email
     , password = ""
-    , userId = Nothing
+    , userId = if sess.userId == "" then Nothing else Just sess.userId
     , responseError = Nothing
+    , emailValid = Nothing
     }
 
 
@@ -63,10 +89,23 @@ update msg model =
             ( { model | password = str }, Cmd.none )
 
         Submit ->
-            ( model, singUp model )
+          let
+              regex = Regex.fromString "\\S+@\\S+\\.\\S+"
+          in
+            case regex of
+                Nothing -> ( model, Cmd.none )
+                 
+            
+                Just r ->
+                  if Regex.contains r model.email then
+                    ( model, singUp model )
+                  else
+                    ( { model | emailValid = Just "email is not valid" }, Cmd.none )
+
+            
 
         ResponseSuccess ukey ->
-            ( { model | userId = Just ukey }, Cmd.none )
+            ( { model | userId = Just ukey }, saveSession <| encodeSession <| Session ukey model.email )
 
         ResponseError message ->
             ( { model | responseError = Just message }, Cmd.none )
@@ -76,6 +115,9 @@ update msg model =
 
         ResponseFail ->
             ( model, Cmd.none )
+
+
+port saveSession : E.Value -> Cmd msg
 
 
 decodeSuccessOrError : Result.Result Http.Error String -> Msg
@@ -102,7 +144,7 @@ singUp : Model -> Cmd Msg
 singUp model =
     Http.post
         { url = "https://cp.coindaq.net/api/getuserkey"
-        , body = Http.jsonBody (encode model)
+        , body = Http.jsonBody (encodeResponse model)
         , expect = Http.expectString decodeSuccessOrError
         }
 
@@ -110,11 +152,15 @@ singUp model =
 view : Model -> Html Msg
 view model =
     div []
-        [ case model.responseError of
-            Nothing ->
+        [ case (model.responseError, model.emailValid) of
+            (Nothing, Nothing) ->
                 text ""
+            
+            (_, Just errorMessage) ->
+                div [ class "input-group" ]
+                    [ div [ class "error" ] [ text errorMessage ] ]
 
-            Just errorMessage ->
+            (Just errorMessage, _) ->
                 div [ class "input-group" ]
                     [ div [ class "error" ] [ text errorMessage ] ]
         , div [ class "input-group" ]

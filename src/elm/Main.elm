@@ -98,17 +98,17 @@ type alias Model =
     }
 
 
-init : () -> ( Model, Cmd Msg )
-init _ =
+init : String -> ( Model, Cmd Msg )
+init session =
     ( { data = Dict.empty
       , viewType = Table
       , prevViewType = Table
       , isFind = False
       , modal = False
-      , user = User.init
+      , user = User.init session
       , search = Search.init
       }
-    , Cmd.map Search Search.getPairSymbols
+    , Cmd.none
     )
 
 
@@ -120,7 +120,7 @@ update msg model =
                 ( userModel, command ) =
                     User.update (User.ResponseSuccess ukey) model.user
             in
-            ( { model | modal = False, user = userModel }, Cmd.none )
+            ( { model | modal = False, user = userModel }, Cmd.batch [ Cmd.map Search Search.getPairSymbols, Cmd.map User command ] )
 
         User userMsg ->
             let
@@ -140,6 +140,7 @@ update msg model =
                         encodeSubcribePair <|
                             PairSub (String.toUpper p.exchange) p.pair userId (p.exchange ++ p.pair)
                     )
+
 
         Search searchMsg ->
             let
@@ -258,11 +259,9 @@ viewHead model =
     div [ class "header flex-row flex-between flex-vertical-center roboto" ]
         [ div [ class "logo-name f-bold" ] [ text "CDQ Screener" ]
         , div [ class "flex-row" ]
-            [ button [ class "red-button" ]
-                [ div [ class "flex-row flex-center flex-vertical-center" ]
-                    [ text "SRH "
-                    , div [ class "icon-arrow-rigth" ] []
-                    ]
+            [ div [ class "red-button flex-row flex-center flex-vertical-center" ]
+                [ text "SRH "
+                , div [ class "icon-arrow-rigth" ] []
                 ]
             , if model.isFind then
                 Search.viewSearchInput model.search |> Html.map Search
