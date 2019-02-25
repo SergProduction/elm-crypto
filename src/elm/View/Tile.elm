@@ -83,7 +83,11 @@ viewTile msg d =
                     ]
                 ]
             , div []
-                [ text "GRAPH"
+                [ div [ class "flex-row flex-between"]
+                    [ div [ class "mango"] [text "Price 24h"]
+                    , div [] [text d.priceDiff]
+                    ]
+                , div [] [text "GRAPH"]
                 ]
             ]
         , div [ class "flex-row flex-between" ]

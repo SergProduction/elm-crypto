@@ -1,45 +1,11 @@
 module Data.Pair exposing
     ( Pair
     , decodePair
-    , defaultSubcribe
     )
 
 import Json.Decode as D
 import Json.Decode.Pipeline exposing (required)
 import Json.Encode as E
-
-
-
-{-
-   {
-     "Symbol":"ETHBTC",
-     "Exchange":"BINANCE",
-     "HighVolume24":"164625.909",
-     "Bid":{"current":"0.033634","prev":"0.033671"},
-     "Ask":{"current":"0.033643","prev":"0.033672"},
-     "Low":{"current":"0.033531","prev":"0.033531"},
-     "High":{"current":"0.034371","prev":"0.034371"},
-     "Volume24":{"current":"159306.81","prev":"161977.811"},
-     "MarketCup":{"current":"3.31153248592E9","prev":"0.0"},
-     "MarketVol24":{"current":"1.2787931053E10","prev":"0.0"}
-     "MarketHistory":{"sell":"26700.74200000019","buy":"26006.495999999803"},
-     "InterestRatioNow":{"sell":"96","buy":"4"},
-     "BaseVolume":{"currentDay":"5397.80119079","prevDay":"5489.05795146","twoPrevDay":"0.0"},
-   }
--}
-{-
-   defaultpair
-
-   BTCNEM
-   BTCXVG
-   BTCDGB
-   BTCKMD
-   BTCDASH
-   BTCNAV
-
-   default berge
-   BITTREX
--}
 
 
 type alias A =
@@ -64,6 +30,7 @@ type alias C =
 type alias Pair =
     { symbol : String
     , exchange : String
+    , priceDiff : String
     , highVolume24 : String
     , bid : A
     , ask : A
@@ -83,6 +50,7 @@ decodePair =
     D.succeed Pair
         |> required "Symbol" D.string
         |> required "Exchange" D.string
+        |> required "PriceDiff" D.string
         |> required "HighVolume24" D.string
         |> required "Bid" decodeA
         |> required "Ask" decodeA
@@ -132,14 +100,5 @@ encodeSubcribePair d =
         [ ( "exchange", E.string d.exchange )
         , ( "pair", E.string d.pair )
         , ( "line", E.string d.line )
-        , ( "userId", E.string d.userId )
+        -- , ( "userId", E.string d.userId )
         ]
-
-
-defaultSubcribe ukey =
-    encodeSubcribePair
-        { exchange = "BITTREX"
-        , pair = "BTCNEM"
-        , line = "0"
-        , userId = ukey
-        }

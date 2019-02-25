@@ -1,7 +1,7 @@
 port module Main exposing (Model, Msg(..), init, main, subscriptions, update, view)
 
 import Browser
-import Data.Pair exposing (Pair, decodePair, defaultSubcribe)
+import Data.Pair exposing (Pair, decodePair)
 import Dict
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -108,17 +108,24 @@ init session =
       , user = User.init session
       , search = Search.init
       }
-    , Cmd.none
+    , Cmd.map User User.getUserInfo
     )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        User (User.ResponseSuccess ukey) ->
+        User (User.ResponseSignInSuccess ukey) ->
             let
                 ( userModel, command ) =
-                    User.update (User.ResponseSuccess ukey) model.user
+                    User.update (User.ResponseSignInSuccess ukey) model.user
+            in
+            ( { model | modal = False, user = userModel }, Cmd.batch [ Cmd.map Search Search.getPairSymbols, Cmd.map User command ] )
+
+        User (User.ResponseUserInfoSuccess userInfo) ->
+            let
+                ( userModel, command ) =
+                    User.update (User.ResponseUserInfoSuccess userInfo) model.user
             in
             ( { model | modal = False, user = userModel }, Cmd.batch [ Cmd.map Search Search.getPairSymbols, Cmd.map User command ] )
 
@@ -242,15 +249,17 @@ view model =
     div []
         [ viewHead model
         , viewModal model
-        , case model.viewType of
-            Table ->
-                viewTable UnSubPair model.data
+        , div [class "body"]
+          [ case model.viewType of
+              Table ->
+                  viewTable UnSubPair model.data
 
-            Squart ->
-                viewTileList UnSubPair model.data
+              Squart ->
+                  viewTileList UnSubPair model.data
 
-            SearchView ->
-                Search.view model.search |> Html.map Search
+              SearchView ->
+                  Search.view model.search |> Html.map Search
+          ]
         ]
 
 
@@ -301,13 +310,13 @@ viewModal model =
             text ""
 
         True ->
-            div [ class "modal flex-row flex-center" ]
-                [ div [ class "flex-column modal-form" ]
-                    [ div [ class "close-modal" ]
-                        [ i [ class "fas fa-times", onClick ToggleModalSignIn ] [] ]
-                    , User.view model.user |> Html.map User
-                    ]
-                ]
+            div [ class "modal-fon flex-row flex-center" ]
+              [ div [ class "modal roboto" ]
+                  [ i [ class "close-modal fas fa-times", onClick ToggleModalSignIn ] []
+                  , div [ class "flex-column modal-form" ]
+                      [ User.view model.user |> Html.map User ]
+                  ]
+              ]
 
 
 isActive : ViewType -> ViewType -> ( String, Bool )

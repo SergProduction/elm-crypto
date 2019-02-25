@@ -1,4 +1,4 @@
-port module User exposing (Model, Msg(..), init, update, view)
+port module User exposing (Model, Msg(..), init, update, view, getUserInfo)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -9,13 +9,29 @@ import Json.Encode as E
 import Regex
 
 
-decodeSucces : D.Decoder String
-decodeSucces =
+decodeSignInSucces : D.Decoder String
+decodeSignInSucces =
     D.field "userkey" D.string
 
 
-decodeError : D.Decoder String
-decodeError =
+decodeSignInError : D.Decoder String
+decodeSignInError =
+    D.field "error" D.string
+
+
+decodeUserInfoSucces : D.Decoder UserInfo
+decodeUserInfoSucces =
+    D.map5 UserInfo
+      (D.field "id" D.string)
+      (D.field "userkey" D.string)
+      (D.field "email" D.string)
+      (D.field "firstname" (D.maybe D.string))
+      (D.field "lastname" (D.maybe D.string))
+
+
+
+decodeUserInfoError : D.Decoder String
+decodeUserInfoError =
     D.field "error" D.string
 
 
@@ -25,6 +41,14 @@ encodeResponse model =
         [ ( "e", E.string model.email )
         , ( "p", E.string model.password )
         ]
+
+type alias UserInfo =
+  { id: String
+  , userId: String
+  , email: String
+  , firstname: Maybe String
+  , lastname: Maybe String
+  }
 
 type alias Session =
   { userId : String
@@ -58,10 +82,14 @@ type Msg
     = Email String
     | Password String
     | Submit
-    | ResponseSuccess String
-    | ResponseError String
-    | ResponseFail
-    | ResponseIsNotValide
+    | ResponseSignInSuccess String
+    | ResponseSignInError String
+    | ResponseSignInFail
+    | ResponseSignInNotValid
+    | ResponseUserInfoSuccess UserInfo
+    | ResponseUserInfoError String
+    | ResponseUserInfoFail
+    | ResponseUserInfoNotValid
 
 
 init : String -> Model
@@ -104,55 +132,97 @@ update msg model =
 
             
 
-        ResponseSuccess ukey ->
+        ResponseSignInSuccess ukey ->
             ( { model | userId = Just ukey }, saveSession <| encodeSession <| Session ukey model.email )
 
-        ResponseError message ->
+        ResponseSignInError message ->
             ( { model | responseError = Just message }, Cmd.none )
 
-        ResponseIsNotValide ->
+        ResponseSignInNotValid ->
             ( model, Cmd.none )
 
-        ResponseFail ->
+        ResponseSignInFail ->
+            ( model, Cmd.none )
+
+
+        ResponseUserInfoSuccess userInfo ->
+            ( { model | userId = Just userInfo.userId }, Cmd.none )
+
+        ResponseUserInfoError message ->
+            ( model, Cmd.none )
+
+        ResponseUserInfoNotValid ->
+            ( model, Cmd.none )
+
+        ResponseUserInfoFail ->
             ( model, Cmd.none )
 
 
 port saveSession : E.Value -> Cmd msg
 
 
-decodeSuccessOrError : Result.Result Http.Error String -> Msg
-decodeSuccessOrError r =
+decodeSignInSuccessOrError : Result.Result Http.Error String -> Msg
+decodeSignInSuccessOrError r =
     case r of
         Ok response ->
-            case D.decodeString decodeSucces response of
+            case D.decodeString decodeSignInSucces response of
                 Ok success ->
-                    ResponseSuccess success
+                    ResponseSignInSuccess success
 
                 Err _ ->
-                    case D.decodeString decodeError response of
+                    case D.decodeString decodeSignInError response of
                         Ok errorMessage ->
-                            ResponseError errorMessage
+                            ResponseSignInError errorMessage
 
                         Err e ->
-                            ResponseIsNotValide
+                            ResponseSignInNotValid
 
         Err e ->
-            ResponseFail
+            ResponseSignInFail
 
+
+decodeUserInfoSuccessOrError : Result.Result Http.Error String -> Msg
+decodeUserInfoSuccessOrError r =
+    case r of
+        Ok response ->
+            case D.decodeString decodeUserInfoSucces response of
+                Ok success ->
+                    ResponseUserInfoSuccess success
+
+                Err _ ->
+                    case D.decodeString decodeUserInfoError response of
+                        Ok errorMessage ->
+                            ResponseUserInfoError errorMessage
+
+                        Err e ->
+                            ResponseUserInfoNotValid
+
+        Err e ->
+            ResponseUserInfoFail
 
 singUp : Model -> Cmd Msg
 singUp model =
     Http.post
         { url = "https://cp.coindaq.net/api/getuserkey"
         , body = Http.jsonBody (encodeResponse model)
-        , expect = Http.expectString decodeSuccessOrError
+        , expect = Http.expectString decodeSignInSuccessOrError
+        }
+
+
+getUserInfo : Cmd Msg
+getUserInfo =
+  Http.post
+        { url = "https://cp.coindaq.net/api/getuserinfo"
+        , body = Http.emptyBody
+        , expect = Http.expectString decodeUserInfoSuccessOrError
         }
 
 
 view : Model -> Html Msg
 view model =
     div []
-        [ case (model.responseError, model.emailValid) of
+        [ div [ class "input-group flex-center" ] [ text "CoinDAQ Terminal" ]
+        , case (model.responseError, model.emailValid) of
             (Nothing, Nothing) ->
                 text ""
             
@@ -164,12 +234,16 @@ view model =
                 div [ class "input-group" ]
                     [ div [ class "error" ] [ text errorMessage ] ]
         , div [ class "input-group" ]
-            [ input [ type_ "text", placeholder "Email", onInput Email, value model.email ] []
+            [ input [ class "green", type_ "text", placeholder "Email", onInput Email, value model.email ] []
             ]
         , div [ class "input-group" ]
-            [ input [ type_ "text", placeholder "Password", onInput Password, value model.password ] []
+            [ input [ class "red", type_ "password", placeholder "Password", onInput Password, value model.password ] []
             ]
         , div [ class "input-group" ]
-            [ button [ class "button-form", onClick Submit ] [ text "Connect" ]
+            [ button [ class "button-form", onClick Submit ] [ text "Sign In" ]
+            ]
+        , div [ class "input-group flex-between" ]
+            [ a [ href "#fp", class "mango" ] [ text "Forgot password?" ]
+            , a [ href "#su", class "blue" ] [ text "Sign up ->" ]
             ]
         ]
