@@ -221,7 +221,10 @@ getUserInfo =
 view : Model -> Html Msg
 view model =
     div []
-        [ div [ class "input-group flex-center" ] [ text "CoinDAQ Terminal" ]
+        [ div [ class "input-group flex-center" ]
+            [ img [ src "/img/coindaq-logo.png", class "logo-img"] []
+            ]
+        , div [ class "logo-name flex-center" ] [ text "CoinDAQ Terminal" ]
         , case (model.responseError, model.emailValid) of
             (Nothing, Nothing) ->
                 text ""
@@ -243,7 +246,7 @@ view model =
             [ button [ class "button-form", onClick Submit ] [ text "Sign In" ]
             ]
         , div [ class "input-group flex-between" ]
-            [ a [ href "#fp", class "mango" ] [ text "Forgot password?" ]
-            , a [ href "#su", class "blue" ] [ text "Sign up ->" ]
+            [ a [ href "https://cp.coindaq.net/auth/forgot", class "mango" ] [ text "Forgot password?" ]
+            , a [ href "https://cp.coindaq.net/auth/register", class "blue" ] [ text "Sign up ->" ]
             ]
         ]

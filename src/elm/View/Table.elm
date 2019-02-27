@@ -21,8 +21,8 @@ viewRow : (Pair -> msg) -> Pair -> Html msg
 viewRow msg d =
     tr []
         [ td [ class "name-value-group" ]
-            [ div [ class "name" ] [ text d.exchange ]
-            , div [ class "value" ] [ text "ET TIME" ]
+            [ div [ class "name burse" ] [ text d.exchange ]
+            , div [ class "burse time" ] [ text d.time ]
             , div [ class "name" ] [ text d.symbol ]
             ]
         , td [ class "name-value-group" ]

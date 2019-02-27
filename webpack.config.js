@@ -4,6 +4,8 @@ const merge = require('webpack-merge')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+
 
 const base = {
   entry: {
@@ -41,7 +43,13 @@ const base = {
   plugins: [
     new MiniCssExtractPlugin({
       filename: './styled/index.css',
-    })
+    }),
+    new CopyWebpackPlugin([
+      {
+        from: './src/img/',
+        to: './img/',
+      },
+    ]),
   ]
 }
 

@@ -2,20 +2,26 @@
 cb-fon = #000
 cb-one = #040404
 cb-two = #080808
+cb-modal = #060606
 cb-border = #1c1c1c
+cb-border-two = #262626
+
 // cf - color-font
-cf-red = #c70021
+cf-red = #ff0002
 cf-mango = #ffa028
 cf-green = #008951
 cf-blue = #0099ff
-cf-grey = #b3b3b3
+cf-grey-one = #b3b3b3
+cf-grey-two = #dddddd
+cf-grey-active = #5f5f5f
+cf-grey-disactive = #232323
+cf-grey-menu = #252525
+
 cf-white = #fff
-//  ci - color-icon
-ci-active = #5f5f5f
-ci-disactive = #252525
 // fs - font-size
 fs-big = 36px
 fs-modal = 18px
+fs-icon-close = 29px
 fs-control = 16px
 fs-norm = 14px
 fs-small = 12px
@@ -38,15 +44,27 @@ fs-small = 12px
 body
   font-family monacoregular
   background-color cb-fon
-  color cf-grey 
+  color cf-grey-two
   font-size fs-norm
   margin 0px
 
 
 
 
-.logo-name
+.header-about-name
   color cf-white
+
+
+.modal .logo-name
+  display flex
+  margin-bottom 25px
+  color #d0d0d0
+
+.logo-img
+  width 100px
+  height 100px
+  padding 30px
+
 
 
 .roboto *
@@ -66,7 +84,11 @@ body
   font-family 'Roboto Mono', monospace
   font-size fs-small
 
+.burse
+  color cf-grey-one
 
+.burse.time
+  color cf-blue
 
 
 .red
@@ -87,15 +109,15 @@ body
 
 
 .active
-  color ci-active
+  color cf-grey-active
 
 
 .disactive
-  color ci-disactive
+  color cf-grey-disactive
 
 
 .menu
-  color ci-disactive
+  color cf-grey-menu
 
 
 .table-row-menu
@@ -180,9 +202,9 @@ input
   width 100%
   padding 0.75rem 1rem
   background-color cb-fon
-  color cf-grey 
+  color cf-grey-two 
   background-clip padding-box
-  border 1px solid cb-border
+  border 1px solid #404040
   box-sizing border-box
 
 
@@ -193,23 +215,31 @@ input focus
 .search input
   padding inherit
 
+.modal input
+  font-size fs-modal
+
+
 .input-group
   display flex
   align-items flex-start
 
 
 .input-group + .input-group
-  margin-top 1rem
+  margin-top 10px
 
 
 .input-group > .error
   width 100%
-  padding 0.75rem 1rem
+  padding 20px
   color cf-red
   background-clip padding-box
   box-sizing border-box
+  border-top 1px solid #404040
 
 
+
+.modal .input-group
+  min-width 444px    
 /* ----- buttons ----- */
 
 
@@ -255,11 +285,11 @@ button:focus
 .sign-in-button
   width 97px
   height 40px
-  background-color cf-grey
+  background-color transparent
   border 0px
   font-size fs-control
   font-weight 600
-  color cb-fon
+  color cf-grey-two
 
 
 .button-form
@@ -274,11 +304,18 @@ button:focus
   border 1px solid cb-border
   padding 0.75rem 1rem
   background cb-fon
-  color cf-grey
+  color cf-grey-two
 
 
 .button-form hover
   border-color rgba(0,0,0,0.6)
+
+
+.modal button
+  font-size fs-modal
+  background-color cb-fon
+  border 1px solid #404040
+  color #d0d0d0
 
 
 /* ----- Modal ----- */
@@ -298,19 +335,26 @@ button:focus
 
 
 .close-modal
-  position: relative;
-  top: -50px;
-  right: -330px;
+  position relative
+  top -50px
+  right -465px
   cursor pointer
-  font-size fs-modal
+  font-size fs-icon-close
 
 .modal
-  background-color cb-two
+  background-color cb-modal
   padding 77px
-  border 1px solid cb-border
+  border 1px solid cb-border-two
+  font-size fs-modal
 
 .modal-form
   min-width 300px
+
+
+/* ----- Search ----- */
+
+.search
+  background-color cb-modal
 
 
 /* ----- Tile ----- */
@@ -374,6 +418,6 @@ td + td
 
 
 .search tr hover
-  background-color cb-border
+  background-color #141414
 
 

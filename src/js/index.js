@@ -17,7 +17,7 @@ const logStatMidleWsMessageStart = () => (logStatMidleWsMessageTimerId = setInte
   historyCounterMessageWs.push(counterMessageWs)
   counterMessageWs = 0
 
-  console.log(historyCounterMessageWs.reduce((p, n) => p + n) / historyCounterMessageWs.length)
+  // console.log(historyCounterMessageWs.reduce((p, n) => p + n) / historyCounterMessageWs.length)
 }, 1000))
 
 

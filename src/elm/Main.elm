@@ -266,7 +266,7 @@ view model =
 viewHead : Model -> Html Msg
 viewHead model =
     div [ class "header flex-row flex-between flex-vertical-center roboto" ]
-        [ div [ class "logo-name f-bold" ] [ text "CDQ Screener" ]
+        [ div [ class "header-about-name f-bold" ] [ text "CDQ Screener" ]
         , div [ class "flex-row" ]
             [ div [ class "red-button flex-row flex-center flex-vertical-center" ]
                 [ text "SRH "

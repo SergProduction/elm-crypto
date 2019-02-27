@@ -32,6 +32,7 @@ type alias Pair =
     , exchange : String
     , priceDiff : String
     , highVolume24 : String
+    , time : String
     , bid : A
     , ask : A
     , low : A
@@ -52,6 +53,7 @@ decodePair =
         |> required "Exchange" D.string
         |> required "PriceDiff" D.string
         |> required "HighVolume24" D.string
+        |> required "Time" D.string
         |> required "Bid" decodeA
         |> required "Ask" decodeA
         |> required "Low" decodeA
