@@ -10,11 +10,14 @@ import View.Helpers exposing (getRedOrGreenClass)
 
 viewTable : (Pair -> msg) -> Dict.Dict String Pair -> Html msg
 viewTable msg model =
-    div [ class "flex-row flex-center" ]
-        [ table []
-            [ tbody [] (List.map (viewRow msg) (Dict.values model))
-            ]
-        ]
+    if (Dict.isEmpty model) then
+        viewPreloader
+    else
+      div [ class "flex-row flex-center" ]
+          [ table []
+              [ tbody [] (List.map (viewRow msg) (Dict.values model))
+              ]
+          ]
 
 
 viewRow : (Pair -> msg) -> Pair -> Html msg
@@ -96,3 +99,24 @@ viewRow msg d =
               ]
             ]
         ]
+
+
+viewPreloader : Html msg
+viewPreloader =
+    div [ class "flex-row flex-center" ]
+        [ table []
+            [ tbody [] (List.map viewRowPreloader (List.repeat 5 0))
+            ]
+        ]
+
+
+viewRowPreloader : a -> Html msg
+viewRowPreloader _ = 
+    tr [] (List.map (\x ->
+        td [ class "name-value-group" ]
+              [ div [ class "preloader" ] []
+              , div [ class "preloader" ] []
+              , div [ class "preloader" ] []
+              , div [ class "preloader" ] []
+              ]
+      ) (List.repeat 9 0))

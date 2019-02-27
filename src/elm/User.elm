@@ -50,23 +50,21 @@ type alias UserInfo =
   , lastname: Maybe String
   }
 
-type alias Session =
-  { userId : String
-  , email : String
-  }
+
+
+type alias Session = { userId : String }
+
 
 encodeSession : Session -> E.Value
 encodeSession s =
-    E.object
-        [ ( "userId", E.string s.userId )
-        , ( "email", E.string s.email )
-        ]
+    E.object [ ( "userkey", E.string s.userId ) ]
+
 
 decodeSession : D.Decoder Session
 decodeSession =
-    D.map2 Session
-        ( D.field "userId" D.string )
-        ( D.field "email" D.string )
+    D.map Session
+        ( D.field "userkey" D.string )
+
 
 
 type alias Model =
@@ -92,16 +90,11 @@ type Msg
     | ResponseUserInfoNotValid
 
 
-init : String -> Model
-init initSession =
-  let
-    sess = case D.decodeString decodeSession initSession of
-      Ok s -> s
-      Err _ -> Session "" ""
-  in
-    { email = sess.email
+init : Model
+init =
+    { email = ""
     , password = ""
-    , userId = if sess.userId == "" then Nothing else Just sess.userId
+    , userId = Nothing
     , responseError = Nothing
     , emailValid = Nothing
     }
@@ -133,7 +126,7 @@ update msg model =
             
 
         ResponseSignInSuccess ukey ->
-            ( { model | userId = Just ukey }, saveSession <| encodeSession <| Session ukey model.email )
+            ( { model | userId = Just ukey }, saveSession <| encodeSession <| Session ukey )
 
         ResponseSignInError message ->
             ( { model | responseError = Just message }, Cmd.none )
@@ -146,7 +139,7 @@ update msg model =
 
 
         ResponseUserInfoSuccess userInfo ->
-            ( { model | userId = Just userInfo.userId }, Cmd.none )
+            ( { model | userId = Just userInfo.userId, email = userInfo.email }, Cmd.none )
 
         ResponseUserInfoError message ->
             ( model, Cmd.none )
@@ -209,13 +202,17 @@ singUp model =
         }
 
 
-getUserInfo : Cmd Msg
-getUserInfo =
-  Http.post
-        { url = "https://cp.coindaq.net/api/getuserinfo"
-        , body = Http.emptyBody
-        , expect = Http.expectString decodeUserInfoSuccessOrError
-        }
+getUserInfo : String -> Cmd Msg
+getUserInfo initSession =
+    case D.decodeString decodeSession initSession of
+      Ok s ->
+        Http.post
+          { url = "https://cp.coindaq.net/api/getuserinfo"
+          , body = Http.jsonBody (encodeSession s)
+          , expect = Http.expectString decodeUserInfoSuccessOrError
+          }
+      Err _ -> Cmd.none
+  
 
 
 view : Model -> Html Msg

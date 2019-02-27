@@ -106,6 +106,39 @@ body
   color cf-mango
 
 
+/*
+.preloader
+  background: #fff;
+  border: 1px solid;
+  border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+  border-radius: 3px;
+  padding: 12px;
+  margin: 0 auto;
+  max-width: 472px;
+  min-height: 200px;
+*/
+
+@keyframes placeHolderShimmer{
+    0%{
+        background-position: -200px 0
+    }
+    100%{
+        background-position: 1500px 0
+    }
+}
+
+.preloader {
+    animation-duration: 4s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: placeHolderShimmer;
+    animation-timing-function: linear;
+    background: cb-fon
+    background: linear-gradient(to right, cb-two 8%, cb-border 18%, cb-two 33%);
+    // background-size: 800px 104px;
+    height: 18px;
+    position: relative;
+}
 
 
 .active
@@ -147,7 +180,11 @@ body
   border-bottom 1px solid cb-border
   background-color cb-fon
 
-.header .userName
+
+.header .close-search
+  margin-right 19px
+
+.header .user-name
   margin-right 19px
 
 
@@ -239,7 +276,11 @@ input focus
 
 
 .modal .input-group
-  min-width 444px    
+  min-width 444px
+
+.header input
+  width inherit
+  padding inherit
 /* ----- buttons ----- */
 
 
@@ -364,11 +405,11 @@ button:focus
   grid-template-columns repeat(auto-fill, minmax(400px,1fr))
 
 
-.tile-list > divnth-child(odd)
+.tile-list > div:nth-child(odd)
   background-color cb-one
 
 
-.tile-list > divnth-child(even)
+.tile-list > div:nth-child(even)
   background-color cb-two
 
 
@@ -401,11 +442,11 @@ table.full-width
   width 100%
 
 
-trnth-child(odd)
+tr:nth-child(odd)
   background-color cb-one
 
 
-trnth-child(even)
+tr:nth-child(even)
   background-color cb-two
 
 
@@ -417,7 +458,7 @@ td + td
   border-left 1px solid cb-border
 
 
-.search tr hover
+.search tr :hover
   background-color #141414
 
 

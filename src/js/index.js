@@ -1,8 +1,16 @@
+import cookie from 'js-cookie'
+
+
 import '../styled/index.styl'
+
+
+const ukey = cookie.get('userkey')
+
+console.log({ ukey })
 
 const app = window.Elm.Main.init({
   node: document.getElementById('elm'),
-  flags: ""
+  flags: ukey || ""
 });
 
 const endpoint = 'wss://app.coindaq.net/ws' // 'ws://142.93.47.26:1023' // 'wss://coindaq.net:8080'
@@ -49,8 +57,16 @@ const wsListen = (ws, cb) => {
 
 
 app.ports.saveSession.subscribe((data) => {
-  console.log('saveSession', data) 
+  console.log('saveSession', data)
+  cookie.set('userkey', data, { expires: 7 }); 
 })
+
+
+app.ports.leaveUser.subscribe(() => {
+  console.log('leaveUser')
+  cookie.remove('userkey'); 
+})
+
 
 // ----- user ws -----
 app.ports.toJs.subscribe((data) => {

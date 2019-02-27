@@ -79,6 +79,9 @@ type Msg
     | View ViewType
     | ToggleModalSignIn
     | UnSubPair Pair
+    | MouseOverEmail
+    | MouseLeaveExit
+    | Leave
 
 
 type ViewType
@@ -91,6 +94,7 @@ type alias Model =
     { data : Dict.Dict String Pair
     , modal : Bool
     , viewType : ViewType
+    , overEmail : Bool
     , prevViewType : ViewType
     , isFind : Bool
     , user : User.Model
@@ -102,13 +106,14 @@ init : String -> ( Model, Cmd Msg )
 init session =
     ( { data = Dict.empty
       , viewType = Table
+      , overEmail = False
       , prevViewType = Table
       , isFind = False
       , modal = False
-      , user = User.init session
+      , user = User.init
       , search = Search.init
       }
-    , Cmd.map User User.getUserInfo
+    , Cmd.map User (User.getUserInfo session)
     )
 
 
@@ -202,6 +207,15 @@ update msg model =
         ToggleModalSignIn ->
             ( { model | modal = not model.modal }, Cmd.none )
 
+        MouseOverEmail ->
+            ( { model | overEmail = True }, Cmd.none )
+
+        MouseLeaveExit ->
+            ( { model | overEmail = False }, Cmd.none )
+
+        Leave ->
+            ( { model | overEmail = False, user = User.init }, leaveUser () )
+
         EchoWs result ->
             case result of
                 Ok d ->
@@ -234,6 +248,10 @@ port wsListenUnsubcribePairs : (String -> msg) -> Sub msg
 
 
 port toJs : E.Value -> Cmd msg
+
+
+port leaveUser : () -> Cmd msg
+
 
 
 subscriptions : Model -> Sub Msg
@@ -291,7 +309,8 @@ viewHead model =
                 [ i [ classList [ ( "fas fa-th-large", True ), isActive Squart model.viewType ] ] [] ]
             ]
         , if model.isFind then
-            i [ class "fas fa-times", onClick (View SearchView) ] []
+            div [ class "close-search"]
+              [ i [ class "fas fa-times", onClick (View SearchView) ] [] ]
 
           else
             case model.user.userId of
@@ -299,7 +318,10 @@ viewHead model =
                     button [ class "sign-in-button", onClick ToggleModalSignIn ] [ text "Sign-in" ]
 
                 Just _ ->
-                    span [ class "userName" ] [ text model.user.email ]
+                    if model.overEmail then
+                        button [ class "sign-in-button", onClick Leave, onMouseLeave MouseLeaveExit ] [ text "Leave" ]
+                    else
+                        span [ class "user-name", onMouseOver MouseOverEmail ] [ text model.user.email ]
         ]
 
 
