@@ -69,7 +69,7 @@ init =
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
+update msg model=
     case msg of
         FindPair str ->
             ( { model
@@ -109,12 +109,12 @@ viewSearchInput model =
     input [ class "input-search", type_ "text", placeholder "search", value model.find, onInput FindPair ] []
 
 
-view : Model -> Html Msg
-view model =
+view : Model -> Dict.Dict String pair -> Html Msg
+view model dictPair =
     div [ class "search flex-row flex-between" ]
         [ table [ class "full-width" ]
             [ thead [] [ viewHeadRow ]
-            , tbody [] (List.map viewBodyRow model.resultFind)
+            , tbody [] (List.map (viewBodyRow dictPair) model.resultFind)
             ]
         ]
 
@@ -129,11 +129,17 @@ viewHeadRow =
         ]
 
 
-viewBodyRow : PairSymbols -> Html Msg
-viewBodyRow row =
+viewBodyRow : Dict.Dict String pair -> PairSymbols -> Html Msg
+viewBodyRow dictPair row =
     tr []
         [ td [ class "name-value-group" ] [ text row.exchange ]
         , td [ class "name-value-group name" ] [ text row.pair ]
         , td [ class "name-value-group " ]
-            [ button [ class "btn transparent blue", onClick (SubscribePair row) ] [ text "ADD" ] ]
+            [ button [ class "btn transparent blue", onClick (SubscribePair row) ]
+                [ if Dict.member ((String.toUpper row.exchange) ++ row.pair) dictPair then
+                    i [ class "fas fa-check" ] []
+                  else
+                    text "ADD"
+                ]
+            ]
         ]

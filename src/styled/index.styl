@@ -336,8 +336,8 @@ button:focus
 
 
 .sign-in-button
-  width 97px
   height 40px
+  padding 0 19px
   background-color transparent
   border 0px
   font-size fs-control
@@ -423,6 +423,25 @@ button:focus
   background-color #0e0e0e
 
 
+/* ----- Context Menu ----- */
+
+
+.context-menu
+  position fixed
+  top 10px
+  right 10px
+  background cb-modal
+  padding 25px
+  border 1px solid cb-border
+  font-weight 600
+
+
+.context-menu > div + div
+  margin-top 15px
+
+.context-menu button
+  font-size 14px
+
 /* ----- Tile ----- */
 
 .tile-list
@@ -467,11 +486,11 @@ table.full-width
   width 100%
 
 
-tr:nth-child(odd)
+.body tr:nth-child(odd)
   background-color cb-two
 
 
-tr:nth-child(even)
+.body tr:nth-child(even)
   background-color cb-one
 
 

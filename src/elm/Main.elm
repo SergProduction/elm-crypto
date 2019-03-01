@@ -79,8 +79,8 @@ type Msg
     | View ViewType
     | ToggleModalSignIn
     | UnSubPair Pair
-    | MouseOverEmail
-    | MouseLeaveExit
+    | OpenCtxMenu
+    | CloseCtxMenu
     | Leave
 
 
@@ -94,7 +94,7 @@ type alias Model =
     { data : Dict.Dict String Pair
     , modal : Bool
     , viewType : ViewType
-    , overEmail : Bool
+    , contextMenuIsOpen : Bool
     , prevViewType : ViewType
     , isFind : Bool
     , user : User.Model
@@ -107,7 +107,7 @@ init : String -> ( Model, Cmd Msg )
 init session =
     ( { data = Dict.empty
       , viewType = Table
-      , overEmail = False
+      , contextMenuIsOpen = False
       , prevViewType = Table
       , isFind = False
       , modal = False
@@ -209,14 +209,14 @@ update msg model =
         ToggleModalSignIn ->
             ( { model | modal = not model.modal }, Cmd.none )
 
-        MouseOverEmail ->
-            ( { model | overEmail = True }, Cmd.none )
+        OpenCtxMenu ->
+            ( { model | contextMenuIsOpen = True }, Cmd.none )
 
-        MouseLeaveExit ->
-            ( { model | overEmail = False }, Cmd.none )
+        CloseCtxMenu ->
+            ( { model | contextMenuIsOpen = False }, Cmd.none )
 
         Leave ->
-            ( { model | overEmail = False, user = User.init }, leaveUser () )
+            ( { model | contextMenuIsOpen = False, user = User.init }, leaveUser () )
 
         WsStatus status ->
             ( { model | wsStatus = status }, Cmd.none )
@@ -285,9 +285,13 @@ view model =
                   viewTileList UnSubPair model.data
 
               SearchView ->
-                  Search.view model.search |> Html.map Search
+                  Search.view model.search model.data |> Html.map Search
           ]
         , viewStatusBar model
+        , if model.contextMenuIsOpen then
+            viewContextMenu
+          else
+            text ""
         ]
 
 
@@ -328,10 +332,7 @@ viewHead model =
                     button [ class "sign-in-button", onClick ToggleModalSignIn ] [ text "Sign-in" ]
 
                 Just _ ->
-                    if model.overEmail then
-                        button [ class "sign-in-button", onClick Leave, onMouseLeave MouseLeaveExit ] [ text "Leave" ]
-                    else
-                        span [ class "user-name", onMouseOver MouseOverEmail ] [ text model.user.email ]
+                    button [ class "sign-in-button", onClick OpenCtxMenu ] [ text model.user.email ]
         ]
 
 
@@ -364,7 +365,14 @@ statusBarColor status =
         "connect" -> ("green", True)
         "error" -> ("red", True)
         _ -> ("red", True)
-            
+
+       
+viewContextMenu : Html Msg
+viewContextMenu = div [ class "context-menu", onMouseLeave CloseCtxMenu ]
+  [ div [] [ a [ href "https://cp.coindaq.net", class "mango" ] [ text "Control Pannel" ] ]
+  , div [] [ a [ href "https://cp.coindaq.net/profile", class "mango" ] [ text "Setting" ] ]
+  , div [] [ button [class "btn transparent f-bold mango", onClick Leave ] [ text "Logout" ] ]
+  ]
 
 
 
