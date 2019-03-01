@@ -1,7 +1,7 @@
 // cb - color-black
 cb-fon = #000
 cb-one = #040404
-cb-two = #080808
+cb-two = #0e0e0e
 cb-modal = #060606
 cb-border = #1c1c1c
 cb-border-two = #262626
@@ -63,7 +63,7 @@ body
 .logo-img
   width 100px
   height 100px
-  padding 30px
+  padding 33px
 
 
 
@@ -94,9 +94,15 @@ body
 .red
   color cf-red
 
+.red-input
+  color #eb042a
+
 
 .green
   color cf-green
+
+.green-input
+  color #00d47d
 
 
 .blue
@@ -128,7 +134,7 @@ body
 }
 
 .preloader {
-    animation-duration: 4s;
+    animation-duration: 6s;
     animation-fill-mode: forwards;
     animation-iteration-count: infinite;
     animation-name: placeHolderShimmer;
@@ -177,6 +183,7 @@ body
   position sticky
   top 0
   padding-left 20px
+  border-top 1px solid cb-border
   border-bottom 1px solid cb-border
   background-color cb-fon
 
@@ -189,6 +196,8 @@ body
 
 
 .options-view
+  height 40px
+  padding 0 19px
   border 1px solid cb-border
   border-top 0px solid transparent
   border-bottom 0px solid transparent
@@ -281,6 +290,8 @@ input focus
 .header input
   width inherit
   padding inherit
+  border-bottom none
+  border-top none
 /* ----- buttons ----- */
 
 
@@ -321,6 +332,7 @@ button:focus
   background transparent
   color cf-white
   border 0
+  font-size 15px
 
 
 .sign-in-button
@@ -398,6 +410,19 @@ button:focus
   background-color cb-modal
 
 
+/* ----- Status Bar ----- */
+
+.status-bar
+  position fixed
+  bottom 0
+  width 100%
+  height 40px
+  display flex
+  align-items center
+  padding 0 20px
+  background-color #0e0e0e
+
+
 /* ----- Tile ----- */
 
 .tile-list
@@ -443,22 +468,28 @@ table.full-width
 
 
 tr:nth-child(odd)
-  background-color cb-one
-
-
-tr:nth-child(even)
   background-color cb-two
 
 
-tr + tr
-  padding-top 3px
+tr:nth-child(even)
+  background-color cb-one
 
+
+tr :nth-child(3)
+  border-left none
+
+tr :nth-child(6)
+  width 160px
+
+
+td
+  margin-top 3px
 
 td + td
   border-left 1px solid cb-border
 
 
-.search tr :hover
+.search tr:hover
   background-color #141414
 
 

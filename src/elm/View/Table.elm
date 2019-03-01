@@ -25,7 +25,7 @@ viewRow msg d =
     tr []
         [ td [ class "name-value-group" ]
             [ div [ class "name burse" ] [ text d.exchange ]
-            , div [ class "burse time" ] [ text d.time ]
+            , div [ class "burse time" ] [ text ("ET: " ++ d.time) ]
             , div [ class "name" ] [ text d.symbol ]
             ]
         , td [ class "name-value-group" ]

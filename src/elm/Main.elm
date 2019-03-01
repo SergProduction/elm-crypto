@@ -55,12 +55,11 @@ encodeUnSubcribePair d =
         ]
 
 
-encodePairUnSubResponse : D.Decoder PairUnSubResponse
-encodePairUnSubResponse =
+dencodePairUnSubResponse : D.Decoder PairUnSubResponse
+dencodePairUnSubResponse =
     D.map2 PairUnSubResponse
         (D.field "message" D.bool)
         (D.field "pairId" D.string)
-
 
 main =
     Browser.element
@@ -74,6 +73,7 @@ main =
 type Msg
     = EchoWs (Result D.Error Pair)
     | EchoWsUsub (Result D.Error PairUnSubResponse)
+    | WsStatus String
     | User User.Msg
     | Search Search.Msg
     | View ViewType
@@ -99,6 +99,7 @@ type alias Model =
     , isFind : Bool
     , user : User.Model
     , search : Search.Model
+    , wsStatus : String
     }
 
 
@@ -112,6 +113,7 @@ init session =
       , modal = False
       , user = User.init
       , search = Search.init
+      , wsStatus = "loading"
       }
     , Cmd.map User (User.getUserInfo session)
     )
@@ -216,6 +218,11 @@ update msg model =
         Leave ->
             ( { model | overEmail = False, user = User.init }, leaveUser () )
 
+        WsStatus status ->
+            ( { model | wsStatus = status }, Cmd.none )
+
+
+
         EchoWs result ->
             case result of
                 Ok d ->
@@ -246,6 +253,7 @@ port wsListenPairs : (String -> msg) -> Sub msg
 
 port wsListenUnsubcribePairs : (String -> msg) -> Sub msg
 
+port wsDefaultStatus : (String -> msg) -> Sub msg
 
 port toJs : E.Value -> Cmd msg
 
@@ -258,7 +266,8 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
         [ wsListenPairs (\s -> EchoWs (D.decodeString decodePair s))
-        , wsListenUnsubcribePairs (\s -> EchoWsUsub (D.decodeString encodePairUnSubResponse s))
+        , wsListenUnsubcribePairs (\s -> EchoWsUsub (D.decodeString dencodePairUnSubResponse s))
+        , wsDefaultStatus WsStatus
         ]
 
 
@@ -278,13 +287,14 @@ view model =
               SearchView ->
                   Search.view model.search |> Html.map Search
           ]
+        , viewStatusBar model
         ]
 
 
 viewHead : Model -> Html Msg
 viewHead model =
     div [ class "header flex-row flex-between flex-vertical-center roboto" ]
-        [ div [ class "header-about-name f-bold" ] [ text "CDQ Screener" ]
+        [ div [ class "header-about-name f-bold" ] [ text "Analytical Monitor" ]
         , div [ class "flex-row" ]
             [ div [ class "red-button flex-row flex-center flex-vertical-center" ]
                 [ text "SRH "
@@ -339,6 +349,23 @@ viewModal model =
                       [ User.view model.user |> Html.map User ]
                   ]
               ]
+
+
+viewStatusBar : Model -> Html Msg
+viewStatusBar model =
+    div [ classList [("status-bar", True), statusBarColor model.wsStatus ] ]
+      [ text <| "Status: "++ model.wsStatus ]
+
+
+statusBarColor : String -> (String, Bool)
+statusBarColor status =
+    case status of
+        "loading" -> ("blue", True)
+        "connect" -> ("green", True)
+        "error" -> ("red", True)
+        _ -> ("red", True)
+            
+
 
 
 isActive : ViewType -> ViewType -> ( String, Bool )

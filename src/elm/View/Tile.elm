@@ -20,7 +20,7 @@ viewTile msg d =
             [ span [ class "name burse" ] [ text d.exchange ]
             , span [ class "name" ] [ text d.symbol ]
             , span [ class "red" ] [ text "$2222.00002" ]
-            , span [ class "burse time" ] [ text d.time ]
+            , span [ class "burse time" ] [ text ("ET: " ++ d.time) ]
             , div [ class "table-row-menu" ]
                 [ button [ class "btn transparent", onClick (msg d) ]
                     [ i [ class "menu fas fa-ellipsis-h" ] [] ]

@@ -106,7 +106,7 @@ getPairSymbols =
 
 viewSearchInput : Model -> Html Msg
 viewSearchInput model =
-    input [ class "input-search", type_ "text", placeholder "find", value model.find, onInput FindPair ] []
+    input [ class "input-search", type_ "text", placeholder "search", value model.find, onInput FindPair ] []
 
 
 view : Model -> Html Msg
