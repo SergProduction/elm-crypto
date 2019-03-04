@@ -1,11 +1,12 @@
-module Data.Pair exposing
+module Data.TakePair exposing
     ( Pair
-    , decodePair
+    , decode
     )
 
 import Json.Decode as D
 import Json.Decode.Pipeline exposing (required)
 import Json.Encode as E
+import Dict
 
 
 type alias A =
@@ -26,10 +27,14 @@ type alias C =
     , twoPrevDay : String
     }
 
+type alias Graph =
+  { x : Float
+  , y : Float
+  }
 
 type alias Pair =
-    { symbol : String
-    , exchange : String
+    { exchange : String
+    , symbol : String
     , priceDiff : String
     , highVolume24 : String
     , time : String
@@ -43,14 +48,15 @@ type alias Pair =
     , marketHistory : B
     , interestRatioNow : B
     , baseVolume : C
+    , graph : List Graph
     }
 
 
-decodePair : D.Decoder Pair
-decodePair =
+decode : D.Decoder Pair
+decode =
     D.succeed Pair
-        |> required "Symbol" D.string
         |> required "Exchange" D.string
+        |> required "Symbol" D.string
         |> required "PriceDiff" D.string
         |> required "HighVolume24" D.string
         |> required "Time" D.string
@@ -64,6 +70,7 @@ decodePair =
         |> required "MarketHistory" decodeB
         |> required "InterestRatioNow" decodeB
         |> required "BaseVolume" decodeC
+        |> required "Graphics" (D.list decodeGraph)
 
 
 decodeA : D.Decoder A
@@ -87,20 +94,9 @@ decodeC =
         (D.field "prevDay" D.string)
         (D.field "twoPrevDay" D.string)
 
+decodeGraph : D.Decoder Graph
+decodeGraph =
+    D.map2 Graph
+        (D.field "x" D.float)
+        (D.field "y" D.float)
 
-type alias SubcribePair =
-    { exchange : String
-    , pair : String
-    , line : String
-    , userId : String
-    }
-
-
-encodeSubcribePair : SubcribePair -> E.Value
-encodeSubcribePair d =
-    E.object
-        [ ( "exchange", E.string d.exchange )
-        , ( "pair", E.string d.pair )
-        , ( "line", E.string d.line )
-        -- , ( "userId", E.string d.userId )
-        ]

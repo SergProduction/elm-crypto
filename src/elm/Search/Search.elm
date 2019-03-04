@@ -1,12 +1,8 @@
-module Search exposing
-    ( JSONPairSymbols
-    , Model
+module Search.Search exposing
+    ( Model
     , Msg(..)
-    , PairSymbolsList
-    , decodeJSONPairSymbols
     , getPairSymbols
     , init
-    , transformJSONToPairSymbolsList
     , update
     , view
     , viewSearchInput
@@ -19,44 +15,19 @@ import Html.Events exposing (..)
 import Http
 import Json.Decode as D
 import Json.Encode as E
-
-
-type alias JSONPairSymbols =
-    Dict.Dict String (List String)
-
-
-type alias PairSymbols =
-    { exchange : String
-    , pair : String
-    }
-
-
-type alias PairSymbolsList =
-    List PairSymbols
-
-
-transformJSONToPairSymbolsList : JSONPairSymbols -> PairSymbolsList
-transformJSONToPairSymbolsList a =
-    List.concatMap
-        (\( exchange, pairs ) -> List.map (\pair -> PairSymbols exchange pair) pairs)
-        (Dict.toList a)
-
-
-decodeJSONPairSymbols : D.Decoder JSONPairSymbols
-decodeJSONPairSymbols =
-    D.dict (D.list D.string)
+import Search.Data.Take as Data
 
 
 type Msg
     = FindPair String
-    | SubscribePair PairSymbols
-    | ResponsePairSymbols (Result Http.Error JSONPairSymbols)
+    | SubscribePair Data.Pair
+    | ResponsePairs (Result Http.Error Data.RowPairs)
 
 
 type alias Model =
     { find : String
-    , data : PairSymbolsList
-    , resultFind : PairSymbolsList
+    , data : Data.Pairs
+    , resultFind : Data.Pairs
     }
 
 
@@ -74,7 +45,7 @@ update msg model=
         FindPair str ->
             ( { model
                 | find = str
-                , resultFind = List.filter (\d -> String.contains (String.toLower str) (String.toLower d.pair)) model.data
+                , resultFind = List.filter (\d -> String.contains (String.toLower str) (String.toLower d.symbol)) model.data
               }
             , Cmd.none
             )
@@ -82,12 +53,16 @@ update msg model=
         SubscribePair _ ->
             ( model, Cmd.none )
 
-        ResponsePairSymbols r ->
+        ResponsePairs r ->
             case r of
                 Ok d ->
+                    let
+                        pairs = Data.transformRowPairToPair d
+                    in
+                    
                     ( { model
-                        | data = transformJSONToPairSymbolsList d
-                        , resultFind = transformJSONToPairSymbolsList d
+                        | data = pairs
+                        , resultFind = pairs
                       }
                     , Cmd.none
                     )
@@ -100,7 +75,7 @@ getPairSymbols : Cmd Msg
 getPairSymbols =
     Http.get
         { url = "https://app.coindaq.net/rest/pairs" -- https://coindaq.net:8080 http://142.93.47.26:1023/pairs
-        , expect = Http.expectJson ResponsePairSymbols decodeJSONPairSymbols
+        , expect = Http.expectJson ResponsePairs Data.decodeRowPairs
         }
 
 
@@ -111,7 +86,7 @@ viewSearchInput model =
 
 view : Model -> Dict.Dict String pair -> Html Msg
 view model dictPair =
-    div [ class "search flex-row flex-between" ]
+    div [ class "flex-row flex-between" ]
         [ table [ class "full-width" ]
             [ thead [] [ viewHeadRow ]
             , tbody [] (List.map (viewBodyRow dictPair) model.resultFind)
@@ -124,20 +99,25 @@ viewHeadRow =
     tr []
         [ td [ class "name-value-group" ] [ text "Exchange" ]
         , td [ class "name-value-group name" ] [ text "Pair" ]
+        , td [ class "name-value-group name" ] [ text "Ask" ]
+        , td [ class "name-value-group name" ] [ text "Bid" ]
+
         , td [ class "name-value-group name" ]
             [ i [ class "fas fa-star" ] [] ]
         ]
 
 
-viewBodyRow : Dict.Dict String pair -> PairSymbols -> Html Msg
+viewBodyRow : Dict.Dict String pair -> Data.Pair -> Html Msg
 viewBodyRow dictPair row =
     tr []
         [ td [ class "name-value-group" ] [ text row.exchange ]
-        , td [ class "name-value-group name" ] [ text row.pair ]
+        , td [ class "name-value-group name" ] [ text row.symbol ]
+        , td [ class "name-value-group" ] [ text row.ask ]
+        , td [ class "name-value-group" ] [ text row.bid ]
         , td [ class "name-value-group " ]
             [ button [ class "btn transparent blue", onClick (SubscribePair row) ]
-                [ if Dict.member ((String.toUpper row.exchange) ++ row.pair) dictPair then
-                    i [ class "fas fa-check" ] []
+                [ if Dict.member ((String.toUpper row.exchange) ++ row.symbol) dictPair then
+                    i [ class "fas fa-check green" ] []
                   else
                     text "ADD"
                 ]

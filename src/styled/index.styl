@@ -47,8 +47,10 @@ body
   color cf-grey-two
   font-size fs-norm
   margin 0px
+  min-width 1350px
 
-
+.body
+  margin-bottom 40px
 
 
 .header-about-name
@@ -89,6 +91,7 @@ body
 
 .burse.time
   color cf-blue
+  white-space nowrap
 
 
 .red
@@ -214,6 +217,9 @@ body
   border-right 7px solid transparent
 
 
+.text-graph > span + span
+  margin-left 10px
+
 /* ----- flex helpers ----- */
 
 
@@ -261,6 +267,10 @@ input focus
 .search input
   padding inherit
 
+.search input
+  padding inherit
+
+
 .modal input
   font-size fs-modal
 
@@ -292,6 +302,15 @@ input focus
   padding inherit
   border-bottom none
   border-top none
+  padding-left 15px
+  font-family 'Roboto Mono', monospace
+  font-size 16px
+  font-weight 600
+
+.header input:focus
+  outline 1px solid transparent
+
+
 /* ----- buttons ----- */
 
 
@@ -300,7 +319,7 @@ button
 
 
 button:focus
-  border 2px solid #464c52
+  outline 1px solid transparent
 
 
 .red-button
@@ -369,6 +388,13 @@ button:focus
   background-color cb-fon
   border 1px solid #404040
   color #d0d0d0
+
+
+.login input::placeholder
+  color cf-green
+
+.password input::placeholder
+  color cf-red
 
 
 /* ----- Modal ----- */
@@ -486,29 +512,32 @@ table.full-width
   width 100%
 
 
-.body tr:nth-child(odd)
+.base tr:nth-child(odd)
   background-color cb-two
 
 
-.body tr:nth-child(even)
+.base tr:nth-child(even)
   background-color cb-one
 
 
-tr :nth-child(3)
+
+.base tr :nth-child(3)
   border-left none
 
-tr :nth-child(6)
+.base tr :nth-child(6)
   width 160px
 
 
-td
+.base td
   margin-top 3px
 
-td + td
+.base td + td
   border-left 1px solid cb-border
 
 
 .search tr:hover
   background-color #141414
 
+.search tr
+  border-top 1px solid cb-border
 

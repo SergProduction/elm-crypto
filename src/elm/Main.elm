@@ -1,7 +1,6 @@
 port module Main exposing (Model, Msg(..), init, main, subscriptions, update, view)
 
 import Browser
-import Data.Pair exposing (Pair, decodePair)
 import Dict
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -9,57 +8,15 @@ import Html.Events exposing (..)
 import Http
 import Json.Decode as D
 import Json.Encode as E
-import Search exposing (JSONPairSymbols, PairSymbolsList, decodeJSONPairSymbols, transformJSONToPairSymbolsList)
+import Search.Search as Search
 import User
 import View.Table exposing (viewTable)
 import View.Tile exposing (viewTileList)
+import Data.TakePair as TakePair
+import Data.TakeUnSub as TakeUnSub
+import Data.SendSub as SendSub
+import Data.SendUnSub as SendUnSub
 
-
-type alias PairUnSubResponse =
-    { message : Bool
-    , pairId : String
-    }
-
-
-type alias PairSub =
-    { exchange : String
-    , pair : String
-    , userId : String
-    , pairId : String
-    }
-
-
-type alias PairUnSub =
-    { exchange : String
-    , pair : String
-    , userId : String
-    }
-
-
-encodeSubcribePair : PairSub -> E.Value
-encodeSubcribePair d =
-    E.object
-        [ ( "exchange", E.string d.exchange )
-        , ( "pair", E.string d.pair )
-        , ( "pairId", E.string d.pairId )
-        , ( "userId", E.string d.userId )
-        ]
-
-
-encodeUnSubcribePair : PairUnSub -> E.Value
-encodeUnSubcribePair d =
-    E.object
-        [ ( "exchange", E.string d.exchange )
-        , ( "pair", E.string d.pair )
-        , ( "userId", E.string d.userId )
-        ]
-
-
-dencodePairUnSubResponse : D.Decoder PairUnSubResponse
-dencodePairUnSubResponse =
-    D.map2 PairUnSubResponse
-        (D.field "message" D.bool)
-        (D.field "pairId" D.string)
 
 main =
     Browser.element
@@ -71,17 +28,17 @@ main =
 
 
 type Msg
-    = EchoWs (Result D.Error Pair)
-    | EchoWsUsub (Result D.Error PairUnSubResponse)
+    = EchoWs (Result D.Error TakePair.Pair)
+    | EchoWsUnSub (Result D.Error TakeUnSub.PairUnSub)
     | WsStatus String
     | User User.Msg
     | Search Search.Msg
     | View ViewType
     | ToggleModalSignIn
-    | UnSubPair Pair
+    | UnSubPair TakePair.Pair
     | OpenCtxMenu
     | CloseCtxMenu
-    | Leave
+    | LogOut
 
 
 type ViewType
@@ -91,7 +48,7 @@ type ViewType
 
 
 type alias Model =
-    { data : Dict.Dict String Pair
+    { data : Dict.Dict String TakePair.Pair
     , modal : Bool
     , viewType : ViewType
     , contextMenuIsOpen : Bool
@@ -101,6 +58,10 @@ type alias Model =
     , search : Search.Model
     , wsStatus : String
     }
+
+
+createPairId : String -> String -> String
+createPairId exchange symbol = String.toUpper <| exchange ++ symbol
 
 
 init : String -> ( Model, Cmd Msg )
@@ -151,8 +112,8 @@ update msg model =
                 Just userId ->
                     ( model
                     , toJs <|
-                        encodeSubcribePair <|
-                            PairSub (String.toUpper p.exchange) p.pair userId (p.exchange ++ p.pair)
+                        SendSub.encode <|
+                            SendSub.PairSub (String.toUpper p.exchange) p.symbol userId ( createPairId p.exchange p.symbol)
                     )
 
 
@@ -171,12 +132,12 @@ update msg model =
                 Just userId ->
                     let
                         pairUnSub =
-                            PairUnSub (String.toUpper pair.exchange) pair.symbol userId
+                            SendUnSub.PairUnSub (String.toUpper pair.exchange) pair.symbol userId
                     in
-                    ( model, toJs (encodeUnSubcribePair pairUnSub) )
+                    ( model, toJs (SendUnSub.encode pairUnSub) )
 
-        View t ->
-            case t of
+        View vtype ->
+            case vtype of
                 Table ->
                     ( { model | viewType = Table }, Cmd.none )
 
@@ -215,32 +176,36 @@ update msg model =
         CloseCtxMenu ->
             ( { model | contextMenuIsOpen = False }, Cmd.none )
 
-        Leave ->
+        LogOut ->
             ( { model | contextMenuIsOpen = False, user = User.init }, leaveUser () )
 
         WsStatus status ->
             ( { model | wsStatus = status }, Cmd.none )
 
 
-
         EchoWs result ->
             case result of
-                Ok d ->
+                Ok newPair ->
                     let
                         data =
-                            Dict.insert (d.exchange ++ d.symbol) d model.data
+                            Dict.insert
+                              (createPairId newPair.exchange newPair.symbol)
+                              newPair
+                              model.data
                     in
                     ( { model | data = data }, Cmd.none )
 
                 Err _ ->
                     ( model, Cmd.none )
 
-        EchoWsUsub result ->
+        EchoWsUnSub result ->
             case result of
-                Ok d ->
+                Ok unsubPair ->
                     let
                         data =
-                            Dict.filter (\k v -> not (k == d.pairId)) model.data
+                            Dict.filter
+                              (\k v -> not (k == unsubPair.pairId))
+                              model.data
                     in
                     ( { model | data = data }, Cmd.none )
 
@@ -265,8 +230,8 @@ port leaveUser : () -> Cmd msg
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ wsListenPairs (\s -> EchoWs (D.decodeString decodePair s))
-        , wsListenUnsubcribePairs (\s -> EchoWsUsub (D.decodeString dencodePairUnSubResponse s))
+        [ wsListenPairs (\s -> EchoWs (D.decodeString TakePair.decode s))
+        , wsListenUnsubcribePairs (\s -> EchoWsUnSub (D.decodeString TakeUnSub.dencode s))
         , wsDefaultStatus WsStatus
         ]
 
@@ -276,16 +241,16 @@ view model =
     div []
         [ viewHead model
         , viewModal model
-        , div [class "body"]
+        , div [ class "body" ]
           [ case model.viewType of
               Table ->
-                  viewTable UnSubPair model.data
+                  div [ class "base" ] [ (viewTable UnSubPair model.data) ]
 
               Squart ->
-                  viewTileList UnSubPair model.data
+                  div [ class "base" ] [ (viewTileList UnSubPair model.data) ]
 
               SearchView ->
-                  Search.view model.search model.data |> Html.map Search
+                  div [ class "search" ] [ (Search.view model.search model.data |> Html.map Search) ]
           ]
         , viewStatusBar model
         , if model.contextMenuIsOpen then
@@ -371,7 +336,7 @@ viewContextMenu : Html Msg
 viewContextMenu = div [ class "context-menu", onMouseLeave CloseCtxMenu ]
   [ div [] [ a [ href "https://cp.coindaq.net", class "mango" ] [ text "Control Pannel" ] ]
   , div [] [ a [ href "https://cp.coindaq.net/profile", class "mango" ] [ text "Setting" ] ]
-  , div [] [ button [class "btn transparent f-bold mango", onClick Leave ] [ text "Logout" ] ]
+  , div [] [ button [class "btn transparent f-bold mango", onClick LogOut ] [ text "Logout" ] ]
   ]
 
 

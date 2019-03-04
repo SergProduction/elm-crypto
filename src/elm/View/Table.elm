@@ -1,11 +1,13 @@
 module View.Table exposing (viewTable)
 
-import Data.Pair as DataModule exposing (Pair)
+import Data.TakePair exposing (Pair)
 import Dict
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import View.Helpers exposing (getRedOrGreenClass)
+import View.Graph exposing (viewGraph)
+
 
 
 viewTable : (Pair -> msg) -> Dict.Dict String Pair -> Html msg
@@ -49,7 +51,7 @@ viewRow msg d =
             , div [ classList [ ( "value", True ), getRedOrGreenClass d.volume24.prev d.volume24.current ] ]
                 [ text d.volume24.current ]
             , div [ class "name" ] [ text "Coin Volume 24h High" ]
-            , div [ classList [ ( "value", True ), ( "gt", True ) ] ]
+            , div [ class "value" ]
                 [ text d.highVolume24 ]
             ]
         , td [ class "name-value-group" ]
@@ -92,7 +94,8 @@ viewRow msg d =
                 [ button [ class "btn transparent", onClick (msg d) ]
                     [ i [ class "menu fas fa-ellipsis-h" ] [] ]
                 ]
-            , div [] [ text "GRAPH" ]
+            , div [ class "graph-period"] [ text "1M" ]
+            , div [] [ viewGraph d.graph ]
             , div [ class "flex-row flex-between"]
               [ div [ class "mango"] [text "Price 24h"]
               , div [] [text d.priceDiff]

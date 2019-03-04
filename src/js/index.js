@@ -55,6 +55,40 @@ const wsListen = (ws, cb) => {
 }
 
 
+const scalableGraphData = (data/*:: {[string]: string}*/) => {
+  const n1 = Object.entries(data).map(([k, v]) => ({x: k, y: v}))
+
+  // ----
+
+  const dates = n1.map(d => new Date("1971 00:" + d.x).valueOf())
+
+  const minDate = Math.min(...dates)
+  
+  const datesToLeadMinimal = dates.map(x => x - minDate)
+
+  const maxDate = Math.max(...datesToLeadMinimal)
+  
+  const datesResult = datesToLeadMinimal.map(x => x / maxDate)
+
+  // ----
+
+  const values = n1.map(d => parseFloat(d.y))
+
+  const minValue = Math.min(...values)
+  
+  const valuesToLeadMinimal = values.map(x => x - minValue)
+
+  const maxValue = Math.max(...valuesToLeadMinimal)
+
+  const valuesResult = valuesToLeadMinimal.map(y => y / maxValue)
+
+  // ----
+
+  return valuesResult
+    .map((y, i) => ({x: datesResult[i], y }))
+    .sort((a, b) => a.x - b.x)
+}
+
 
 app.ports.saveSession.subscribe((data) => {
   console.log('saveSession', data)
@@ -72,17 +106,25 @@ app.ports.leaveUser.subscribe(() => {
 app.ports.toJs.subscribe((data) => {
 
   if (socketAuth === undefined) {
+    
     socketAuth = new WebSocket(endpoint);
-    wsListen(socketAuth, (wsData) => {
-      app.ports.wsListenPairs.send(wsData)
 
-      if (JSON.parse(wsData).Bid === undefined) {
+    wsListen(socketAuth, (wsData) => {
+      
+      if (JSON.parse(wsData).message !== undefined) {
         app.ports.wsListenUnsubcribePairs.send(wsData)
+      } else {
+        const d = JSON.parse(wsData)
+
+        d.Graphics = scalableGraphData(d.Graphics)
+      
+        app.ports.wsListenPairs.send(JSON.stringify(d))
       }
     })
     .on('open', () => {
       socketAuth.send(JSON.stringify(data))
     })
+
   }
 
   if (socketAuth.readyState === 1) {
@@ -96,7 +138,12 @@ socketDefault = new WebSocket(`${endpoint}/defaults`);
 
 wsListen(socketDefault, (wsData) => {
   counterMessageWs++
-  app.ports.wsListenPairs.send(wsData)
+
+  const d = JSON.parse(wsData)
+
+  d.Graphics = scalableGraphData(d.Graphics)
+
+  app.ports.wsListenPairs.send(JSON.stringify(d))
 })
 .on('open', () => {
   logStatMidleWsMessageStart()

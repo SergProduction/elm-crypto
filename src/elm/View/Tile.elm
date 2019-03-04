@@ -1,11 +1,12 @@
 module View.Tile exposing (viewTileList)
 
-import Data.Pair as DataModule exposing (Pair)
+import Data.TakePair exposing (Pair)
 import Dict
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import View.Helpers exposing (getRedOrGreenClass)
+import View.Graph exposing (viewGraph)
 
 
 viewTileList : (Pair -> msg) -> Dict.Dict String Pair -> Html msg
@@ -58,7 +59,7 @@ viewTile msg d =
                 , div [ classList [ ( "value", True ), getRedOrGreenClass d.volume24.prev d.volume24.current ] ]
                     [ text d.volume24.current ]
                 , div [ class "name" ] [ text "Coin Volume 24h High" ]
-                , div [ classList [ ( "value", True ), ( "gt", True ) ] ]
+                , div [ class "value" ]
                     [ text d.highVolume24 ]
                 ]
             , div [ class "name-value-group" ]
@@ -71,7 +72,7 @@ viewTile msg d =
         , div [ class "flex-row flex-between" ]
             [ div []
                 [ div [ class "name" ] [ text "Interest Ratio Now" ]
-                , div [ class "flex-row interest-ratio" ]
+                , div [ class "flex-row interest-ratio roboto" ]
                     [ div [ class "flex-column" ]
                         [ span [ class "interest-ratio-value green" ] [ text (d.interestRatioNow.buy ++ "%") ]
                         , span [] [ text "IRN Buy" ]
@@ -82,12 +83,13 @@ viewTile msg d =
                         ]
                     ]
                 ]
-            , div []
-                [ div [ class "flex-row flex-between"]
-                    [ div [ class "mango"] [text "Price 24h"]
-                    , div [] [text d.priceDiff]
+            , div [ class "flex-column flex-between"]
+                [ div [ class "text-graph"]
+                    [ span [ class "blue"] [ text "1M"]
+                    , span [ class "mango"] [text "Price 24h"]
+                    , span [] [text d.priceDiff]
                     ]
-                , div [] [text "GRAPH"]
+                , div [] [ viewGraph d.graph ]
                 ]
             ]
         , div [ class "flex-row flex-between" ]

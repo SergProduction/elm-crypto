@@ -233,10 +233,10 @@ view model =
             (Just errorMessage, _) ->
                 div [ class "input-group" ]
                     [ div [ class "error" ] [ text errorMessage ] ]
-        , div [ class "input-group" ]
+        , div [ class "input-group login" ]
             [ input [ class "green-input", type_ "text", placeholder "Email", onInput Email, value model.email ] []
             ]
-        , div [ class "input-group" ]
+        , div [ class "input-group password" ]
             [ input [ class "red-input", type_ "password", placeholder "Password", onInput Password, value model.password ] []
             ]
         , div [ class "input-group" ]
