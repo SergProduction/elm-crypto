@@ -147,13 +147,13 @@ wsListen(socketDefault, (wsData) => {
 })
 .on('open', () => {
   logStatMidleWsMessageStart()
-  app.ports.wsDefaultStatus.send('connect')
+  app.ports.wsDefaultStatus.send('Connect')
 })
 .on('close', () => {
   logStatMidleWsMessageStop()
-  app.ports.wsDefaultStatus.send('close')
+  app.ports.wsDefaultStatus.send('Close')
 })
 .on('error', () => {
   logStatMidleWsMessageStop()
-  app.ports.wsDefaultStatus.send('error')
+  app.ports.wsDefaultStatus.send('Error')
 })

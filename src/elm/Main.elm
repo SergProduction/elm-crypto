@@ -2,6 +2,7 @@ port module Main exposing (Model, Msg(..), init, main, subscriptions, update, vi
 
 import Browser
 import Dict
+import Array
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -16,6 +17,8 @@ import Data.TakePair as TakePair
 import Data.TakeUnSub as TakeUnSub
 import Data.SendSub as SendSub
 import Data.SendUnSub as SendUnSub
+import MainHelpers exposing (shiftData)
+
 
 
 main =
@@ -35,8 +38,12 @@ type Msg
     | Search Search.Msg
     | View ViewType
     | ToggleModalSignIn
-    | UnSubPair TakePair.Pair
-    | OpenCtxMenu
+    | PairMoveTop
+    | PairMoveUp
+    | PairMoveDow
+    | UnSubPair
+    | OpenCtxMenuUser
+    | OpenCtxMenuPair TakePair.Pair
     | CloseCtxMenu
     | LogOut
 
@@ -48,10 +55,13 @@ type ViewType
 
 
 type alias Model =
-    { data : Dict.Dict String TakePair.Pair
+    { dataMap : Dict.Dict String Int
+    , data : Array.Array TakePair.Pair
     , modal : Bool
     , viewType : ViewType
-    , contextMenuIsOpen : Bool
+    , contextMenuUserIsOpen : Bool
+    , contextMenuPairIsOpen : Bool
+    , contextMenuPair : Maybe TakePair.Pair
     , prevViewType : ViewType
     , isFind : Bool
     , user : User.Model
@@ -66,15 +76,18 @@ createPairId exchange symbol = String.toUpper <| exchange ++ symbol
 
 init : String -> ( Model, Cmd Msg )
 init session =
-    ( { data = Dict.empty
+    ( { dataMap = Dict.empty
+      , data = Array.empty
       , viewType = Table
-      , contextMenuIsOpen = False
+      , contextMenuUserIsOpen = False
+      , contextMenuPairIsOpen = False
+      , contextMenuPair = Nothing
       , prevViewType = Table
       , isFind = False
       , modal = False
       , user = User.init
       , search = Search.init
-      , wsStatus = "loading"
+      , wsStatus = "Loading"
       }
     , Cmd.map User (User.getUserInfo session)
     )
@@ -124,17 +137,28 @@ update msg model =
             in
             ( { model | search = search }, Cmd.map Search command )
 
-        UnSubPair pair ->
-            case model.user.userId of
-                Nothing ->
-                    ( model, Cmd.none )
-
-                Just userId ->
+        UnSubPair ->
+            let
+              maybeModelCmd =
+                Maybe.map2
+                  (\userId ctxPair ->
                     let
-                        pairUnSub =
-                            SendUnSub.PairUnSub (String.toUpper pair.exchange) pair.symbol userId
+                      pairUnSub =
+                        SendUnSub.PairUnSub
+                          (String.toUpper ctxPair.exchange)
+                          ctxPair.id
+                          userId
                     in
                     ( model, toJs (SendUnSub.encode pairUnSub) )
+                  )
+                  model.user.userId
+                  model.contextMenuPair
+            in
+              case maybeModelCmd of
+                Just ( newModel, cmd ) ->
+                    ( newModel, cmd )
+                Nothing ->
+                    ( model, Cmd.none )
 
         View vtype ->
             case vtype of
@@ -170,30 +194,105 @@ update msg model =
         ToggleModalSignIn ->
             ( { model | modal = not model.modal }, Cmd.none )
 
-        OpenCtxMenu ->
-            ( { model | contextMenuIsOpen = True }, Cmd.none )
+        OpenCtxMenuUser ->
+            ( { model | contextMenuUserIsOpen = True }, Cmd.none )
+
+        OpenCtxMenuPair pair->
+            ( { model | contextMenuPairIsOpen = True, contextMenuPair = Just pair }, Cmd.none )
 
         CloseCtxMenu ->
-            ( { model | contextMenuIsOpen = False }, Cmd.none )
+            (
+              { model
+              | contextMenuUserIsOpen = False
+              , contextMenuPairIsOpen = False
+              , contextMenuPair = Nothing
+              }
+            ,
+              Cmd.none
+            )
 
         LogOut ->
-            ( { model | contextMenuIsOpen = False, user = User.init }, leaveUser () )
+            ( { model | contextMenuUserIsOpen = False, user = User.init }, leaveUser () )
 
         WsStatus status ->
             ( { model | wsStatus = status }, Cmd.none )
 
+        PairMoveTop ->
+          case model.contextMenuPair of
+            Nothing ->
+              ( model , Cmd.none )
+
+            Just pair ->
+                let
+                  maybeData = shiftData (model.dataMap, model.data) pair MainHelpers.Top
+                in
+                  case maybeData of
+                    Nothing ->
+                      ( model , Cmd.none )
+        
+                    Just (dataMap, data) ->
+
+                      ( { model | dataMap = dataMap, data = data } , Cmd.none )
+
+        PairMoveUp ->
+          case model.contextMenuPair of
+            Nothing ->
+              ( model , Cmd.none )
+
+            Just pair ->
+                let
+                  maybeData = shiftData (model.dataMap, model.data) pair MainHelpers.Up
+                in
+                  case maybeData of
+                    Nothing ->
+                      let
+                          x = Debug.log "ff" "f"
+                      in
+                      
+                      ( model , Cmd.none )
+        
+                    Just (dataMap, data) ->
+
+                      ( { model | dataMap = dataMap, data = data } , Cmd.none )
+              
+        PairMoveDow ->
+          case model.contextMenuPair of
+            Nothing ->
+              ( model , Cmd.none )
+
+            Just pair ->
+                let
+                  maybeData = shiftData (model.dataMap, model.data) pair MainHelpers.Down
+                in
+                  case maybeData of
+                    Nothing ->
+                      ( model , Cmd.none )
+        
+                    Just (dataMap, data) ->
+
+                      ( { model | dataMap = dataMap, data = data } , Cmd.none )
 
         EchoWs result ->
             case result of
                 Ok newPair ->
                     let
                         data =
-                            Dict.insert
-                              (createPairId newPair.exchange newPair.symbol)
-                              newPair
-                              model.data
+                            if Dict.member newPair.id model.dataMap then
+                              case Dict.get newPair.id model.dataMap of
+                                Just index -> Array.set index newPair model.data
+                                Nothing -> model.data
+                            else
+                              Array.push newPair model.data
+                        dataMap =
+                            if Dict.member newPair.id model.dataMap then
+                              model.dataMap
+                            else
+                              Dict.insert
+                                newPair.id
+                                ((Array.length data) - 1 )
+                                model.dataMap
                     in
-                    ( { model | data = data }, Cmd.none )
+                    ( { model | data = data, dataMap = dataMap }, Cmd.none )
 
                 Err _ ->
                     ( model, Cmd.none )
@@ -203,11 +302,13 @@ update msg model =
                 Ok unsubPair ->
                     let
                         data =
+                          Array.filter (\p -> not (p.id == unsubPair.pairId)) model.data
+                        dataMap =
                             Dict.filter
                               (\k v -> not (k == unsubPair.pairId))
-                              model.data
+                              model.dataMap
                     in
-                    ( { model | data = data }, Cmd.none )
+                    ( { model | data = data, dataMap = dataMap }, Cmd.none )
 
                 Err _ ->
                     ( model, Cmd.none )
@@ -244,17 +345,21 @@ view model =
         , div [ class "body" ]
           [ case model.viewType of
               Table ->
-                  div [ class "base" ] [ (viewTable UnSubPair model.data) ]
+                  div [ class "base" ] [ (viewTable OpenCtxMenuPair model.data) ]
 
               Squart ->
-                  div [ class "base" ] [ (viewTileList UnSubPair model.data) ]
+                  div [ class "base" ] [ (viewTileList OpenCtxMenuPair model.data) ]
 
               SearchView ->
-                  div [ class "search" ] [ (Search.view model.search model.data |> Html.map Search) ]
+                  div [ class "search" ] [ (Search.view model.search model.dataMap |> Html.map Search) ]
           ]
         , viewStatusBar model
-        , if model.contextMenuIsOpen then
+        , if model.contextMenuUserIsOpen then
             viewContextMenu
+          else
+            text ""
+        , if model.contextMenuPairIsOpen then
+            viewContextMenuPair
           else
             text ""
         ]
@@ -280,7 +385,7 @@ viewHead model =
               else
                 text ""
             ]
-        , div [] [ text "Market Cap: $120 558 456 737 • 24h Vol: $20 850 816 957 • BTC Dominance: 52.7%" ]
+        , div [ class "market-cap" ] [] -- text "Market Cap: $120 558 456 737 • 24h Vol: $20 850 816 957 • BTC Dominance: 52.7%" ]
         , div [ class "options-view flex-row" ]
             [ button [ onClick (View Table) ]
                 [ i [ classList [ ( "fas fa-th-list", True ), isActive Table model.viewType ] ] [] ]
@@ -297,7 +402,7 @@ viewHead model =
                     button [ class "sign-in-button", onClick ToggleModalSignIn ] [ text "Sign-in" ]
 
                 Just _ ->
-                    button [ class "sign-in-button", onClick OpenCtxMenu ] [ text model.user.email ]
+                    button [ class "sign-in-button", onClick OpenCtxMenuUser ] [ text model.user.email ]
         ]
 
 
@@ -319,16 +424,18 @@ viewModal model =
 
 viewStatusBar : Model -> Html Msg
 viewStatusBar model =
-    div [ classList [("status-bar", True), statusBarColor model.wsStatus ] ]
-      [ text <| "Status: "++ model.wsStatus ]
+    div [ class "status-bar flex-row flex-between" ]
+      [ div [ classList [statusBarColor model.wsStatus] ] [ text <| "Status: "++ model.wsStatus ]
+      , div [] [ text "Terminal MVP: 0.9.4"]
+      ]
 
 
 statusBarColor : String -> (String, Bool)
 statusBarColor status =
     case status of
-        "loading" -> ("blue", True)
-        "connect" -> ("green", True)
-        "error" -> ("red", True)
+        "Loading" -> ("blue", True)
+        "Connect" -> ("green", True)
+        "Error" -> ("red", True)
         _ -> ("red", True)
 
        
@@ -339,6 +446,13 @@ viewContextMenu = div [ class "context-menu", onMouseLeave CloseCtxMenu ]
   , div [] [ button [class "btn transparent f-bold mango", onClick LogOut ] [ text "Logout" ] ]
   ]
 
+viewContextMenuPair : Html Msg
+viewContextMenuPair = div [ class "context-menu", onMouseLeave CloseCtxMenu ]
+  [ div [] [ button [class "btn transparent f-bold mango", onClick PairMoveTop ] [ text "Move top" ] ]
+  , div [] [ button [class "btn transparent f-bold mango", onClick PairMoveUp ] [ text "Move up" ] ]
+  , div [] [ button [class "btn transparent f-bold mango", onClick PairMoveDow ] [ text "Move down" ] ]
+  , div [] [ button [class "btn transparent f-bold mango", onClick UnSubPair ] [ text "Remove" ] ]
+  ]
 
 
 isActive : ViewType -> ViewType -> ( String, Bool )

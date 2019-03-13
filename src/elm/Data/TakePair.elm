@@ -33,7 +33,8 @@ type alias Graph =
   }
 
 type alias Pair =
-    { exchange : String
+    { id : String
+    , exchange : String
     , symbol : String
     , priceDiff : String
     , highVolume24 : String
@@ -55,6 +56,7 @@ type alias Pair =
 decode : D.Decoder Pair
 decode =
     D.succeed Pair
+        |> required "PairId" D.string
         |> required "Exchange" D.string
         |> required "Symbol" D.string
         |> required "PriceDiff" D.string

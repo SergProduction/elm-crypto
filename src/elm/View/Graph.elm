@@ -37,7 +37,7 @@ viewGraph graphData =
     ]
     [ polyline
       [ fill "none"
-      , stroke (getRedOrGreen graphData)
+      , stroke "#0099ff" -- (getRedOrGreen graphData)
       , strokeWidth "2"
       , points <| listToPath graphData
       ] []  

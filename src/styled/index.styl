@@ -55,6 +55,7 @@ body
 
 .header-about-name
   color cf-white
+  margin-right 20px
 
 
 .modal .logo-name
@@ -146,7 +147,8 @@ body
     background: linear-gradient(to right, cb-two 8%, cb-border 18%, cb-two 33%);
     // background-size: 800px 104px;
     height: 18px;
-    position: relative;
+    min-width: 100px;
+    // position: relative;
 }
 
 
@@ -164,6 +166,7 @@ body
 
 .table-row-menu
   text-align right
+  float right 
 
 
 
@@ -196,6 +199,11 @@ body
 
 .header .user-name
   margin-right 19px
+
+
+.header .market-cap
+  flex-grow: 1
+
 
 
 .options-view
@@ -339,6 +347,7 @@ button:focus
   border 0px
   font-size fs-control
   font-weight 600
+  margin-left 1px
 
 
 .btn.transparent
@@ -397,6 +406,11 @@ button:focus
   color cf-red
 
 
+/* ----- GRAHP ----- */
+
+.name-value-group > .graph-period
+  margin-top 0
+
 /* ----- Modal ----- */
 
 
@@ -441,12 +455,14 @@ button:focus
 .status-bar
   position fixed
   bottom 0
-  width 100%
+  left 0
+  right 0
   height 40px
   display flex
   align-items center
   padding 0 20px
   background-color #0e0e0e
+  border-top 1px solid cb-border
 
 
 /* ----- Context Menu ----- */

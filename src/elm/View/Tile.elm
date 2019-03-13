@@ -1,7 +1,7 @@
 module View.Tile exposing (viewTileList)
 
 import Data.TakePair exposing (Pair)
-import Dict
+import Array
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -9,9 +9,17 @@ import View.Helpers exposing (getRedOrGreenClass)
 import View.Graph exposing (viewGraph)
 
 
-viewTileList : (Pair -> msg) -> Dict.Dict String Pair -> Html msg
+viewTileList : (Pair -> msg) -> Array.Array Pair -> Html msg
 viewTileList msg model =
-    div [ class "tile-list" ] (List.map (viewTile msg) (Dict.values model))
+    if (Array.isEmpty model) then
+      viewPreloader
+    else
+      view msg model
+      
+
+view : (Pair -> msg) -> Array.Array Pair -> Html msg
+view msg model =
+    div [ class "tile-list" ] <| Array.toList <| Array.map (viewTile msg) model
 
 
 viewTile : (Pair -> msg) -> Pair -> Html msg
@@ -85,7 +93,7 @@ viewTile msg d =
                 ]
             , div [ class "flex-column flex-between"]
                 [ div [ class "text-graph"]
-                    [ span [ class "blue"] [ text "1M"]
+                    [ span [ class "blue"] [ text "CHART 1M"]
                     , span [ class "mango"] [text "Price 24h"]
                     , span [] [text d.priceDiff]
                     ]
@@ -106,3 +114,79 @@ viewTile msg d =
             ]
         ]
 
+viewPreloader : Html msg
+viewPreloader =
+    div [ class "tile-list" ] <| List.map viewTilePreloader (List.repeat 10 0)
+
+
+
+viewTilePreloader : a -> Html msg
+viewTilePreloader _ =
+    div [ class "tile" ]
+      [ div [ class "flex-row flex-between" ]
+            [ span [ class "name burse" ] [ div [ class "preloader" ] [] ]
+            , span [ class "name" ] [ div [ class "preloader" ] [] ]
+            , span [ class "red" ] [ div [ class "preloader" ] [] ]
+            , span [ class "burse time" ] [ div [ class "preloader" ] [] ]
+            ]
+        , div [ class "flex-row flex-between" ]
+            [ div [ class "name-value-group" ]
+                [ div [ class "name" ] [ div [ class "preloader" ] [] ]
+                , div [ class "value"] [ div [ class "preloader" ] [] ]
+                , div [ class "name" ] [ div [ class "preloader" ] [] ]
+                , div [ class "value" ] [ div [ class "preloader" ] [] ]
+                ]
+            , div [ class "name-value-group" ]
+                [ div [ class "name" ] [ div [ class "preloader" ] [] ]
+                , div [ class "value" ] [ div [ class "preloader" ] [] ]
+                , div [ class "name" ] [ div [ class "preloader" ] [] ]
+                , div [ class "value" ] [ div [ class "preloader" ] [] ]
+                ]
+            , div [ class "name-value-group" ]
+                [ div [ class "name" ] [ div [ class "preloader" ] [] ]
+                , div [ class "value" ] [ div [ class "preloader" ] [] ]
+                , div [ class "name" ] [ div [ class "preloader" ] [] ]
+                , div [ class "value" ] [ div [ class "preloader" ] [] ]
+                ]
+            ]
+        , div [ class "flex-row flex-between" ]
+            [ div [ class "name-value-group" ]
+                [ div [ class "name" ] [ div [ class "preloader" ] [] ]
+                , div [ class "value" ] [ div [ class "preloader" ] [] ]
+                , div [ class "name" ] [ div [ class "preloader" ] [] ]
+                , div [ class "value" ] [ div [ class "preloader" ] [] ]
+                ]
+            , div [ class "name-value-group" ]
+                [ div [ class "name" ] [ div [ class "preloader" ] [] ]
+                , div [ class "value" ] [ div [ class "preloader" ] [] ]
+                , div [ class "name" ] [ div [ class "preloader" ] [] ]
+                , div [ class "value" ] [ div [ class "preloader" ] [] ]
+                ]
+            ]
+        , div [ class "flex-row flex-between" ]
+            [ div []
+                [ div [ class "flex-row interest-ratio roboto" ]
+                    [ div [ class "flex-column" ]
+                        [ span [ class "interest-ratio-value green" ] [ div [ class "preloader" ] [] ]
+                        ]
+                    , div [ class "flex-column" ]
+                        [ span [ class "interest-ratio-value red" ] [ div [ class "preloader" ] [] ]
+                        ]
+                    ]
+                ]
+            , div [ class "flex-column flex-between"]
+                [ div [ class "text-graph"]
+                    [ span [] [ div [ class "preloader" ] [] ]
+                    ]
+                , div [] [ div [ class "preloader" ] [] ]
+                ]
+            ]
+        , div [ class "flex-row flex-between" ]
+            [ div [ class "name-value-group" ]
+                [ div [ class "value" ] [ div [ class "preloader" ] [] ]
+                ]
+            , div [ class "name-value-group" ]
+                [ div [ class "value" ] [ div [ class "preloader" ] [] ]
+                ]
+            ]
+        ]

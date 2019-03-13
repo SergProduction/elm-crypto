@@ -1,7 +1,7 @@
 module View.Table exposing (viewTable)
 
 import Data.TakePair exposing (Pair)
-import Dict
+import Array
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -10,17 +10,21 @@ import View.Graph exposing (viewGraph)
 
 
 
-viewTable : (Pair -> msg) -> Dict.Dict String Pair -> Html msg
+viewTable : (Pair -> msg) -> Array.Array Pair -> Html msg
 viewTable msg model =
-    if (Dict.isEmpty model) then
-        viewPreloader
+    if (Array.isEmpty model) then
+      viewPreloader
     else
-      div [ class "flex-row flex-center" ]
+      view msg model
+      
+
+view : (Pair -> msg) -> Array.Array Pair -> Html msg
+view msg model =
+    div [ class "flex-row flex-center" ]
           [ table []
-              [ tbody [] (List.map (viewRow msg) (Dict.values model))
+              [ tbody [] <| Array.toList <| Array.map (viewRow msg) model
               ]
           ]
-
 
 viewRow : (Pair -> msg) -> Pair -> Html msg
 viewRow msg d =
@@ -94,7 +98,7 @@ viewRow msg d =
                 [ button [ class "btn transparent", onClick (msg d) ]
                     [ i [ class "menu fas fa-ellipsis-h" ] [] ]
                 ]
-            , div [ class "graph-period"] [ text "1M" ]
+            , div [ class "graph-period"] [ text "CHART 1M" ]
             , div [] [ viewGraph d.graph ]
             , div [ class "flex-row flex-between"]
               [ div [ class "mango"] [text "Price 24h"]
@@ -108,7 +112,7 @@ viewPreloader : Html msg
 viewPreloader =
     div [ class "flex-row flex-center" ]
         [ table []
-            [ tbody [] (List.map viewRowPreloader (List.repeat 5 0))
+            [ tbody [] (List.map viewRowPreloader (List.repeat 10 0))
             ]
         ]
 
